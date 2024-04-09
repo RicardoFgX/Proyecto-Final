@@ -1,0 +1,54 @@
+# Reglas de ignorar archivos combinadas
+
+# Archivos específicos a ignorar
+src-api/HELP.md
+src-frontend/HELP.md
+
+# Carpetas específicas a ignorar
+src-api/target/
+src-api/.idea/
+src-api/.vscode/
+src-frontend/dist/
+src-frontend/tmp/
+src-frontend/out-tsc/
+src-frontend/bazel-out/
+src-frontend/node_modules/
+src-frontend/.c9/
+src-frontend/.settings/
+src-frontend/.history/
+src-frontend/.angular/cache
+src-frontend/.sass-cache/
+src-frontend/coverage/
+src-frontend/typings/
+
+# Archivos generados
+src-api/.apt_generated
+src-api/.classpath
+src-api/.factorypath
+src-api/.project
+src-api/.springBeans
+src-api/.sts4-cache
+src-api/*.iws
+src-api/*.iml
+src-api/*.ipr
+src-frontend/npm-debug.log
+src-frontend/yarn-error.log
+src-frontend/libpeerconnection.log
+src-frontend/testem.log
+
+# Archivos a no ignorar dentro de carpetas específicas
+src-api/!.mvn/wrapper/maven-wrapper.jar
+src-api/!**/src/main/**/target/
+src-api/!**/src/test/**/target/
+src-api/!**/src/main/**/build/
+src-api/!**/src/test/**/build/
+
+# Archivos a no ignorar en VS Code
+src-frontend/!.vscode/settings.json
+src-frontend/!.vscode/tasks.json
+src-frontend/!.vscode/launch.json
+src-frontend/!.vscode/extensions.json
+
+# Archivos a no ignorar del sistema
+src-frontend/.DS_Store
+src-frontend/Thumbs.db
