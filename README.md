@@ -52,52 +52,52 @@ Motivado por todo esto es que empecé a maquinar en mi cabeza la idea de AR-Task
 
 #### Requisitos Funcionales
 
-**RF01 - Sistema de Autenticación y login:**
+*RF01 - Sistema de Autenticación y login:*
 
 - Implementar un sistema de autenticación seguro para que los usuarios accedan a sus cuentas.
 - Posible integración con otras plataformas de login (Google, GitHub, etc.).
 
-**RF02 - Registro de Usuarios:**
+*RF02 - Registro de Usuarios:*
 
 - Permite a los usuarios nuevos crear cuentas en la aplicación.
 
-**RF03 - Gestión de Perfiles de Usuario:**
+*RF03 - Gestión de Perfiles de Usuario:*
 
 - Los usuarios pueden editar y actualizar sus perfiles, incluyendo nombre, foto de perfil y preferencias personales.
 
-**RF04 - Gestión de Usuarios por parte del Administrador:**
+*RF04 - Gestión de Usuarios por parte del Administrador:*
 
 - El administrador puede realizar operaciones CRUD sobre los perfiles de usuario, incluyendo crear, editar, desactivar y eliminar cuentas de usuario.
 
 #### Requisitos Adicionales
 
-**RF05 - Creación de Tareas:**
+*RF05 - Creación de Tareas:*
 
 - Los usuarios pueden crear nuevas tareas, incluyendo detalles como título, descripción, fechas y categorías.
 
-**RF06 - Creación de Proyectos:**
+*RF06 - Creación de Proyectos:*
 
 - Los usuarios pueden crear proyectos, estableciendo detalles como nombre, descripción, fechas, categorías y miembros del proyecto.
 
-**RF07 - Organización de Tareas y Proyectos:**
+*RF07 - Organización de Tareas y Proyectos:*
 
 - Capacidades para organizar tareas y proyectos mediante asignación de categorías y etiquetas.
 
-**RF08 - Búsqueda y Filtrado:**
+*RF08 - Búsqueda y Filtrado:*
 
 - Funcionalidad de búsqueda y filtrado para encontrar rápidamente tareas y proyectos específicos.
 
-**RF09 - Eliminación de Tareas y Proyectos:**
+*RF09 - Eliminación de Tareas y Proyectos:*
 
 - Opción para eliminar tareas y proyectos, con posibilidad de recuperación.
 
 #### Entregable 1 (Fecha: 08/04)
 
-##### Objetivos
+##### *Objetivos*
 
 - Establecer repositorios en GitHub para el frontend y backend del proyecto.
 
-##### Estructuración del proyecto
+##### *Estructuración del proyecto*
 
 - [Backend](https://github.com/RicardoFgX/Proyecto-Final/tree/main/src-api)
 ![ImgMotivacion1](/docs/images-readme/3.png)
@@ -105,7 +105,7 @@ Motivado por todo esto es que empecé a maquinar en mi cabeza la idea de AR-Task
 - [Frontend](https://github.com/RicardoFgX/Proyecto-Final/tree/main/src-frontend)
 ![ImgMotivacion1](/docs/images-readme/4.png)
 
-##### Base de Datos
+##### *Base de Datos*
 
 - El diseño inicial de la base de datos, aún abierto a futuras mejoras que se tengan que hacer para llevar a cabo el proyecto es el siguiente:
 
@@ -119,7 +119,7 @@ Motivado por todo esto es que empecé a maquinar en mi cabeza la idea de AR-Task
   
 ![ImgMotivacion1](/docs/images-readme/7.png)
 
-##### Evolución y puntualidades
+##### *Evolución y puntualidades*
 
 - Esta primera entrega ha sido la más lenta en cuanto a desarrollo y trabajo plasmado en el proyecto como tal pues, a pesar de tener ya elaborado la propuesta del mismo, tan solo se tenía unas pequeñas pautas y la idea del mismo, por lo que una gran parte de este primer “spring” ha sido concretar y tomar decisiones reales en cuanto al desarrollo.
 
