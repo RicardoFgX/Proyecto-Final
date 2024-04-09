@@ -31,8 +31,9 @@ Como estudiante interesado por la informática y el desarrollo de software, me e
 
 Puede que sea el único que no utilice herramientas de este tipo ya, ya sea con google o porque simplemente no me siento cómodo usando ninguna de estas y acabo realizando lo que para muchos puede ser lo más sencillo (como en mi caso por ejemplo), que es llevarlo todo a cabo en un bloc de notas un listado de todas las cosas que voy haciendo o me quedan por hacer. Dejo de ejemplo dos imágenes:
 
-![ImgMotivacion1](/docs/images-readme/1.png)
-![ImgMotivacion2](/docs/images-readme/2.png)
+  ![ImgMotivacion1](/docs/images-readme/1.png)
+
+  ![ImgMotivacion2](/docs/images-readme/2.png)
 
 Y no ha sido hasta que me ha tocado pensar en la idea sobre la que hacer el proyecto que no he caído en la necesidad, por ejemplo en mi caso, de una herramienta que me permita hacer todas estas cosas
 
@@ -107,7 +108,8 @@ Motivado por todo esto es que empecé a maquinar en mi cabeza la idea de AR-Task
 ##### Base de Datos
 
 - El diseño inicial de la base de datos, aún abierto a futuras mejoras que se tengan que hacer para llevar a cabo el proyecto es el siguiente:
-![ImgMotivacion1](/docs/images-readme/5.png)
+
+  ![ImgMotivacion1](/docs/images-readme/5.png)
 
 - Algunas puntualidades que se pueden comentar son los enumerados que se han utilizado en algunas tablas. Empezando por la tabla “usuarios”, el campo “rol” es un enumerado que va a variar según el rol del usuario en cuestión.
   
