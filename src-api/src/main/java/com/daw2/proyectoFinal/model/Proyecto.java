@@ -1,5 +1,6 @@
 package com.daw2.proyectoFinal.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -28,10 +29,10 @@ public class Proyecto {
     private String descripcion;
 
     @Column(name = "fecha_creacion", nullable = false)
-    private LocalDateTime fechaCreacion;
+    private LocalDate fechaCreacion;
 
     @Column(name = "ultima_fecha_modificacion")
-    private LocalDateTime ultimaFechaModificacion;
+    private LocalDate ultimaFechaModificacion;
 
     @ManyToMany
     @JoinTable(
@@ -41,8 +42,9 @@ public class Proyecto {
     )
     private Set<Usuario> usuarios;
 
-    // Constructor
+ // Constructor con fecha por defecto
     public Proyecto() {
+        this.fechaCreacion = LocalDate.now(); // Fecha actual
     }
 
     // Getters y setters
@@ -71,19 +73,19 @@ public class Proyecto {
         this.descripcion = descripcion;
     }
 
-    public LocalDateTime getFechaCreacion() {
+    public LocalDate getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+    public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public LocalDateTime getUltimaFechaModificacion() {
+    public LocalDate getUltimaFechaModificacion() {
         return ultimaFechaModificacion;
     }
 
-    public void setUltimaFechaModificacion(LocalDateTime ultimaFechaModificacion) {
+    public void setUltimaFechaModificacion(LocalDate ultimaFechaModificacion) {
         this.ultimaFechaModificacion = ultimaFechaModificacion;
     }
 

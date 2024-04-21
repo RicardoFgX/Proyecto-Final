@@ -37,9 +37,20 @@ public class TareaServiceImpl implements TareaService {
         return tareaRepository.findByProyectoId(proyectoId);
     }
 
-    @Override
-    public void eliminarTarea(Long id) {
-        tareaRepository.deleteById(id);
+	@Override
+    public boolean eliminarTarea(Long id) {
+        if (tareaRepository.existsById(id)) {
+        	tareaRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
+	
+	@Override
+	public Tarea actualizarTarea(Tarea tarea) {
+		return tareaRepository.save(tarea);
+	}
+	
+
 
 }

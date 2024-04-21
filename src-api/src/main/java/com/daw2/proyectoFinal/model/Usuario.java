@@ -20,7 +20,7 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)//, unique = true
     private String nombreUsuario;
 
     @Column(nullable = false)
@@ -33,11 +33,8 @@ public class Usuario {
     @Column(nullable = false)
     private Rol rol;
 
-    @ManyToMany(mappedBy = "usuarios")
-    private Set<Proyecto> proyectos;
-
-    // Constructor
     public Usuario() {
+        this.rol = Rol.USUARIO;
     }
 
     // Getters y setters
@@ -82,11 +79,4 @@ public class Usuario {
         this.rol = rol;
     }
 
-    public Set<Proyecto> getProyectos() {
-        return proyectos;
-    }
-
-    public void setProyectos(Set<Proyecto> proyectos) {
-        this.proyectos = proyectos;
-    }
 }

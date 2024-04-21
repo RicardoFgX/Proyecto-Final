@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.daw2.proyectoFinal.model.Anotacion;
+import com.daw2.proyectoFinal.model.Usuario;
 import com.daw2.proyectoFinal.repository.AnotacionRepository;
 import com.daw2.proyectoFinal.services.AnotacionService;
 
@@ -36,11 +37,20 @@ public class AnotacionServiceImpl implements AnotacionService {
     public List<Anotacion> obtenerTodasLasAnotaciones() {
         return anotacionRepository.findAll();
     }
-
+    
     @Override
-    public void eliminarAnotacion(Long id) {
-        anotacionRepository.deleteById(id);
+    public boolean eliminarAnotacion(Long id) {
+        if (anotacionRepository.existsById(id)) {
+        	anotacionRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
+
+	@Override
+	public Anotacion actualizarAnotacion(Anotacion anotacion) {
+		return anotacionRepository.save(anotacion);
+	}
 
     // Otros métodos de servicio según sea necesario
 }

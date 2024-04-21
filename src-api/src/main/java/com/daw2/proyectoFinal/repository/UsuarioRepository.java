@@ -7,5 +7,5 @@ import com.daw2.proyectoFinal.model.Usuario;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-	//Si necesito más métodos los añado aqui
+	Usuario findByNombreUsuario(String nombreUsuario);
 }

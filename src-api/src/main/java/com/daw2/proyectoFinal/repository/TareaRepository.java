@@ -8,5 +8,5 @@ import com.daw2.proyectoFinal.model.Tarea;
 
 public interface TareaRepository extends JpaRepository<Tarea, Long> {
 	List<Tarea> findByProyectoId(Long proyectoId);
-	//Si necesito más métodos los añado aqui
+	List<Tarea> findByProyectoUsuariosId(Long usuarioId);
 }
