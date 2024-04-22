@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.daw2.proyectoFinal.model.Anotacion;
-import com.daw2.proyectoFinal.model.Usuario;
 import com.daw2.proyectoFinal.repository.AnotacionRepository;
 import com.daw2.proyectoFinal.services.AnotacionService;
 

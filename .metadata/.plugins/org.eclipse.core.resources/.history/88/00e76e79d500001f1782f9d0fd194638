@@ -1,0 +1,5 @@
+package com.daw2.proyectoFinal.util;
+
+public class LogUtil {
+
+}

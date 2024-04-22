@@ -1,0 +1,5 @@
+package com.daw2.proyectoFinal.dtos.request;
+
+public class RegistroRequest {
+
+}

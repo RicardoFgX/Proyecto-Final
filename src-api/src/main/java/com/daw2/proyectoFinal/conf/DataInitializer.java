@@ -2,6 +2,7 @@ package com.daw2.proyectoFinal.conf;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.daw2.proyectoFinal.model.Anotacion;
@@ -10,6 +11,7 @@ import com.daw2.proyectoFinal.model.Proyecto;
 import com.daw2.proyectoFinal.model.Rol;
 import com.daw2.proyectoFinal.model.Tarea;
 import com.daw2.proyectoFinal.model.Usuario;
+import com.daw2.proyectoFinal.repository.UsuarioRepository;
 import com.daw2.proyectoFinal.services.AnotacionService;
 import com.daw2.proyectoFinal.services.ProyectoService;
 import com.daw2.proyectoFinal.services.TareaService;
@@ -26,6 +28,9 @@ public class DataInitializer implements CommandLineRunner {
 	private UsuarioService usuarioService;
 
 	@Autowired
+	private UsuarioRepository usuarioRepository;
+
+	@Autowired
 	private AnotacionService anotacionService;
 
 	@Autowired
@@ -34,45 +39,45 @@ public class DataInitializer implements CommandLineRunner {
 	@Autowired
 	private TareaService tareaService;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	@Override
 	public void run(String... args) {
 
 		Usuario usuario1 = new Usuario();
-		Usuario usuario2 = new Usuario();
-		Usuario usuario3 = new Usuario();
+		Usuario admin = new Usuario();
 
 		if (usuarioService.obtenerUsuarioPorId(1L) == null) {
 
-			usuario3.setNombreUsuario("admin");
-			usuario3.setCorreoElectronico("admin@example.com");
-			usuario3.setContraseña("adminpassword");
-			usuario3.setRol(Rol.ADMINISTRADOR);
-			usuarioService.crearUsuario(usuario3);
+			usuario1.setNombre("usuarioejemplo");
+			usuario1.setApellidos("1234");
+			usuario1.setEmail("usuarioejemplo@gmail.com");
+			usuario1.setContrasena(passwordEncoder.encode("1234"));
+			usuario1.getRoles().add(Rol.USUARIO);
+			usuarioRepository.save(usuario1);
 
-			usuario1.setNombreUsuario("usuario1");
-			usuario1.setCorreoElectronico("usuario1@example.com");
-			usuario1.setContraseña("password1");
-			usuarioService.crearUsuario(usuario1);
-
-			usuario2.setNombreUsuario("usuario2");
-			usuario2.setCorreoElectronico("usuario2@example.com");
-			usuario2.setContraseña("password2");
-			usuarioService.crearUsuario(usuario2);
+			admin.setNombre("admin");
+			admin.setApellidos("Fernandez admin");
+			admin.setEmail("admin@gmail.com");
+			admin.setContrasena(passwordEncoder.encode("admin"));
+			admin.getRoles().add(Rol.ADMINISTRADOR);
+			usuarioRepository.save(admin);
 
 			// Crear Anotaciones para usuario2
 			Anotacion anotacion1 = new Anotacion();
 			anotacion1.setContenido("Primera anotacion de usuario2");
 			anotacion1.setTitulo("Prueba1");
-			anotacion1.setUsuario(usuario2);
+			anotacion1.setUsuario(usuario1);
 
 			Anotacion anotacion2 = new Anotacion();
 			anotacion2.setContenido("Segunda anotacion de usuario2");
 			anotacion2.setTitulo("Prueba2");
-			anotacion2.setUsuario(usuario2);
+			anotacion2.setUsuario(usuario1);
 
 			anotacionService.crearAnotacion(anotacion1);
 			anotacionService.crearAnotacion(anotacion2);
-			
+
 			// Crear Proyecto
 			Proyecto proyecto = new Proyecto();
 			proyecto.setNombre("Proyecto1");
@@ -81,7 +86,7 @@ public class DataInitializer implements CommandLineRunner {
 			proyecto = proyectoService.crearProyecto(proyecto);
 
 			// Agregar Usuarios al Proyecto
-			proyecto.setUsuarios(new HashSet<>(Arrays.asList(usuario1, usuario2, usuario3)));
+			proyecto.setUsuarios(new HashSet<>(Arrays.asList(usuario1, admin)));
 			proyectoService.crearProyecto(proyecto);
 
 			// Crear Tareas para el Proyecto

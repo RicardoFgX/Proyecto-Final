@@ -1,0 +1,5 @@
+package com.daw2.proyectoFinal.exceptions;
+
+public class InicializarDatosException {
+
+}

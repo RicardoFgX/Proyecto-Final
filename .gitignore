@@ -8,6 +8,7 @@ src-frontend/HELP.md
 src-api/target/
 src-api/.idea/
 src-api/.vscode/
+src-api/.metadata/
 src-frontend/dist/
 src-frontend/tmp/
 src-frontend/out-tsc/

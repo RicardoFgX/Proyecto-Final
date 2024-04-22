@@ -3,7 +3,6 @@ package com.daw2.proyectoFinal.services;
 import java.util.List;
 
 import com.daw2.proyectoFinal.model.Anotacion;
-import com.daw2.proyectoFinal.model.Usuario;
 
 public interface AnotacionService {
     Anotacion crearAnotacion(Anotacion anotacion);

@@ -1,7 +1,5 @@
 package com.daw2.proyectoFinal.servicesImpl;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.daw2.proyectoFinal.model.Proyecto;
-import com.daw2.proyectoFinal.model.Tarea;
 import com.daw2.proyectoFinal.repository.ProyectoRepository;
 import com.daw2.proyectoFinal.services.ProyectoService;
 
