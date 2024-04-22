@@ -5,6 +5,7 @@ src-api/HELP.md
 src-frontend/HELP.md
 
 # Carpetas específicas a ignorar
+.metadata
 src-api/target/
 src-api/.idea/
 src-api/.vscode/
