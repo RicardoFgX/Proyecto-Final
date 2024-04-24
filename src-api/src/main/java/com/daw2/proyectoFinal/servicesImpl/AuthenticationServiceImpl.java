@@ -75,11 +75,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.getRoles().add(Rol.USUARIO);
         usuarioRepository.save(user);
         String jwt = jwtService.generateToken(user);
+
+        JwtAuthenticationResponse.UserResponse userResponse = new JwtAuthenticationResponse.UserResponse(
+                user,
+                jwt
+        );
+
         return JwtAuthenticationResponse.builder()
-                .user(user)
-                .token(jwt)
+                .user(userResponse)
                 .build();
     }
+
 
     /**
      * Inicia sesión para un usuario existente.
@@ -99,10 +105,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         Usuario user = optionalUser.orElseThrow(() -> new IllegalArgumentException("Email o contraseña inválidos."));
         String jwt = jwtService.generateToken(user);
+
+        JwtAuthenticationResponse.UserResponse userResponse = new JwtAuthenticationResponse.UserResponse(
+                user,
+                jwt
+        );
+
         return JwtAuthenticationResponse.builder()
-                .user(user)
-                .token(jwt)
+                .user(userResponse)
                 .build();
     }
+
 }
 
