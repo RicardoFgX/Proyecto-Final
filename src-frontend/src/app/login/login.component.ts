@@ -13,6 +13,7 @@ import { AuthService } from '../auth.service';
 export class LoginComponent {
   email: string = '';
   password: string = '';
+  nombre: string = '';
 
   constructor(private authService: AuthService) {}
 
@@ -33,5 +34,11 @@ export class LoginComponent {
         console.error('Error en inicio de sesión:', error);
       }
     );
+  }
+
+  register() {
+    console.log(this.email);
+    console.log(this.password);
+    console.log(this.nombre);
   }
 }
