@@ -6,7 +6,6 @@ package com.daw2.proyectoFinal.dtos.request;
  */
 public class RegistroRequest {
     private String nombre;
-    private String apellidos;
     private String email;
     private String contrasena;
 
@@ -24,9 +23,8 @@ public class RegistroRequest {
      * @param email      El correo electrónico proporcionado en la solicitud.
      * @param contrasena La contraseña proporcionada en la solicitud.
      */
-    public RegistroRequest(String nombre, String apellidos, String email, String contrasena) {
+    public RegistroRequest(String nombre, String email, String contrasena) {
         this.nombre = nombre;
-        this.apellidos = apellidos;
         this.email = email;
         this.contrasena = contrasena;
     }
@@ -47,24 +45,6 @@ public class RegistroRequest {
      */
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    /**
-     * Obtiene los apellidos de la solicitud.
-     *
-     * @return Los apellidos de la solicitud.
-     */
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    /**
-     * Establece los apellidos de la solicitud.
-     *
-     * @param apellidos Los apellidos de la solicitud.
-     */
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
     }
 
     /**

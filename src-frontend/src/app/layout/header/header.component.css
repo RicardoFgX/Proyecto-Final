@@ -9,7 +9,6 @@
 /* #Navigation
 ================================================== */
 .start-header {
-	background-color: ;
 	opacity: 1;
 	transform: translateY(0);
 	padding: 20px 0;
@@ -107,3 +106,8 @@
 	position: relative;
     transition: all 200ms linear;
 }
+
+.logged {
+	cursor: pointer;
+  }
+  

@@ -3,6 +3,7 @@
 # Archivos específicos a ignorar
 src-api/HELP.md
 src-frontend/HELP.md
+node_modules
 
 # Carpetas específicas a ignorar
 .metadata

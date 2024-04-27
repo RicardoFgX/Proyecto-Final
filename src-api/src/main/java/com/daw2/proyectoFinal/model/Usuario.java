@@ -46,10 +46,6 @@ public class Usuario implements UserDetails {
     @NotBlank(message = "El nombre no puede estar en blanco")
     private String nombre;
 
-    /**
-     * Campo apellidos del usuario
-     */
-    @NotBlank(message = "Los apellidos no pueden estar en blanco")
     private String apellidos;
 
     /**
