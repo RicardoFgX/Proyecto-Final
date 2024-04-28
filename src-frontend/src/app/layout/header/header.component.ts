@@ -44,5 +44,6 @@ export class HeaderComponent implements OnInit{
     // Limpiar el estado de autenticación y el correo electrónico del usuario
     this.isAuthenticated = false;
     this.userEmail = null;
+    window.location.href = '/home';
   }
 }

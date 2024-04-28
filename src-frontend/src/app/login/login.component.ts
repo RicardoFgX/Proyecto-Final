@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { JwtService } from '../services/jwt-service.service';
+import { jwtDecode } from 'jwt-decode';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +19,7 @@ export class LoginComponent {
   nombre: string = '';
   token: string = '';
 
-  constructor(private authService: AuthService, private jwtService: JwtService) { }
+  constructor(private authService: AuthService, private jwtService: JwtService, private router: Router) { }
 
   login() {
     console.log(this.email);
@@ -37,7 +39,7 @@ export class LoginComponent {
 
         // Lo guardo en local
         this.jwtService.saveToken(resp.user.token);
-        window.location.href = '/home';
+        this.redirectUserByRole();
       },
       error: (error) => {
         console.error('Error de autenticación:', error);
@@ -70,7 +72,7 @@ export class LoginComponent {
 
         // Lo guardo en local
         this.jwtService.saveToken(resp.user.token);
-        window.location.href = '/home';
+        this.redirectUserByRole();
       },
       error: (error) => {
         console.error('Error de autenticación:', error);
@@ -82,7 +84,35 @@ export class LoginComponent {
       }
     });
   }
+
+  redirectUserByRole() {
+    // Verificar si hay un token guardado en el almacenamiento local
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        // Decodificar el token
+        const decodedToken: any = jwtDecode(token);
+        // Verificar si el token contiene información de rol
+        if (decodedToken && decodedToken.role && decodedToken.role.length > 0) {
+          // Obtener el rol del usuario (asumimos que solo hay un rol en el token)
+          const userRole = decodedToken.role[0].authority;
+          // Redirigir al usuario a la página correspondiente según su rol
+          if (userRole === 'ADMINISTRADOR') {
+            window.location.href = '/adminDash';
+          } else {
+            window.location.href = '/userDash';
+          }
+        } else {
+          console.error('El token no contiene información de rol.');
+        }
+      } catch (error) {
+        console.error('Error al decodificar el token:', error);
+      }
+    }
+  }
 }
+
+
 /*
   pruebaToken(): void {
     this.authService.loginToken();

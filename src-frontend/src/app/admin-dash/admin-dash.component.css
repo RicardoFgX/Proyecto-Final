@@ -1,0 +1,11 @@
+table {
+    margin: 0 auto; /* Esto centra horizontalmente el contenedor de la tabla */
+    margin-top: 30px;
+    margin-bottom: 30px;
+    width: 80%; /* Puedes ajustar el ancho del contenedor de la tabla según tus necesidades */
+  }
+
+  .mat-mdc-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
