@@ -11,7 +11,6 @@
 .start-header {
 	opacity: 1;
 	transform: translateY(0);
-	padding: 20px 0;
 	box-shadow: 0 10px 30px 0 rgba(138, 155, 165, 0.15);
 	-webkit-transition : all 0.3s ease-out;
 	transition : all 0.3s ease-out;
@@ -109,5 +108,9 @@
 
 .logged {
 	cursor: pointer;
+  }
+
+  img{
+	width: 150px;
   }
   

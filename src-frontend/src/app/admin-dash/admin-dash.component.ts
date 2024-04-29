@@ -59,8 +59,6 @@ export class AdminDashComponent {
 
 
   modificarUsuario(id: number) {
-    // Aquí puedes implementar la lógica para modificar un usuario
-    // Por ejemplo:
-    // this.router.navigate(['/editar-usuario', id]); // Redirigir a la página de edición de usuario
+
   }
 }
