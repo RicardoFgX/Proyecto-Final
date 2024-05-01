@@ -1,11 +1,13 @@
-table {
-    margin: 0 auto; /* Esto centra horizontalmente el contenedor de la tabla */
-    margin-top: 30px;
-    margin-bottom: 30px;
-    width: 80%; /* Puedes ajustar el ancho del contenedor de la tabla según tus necesidades */
-  }
 
-  .mat-mdc-form-field {
-    font-size: 14px;
-    width: 100%;
-  }
+.adminDash {
+  display: grid;
+  grid-template-columns: 250px auto; /* Sidebar ocupa 250px y el contenido el espacio restante */
+  grid-gap: 20px; /* Espacio entre el sidebar y el contenido */
+  margin: 0;
+  padding:0;
+}
+
+.contenido {
+  display: flex;
+  justify-content: center; /* Centrar horizontalmente */
+}

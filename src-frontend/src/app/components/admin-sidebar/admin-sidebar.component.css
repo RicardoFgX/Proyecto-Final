@@ -1,0 +1,167 @@
+
+.barra-lateral-admin {
+    position: relative;
+    width: 260px;
+    height: 834px;
+    background-color: rgba(246, 248, 249, 1);
+  }
+  
+  .barra-lateral-admin .divider {
+    position: absolute;
+    width: 1px;
+    height: 834px;
+    top: 0;
+    left: 100%;
+    background-color: rgba(132, 145, 154, 1);
+  }
+  
+  .barra-lateral-admin .project-sections {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+  }
+  
+  .barra-lateral-admin .project {
+    display: flex;
+    width: 208px;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    flex: 0 0 auto;
+  }
+  
+  .barra-lateral-admin .at-symbol {
+    position: relative;
+    width: 32px;
+    height: 32px;
+  }
+  
+  .barra-lateral-admin .title-description {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-grow: 1;
+    position: relative;
+    flex: 1;
+  }
+  
+  .barra-lateral-admin .text-wrapper {
+    position: relative;
+    align-self: stretch;
+    margin-top: -1px;
+    font-family: "Inter", Helvetica;
+    font-weight: 600;
+    color: rgba(37, 44, 50, 1);
+    font-size: 14px;
+    letter-spacing: -0.0840000033378601px;
+    line-height: 24px;
+    font-style: 14px;
+  }
+  
+  .barra-lateral-admin .div {
+    position: relative;
+    align-self: stretch;
+    font-family: "Inter-Regular", Helvetica;
+    font-weight: 400;
+    color: rgba(132, 145, 154, 1);
+    font-size: 11.5px;
+    letter-spacing: 0;
+    line-height: 16px;
+  }
+  
+  .barra-lateral-admin .sections {
+    display: flex;
+    flex-direction: column;
+    width: 208px;
+    align-items: flex-start;
+    position: relative;
+    flex: 0 0 auto;
+  }
+  
+  .barra-lateral-admin .sidenav-item{
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 4px 12px 4px 8px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .barra-lateral-admin a{
+    padding: 0px;
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  
+  .barra-lateral-admin a:hover{
+    background-color: rgba(215, 237, 255, 1);
+  }
+  
+  .barra-lateral-admin .img {
+    position: relative;
+    width: 24px;
+    height: 24px;
+  }
+  
+  .barra-lateral-admin .title {
+    margin-top: -1px;
+    font-family: "Inter", Helvetica;
+    font-weight: 600;
+    color: rgba(14, 115, 246, 1);
+    font-size: 14px;
+    letter-spacing: -0.0840000033378601px;
+    line-height: 24px;
+    position: relative;
+    flex: 1;
+    font-style: normal;
+  }
+  
+  
+  .barra-lateral-admin .title-2 {
+    position: relative;
+    flex: 1;
+    margin-top: -1px;
+    font-family: "Inter", Helvetica;
+    font-weight: 600;
+    color: rgba(37, 44, 50, 1);
+    font-size: 14px;
+    letter-spacing: -0.0840000033378601px;
+    line-height: 24px;
+    font-style: normal;
+  }
+  
+  .barra-lateral-admin .sidenav-divider {
+    height: 24px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  
+  .barra-lateral-admin .divider-2 {
+    position: relative;
+    width: 208px;
+    height: 1px;
+    top: 12px;
+    background-color: grey;
+  }
+  
+  .svg-blue {
+    fill: rgba(14, 115, 246, 1);
+  }
+
+  

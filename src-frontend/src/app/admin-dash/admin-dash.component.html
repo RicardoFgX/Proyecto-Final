@@ -1,23 +1,6 @@
-<table class="table table-bordered table-striped">
-    <thead class="thead-dark">
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Apellidos</th>
-        <th>Email</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let usuario of users">
-        <td>{{ usuario.id }}</td>
-        <td>{{ usuario.nombre }}</td>
-        <td>{{ usuario.apellidos }}</td>
-        <td>{{ usuario.email }}</td>
-        <td>
-          <button class="btn btn-danger" (click)="borrarUsuario(usuario.id)">Borrar</button>
-          <button class="btn btn-primary" (click)="modificarUsuario(usuario.id)">Modificar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div class="adminDash">
+  <app-admin-sidebar></app-admin-sidebar>
+  <div class="contenido">
+    <h1>Texto de presentación, aún por elaborar</h1>
+  </div>
+</div>

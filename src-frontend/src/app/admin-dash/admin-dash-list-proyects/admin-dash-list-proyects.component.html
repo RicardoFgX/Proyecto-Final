@@ -1,0 +1,30 @@
+<div class="adminDash">
+    <app-admin-sidebar></app-admin-sidebar>
+    <div class="contenido">
+      <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Fecha Creación</th>
+            <th>Ultima Fecha de modificación</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let proyecto of proyectos">
+            <td>{{ proyecto.id }}</td>
+            <td>{{ proyecto.nombre }}</td>
+            <td>{{ proyecto.descripcion }}</td>
+            <td>{{ proyecto.fechaCreacion }}</td>
+            <td>{{ proyecto.ultimaFechaModificacion }}</td>
+            <td>
+              <button class="btn btn-danger" (click)="borrarProyecto(proyecto.id)">Borrar</button>
+              <button class="btn btn-primary" (click)="modificarProyecto(proyecto.id)">Modificar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

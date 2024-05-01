@@ -1,0 +1,28 @@
+<div class="adminDash">
+    <app-admin-sidebar></app-admin-sidebar>
+    <div class="contenido">
+      <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Contenido</th>
+            <th>Autor</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let note of notes">
+            <td>{{ note.id }}</td>
+            <td>{{ note.titulo }}</td>
+            <td>{{ note.contenido }}</td>
+            <td>{{ note.usuario.email }}</td>
+            <td>
+              <button class="btn btn-danger" (click)="borrarNota(note.id)">Borrar</button>
+              <button class="btn btn-primary" (click)="modificarNota(note.id)">Modificar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

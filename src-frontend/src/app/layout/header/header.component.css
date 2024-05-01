@@ -113,4 +113,11 @@
   img{
 	width: 150px;
   }
+
+.contenedor{
+	padding-left: 15px;
+	padding-right: 15px;
+	margin-left: 20px;
+	margin-right: 20px;
+}
   
