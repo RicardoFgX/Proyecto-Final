@@ -2,6 +2,8 @@ package com.daw2.proyectoFinal.model;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -36,6 +38,7 @@ public class Tarea {
     // Relación Many-to-One con Proyecto
     @ManyToOne
     @JoinColumn(name = "proyecto_id", nullable = false)
+    @JsonIgnore // O usar @JsonBackReference
     private Proyecto proyecto;
 
     // Getters y setters

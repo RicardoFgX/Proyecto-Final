@@ -82,12 +82,23 @@ public class DataInitializer implements CommandLineRunner {
 			Proyecto proyecto = new Proyecto();
 			proyecto.setNombre("Proyecto1");
 			proyecto.setDescripcion("Descripción del Proyecto1");
-
+			
 			proyecto = proyectoService.crearProyecto(proyecto);
 
 			// Agregar Usuarios al Proyecto
 			proyecto.setUsuarios(new HashSet<>(Arrays.asList(usuario1, admin)));
 			proyectoService.crearProyecto(proyecto);
+
+			// Crear Proyecto
+			Proyecto proyecto2 = new Proyecto();
+			proyecto2.setNombre("Proyecto2");
+			proyecto2.setDescripcion("Descripción del Proyecto2");
+			
+			proyecto2 = proyectoService.crearProyecto(proyecto2);
+
+			// Agregar Usuarios al Proyecto
+			proyecto.setUsuarios(new HashSet<>(Arrays.asList(usuario1, admin)));
+			proyectoService.crearProyecto(proyecto2);
 
 			// Crear Tareas para el Proyecto
 			Tarea tarea1 = new Tarea();
@@ -125,6 +136,52 @@ public class DataInitializer implements CommandLineRunner {
 
 			tarea4.setProyecto(proyecto);
 			tareaService.crearTarea(tarea4);
+
+			// Crear y asignar una tarea 5 a un proyecto
+			Tarea tarea5 = new Tarea();
+			tarea5.setNombre("Tarea5");
+			tarea5.setDescripcion("Descripción de Tarea5");
+			tarea5.setFechaVencimiento(LocalDate.now().plusDays(14));
+			tarea5.setEstado(EstadoTarea.EN_PROGRESO);
+			tarea5.setProyecto(proyecto2);
+			tareaService.crearTarea(tarea5);
+
+			// Crear y asignar una tarea 6 a un proyecto
+			Tarea tarea6 = new Tarea();
+			tarea6.setNombre("Tarea6");
+			tarea6.setDescripcion("Descripción de Tarea6");
+			tarea6.setFechaVencimiento(LocalDate.now().plusDays(7));
+			tarea6.setEstado(EstadoTarea.PENDIENTE);
+			tarea6.setProyecto(proyecto2);
+			tareaService.crearTarea(tarea6);
+
+			// Crear y asignar una tarea 7 a un proyecto
+			Tarea tarea7 = new Tarea();
+			tarea7.setNombre("Tarea7");
+			tarea7.setDescripcion("Descripción de Tarea7");
+			tarea7.setFechaVencimiento(LocalDate.now().plusDays(21));
+			tarea7.setEstado(EstadoTarea.EN_PROGRESO);
+			tarea7.setProyecto(proyecto2);
+			tareaService.crearTarea(tarea7);
+
+			// Crear y asignar una tarea 8 a un proyecto
+			Tarea tarea8 = new Tarea();
+			tarea8.setNombre("Tarea8");
+			tarea8.setDescripcion("Descripción de Tarea8");
+			tarea8.setFechaVencimiento(LocalDate.now().plusDays(10));
+			tarea8.setEstado(EstadoTarea.PENDIENTE);
+			tarea8.setProyecto(proyecto2);
+			tareaService.crearTarea(tarea8);
+
+			// Crear y asignar una tarea 9 a un proyecto
+			Tarea tarea9 = new Tarea();
+			tarea9.setNombre("Tarea9");
+			tarea9.setDescripcion("Descripción de Tarea9");
+			tarea9.setFechaVencimiento(LocalDate.now().plusDays(5));
+			tarea9.setEstado(EstadoTarea.EN_PROGRESO);
+			tarea9.setProyecto(proyecto2);
+			tareaService.crearTarea(tarea9);
+
 		}
 	}
 

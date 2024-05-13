@@ -18,5 +18,4 @@ export const routes: Routes = [
   { path: 'adminDash/proyectos', component: AdminDashListProyectsComponent, canMatch: [roleoGuard] },
   { path: 'userDash', component: UserDashComponent, canMatch: [userGuard] },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
-  // El resto se añaden aqui
 ];

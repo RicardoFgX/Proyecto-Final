@@ -1,17 +1,18 @@
 package com.daw2.proyectoFinal.model;
 
-import java.time.LocalDate;
-import java.util.Set;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.JoinColumn;
+import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Table(name = "proyectos")
@@ -33,15 +34,18 @@ public class Proyecto {
     @Column(name = "ultima_fecha_modificacion")
     private LocalDate ultimaFechaModificacion;
 
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
-        name = "usuarios_proyectos",
+        name = "usuario_proyecto",
         joinColumns = @JoinColumn(name = "proyecto_id"),
         inverseJoinColumns = @JoinColumn(name = "usuario_id")
     )
     private Set<Usuario> usuarios;
 
- // Constructor con fecha por defecto
+    @OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL)
+    private Set<Tarea> tareas;
+
+    // Constructor con fecha por defecto
     public Proyecto() {
         this.fechaCreacion = LocalDate.now(); // Fecha actual
     }
@@ -94,5 +98,13 @@ public class Proyecto {
 
     public void setUsuarios(Set<Usuario> usuarios) {
         this.usuarios = usuarios;
+    }
+
+    public Set<Tarea> getTareas() {
+        return tareas;
+    }
+
+    public void setTareas(Set<Tarea> tareas) {
+        this.tareas = tareas;
     }
 }
