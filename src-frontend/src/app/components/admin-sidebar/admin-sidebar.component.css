@@ -2,14 +2,14 @@
 .barra-lateral-admin {
     position: relative;
     width: 260px;
-    height: 834px;
+    height: 100hv;
     background-color: rgba(246, 248, 249, 1);
   }
   
   .barra-lateral-admin .divider {
     position: absolute;
     width: 1px;
-    height: 834px;
+    height: 100hv;
     top: 0;
     left: 100%;
     background-color: rgba(132, 145, 154, 1);
@@ -164,4 +164,7 @@
     fill: rgba(14, 115, 246, 1);
   }
 
-  
+  .sidenav-item.active {
+    background-color: #f0f0f0; /* Color de fondo activo */
+    color: #333; /* Color del texto activo */
+}

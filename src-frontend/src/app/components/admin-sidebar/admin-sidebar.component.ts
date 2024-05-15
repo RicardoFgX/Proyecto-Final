@@ -1,19 +1,45 @@
 import { Component, OnInit } from '@angular/core';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-admin-sidebar',
   standalone: true,
-  imports: [],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './admin-sidebar.component.html',
   styleUrl: './admin-sidebar.component.css'
 })
 export class AdminSidebarComponent implements OnInit{
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
+    // Obtener la ruta actual
+    const currentRoute = this.router.url;
+    console.log(currentRoute);
+    this.setActiveSidebarItem(currentRoute);
+  }
 
+  setActiveSidebarItem(currentRoute: string): void {
+    const sidebarItems = document.querySelectorAll(".sidenav-item");
+    console.log(sidebarItems);
+    sidebarItems.forEach(item => {
+      item.classList.remove("active");
+    });
+    switch (currentRoute) {
+      case '/adminDash/usuarios':
+        console.log("Usuarios coloreados");
+        document.querySelector(".usuarios")?.classList.add("active");
+        break;
+      case '/adminDash/notas':
+        console.log("Notas coloreados");
+        document.querySelector(".notas")?.classList.add("active");
+        break;
+      case '/adminDash/proyectos':
+        console.log("Proyectos coloreados");
+        document.querySelector(".proyectos")?.classList.add("active");
+        break;
+      default:
+        break;
+    }
   }
-  goUsers(){
-    
-  }
+
 }

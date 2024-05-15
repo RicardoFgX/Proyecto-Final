@@ -2,12 +2,31 @@
 .adminDash {
   display: grid;
   grid-template-columns: 250px auto; /* Sidebar ocupa 250px y el contenido el espacio restante */
-  grid-gap: 20px; /* Espacio entre el sidebar y el contenido */
   margin: 0;
   padding:0;
 }
 
 .contenido {
-  display: flex;
   justify-content: center; /* Centrar horizontalmente */
+}
+
+.header-bg {
+  background-image: url('https://st4.depositphotos.com/13324256/20097/i/450/depositphotos_200978284-stock-photo-blank-bright-blue-abstract-background.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  color: #fff;
+}
+
+.content {
+  padding: 50px;
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+p {
+  font-size: 1.2rem;
 }

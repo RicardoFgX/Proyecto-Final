@@ -1,26 +1,51 @@
 table {
-    margin: 0 auto; /* Esto centra horizontalmente el contenedor de la tabla */
-    margin-top: 30px;
-    margin-bottom: 30px;
-    width: 80%; /* Puedes ajustar el ancho del contenedor de la tabla según tus necesidades */
-  }
-
-  .mat-mdc-form-field {
-    font-size: 14px;
-    width: 100%;
-  }
-
-  /* app.component.css */
+  margin-left: 5px;
+  margin-right: 5px;
+  width: 95%;
+}
 
 .adminDash {
-  display: grid;
-  grid-template-columns: 250px auto; /* Sidebar ocupa 250px y el contenido el espacio restante */
-  grid-gap: 20px; /* Espacio entre el sidebar y el contenido */
-  margin: 0;
-  padding:0;
+display: grid;
+grid-template-columns: 250px auto; /* Sidebar ocupa 250px y el contenido el espacio restante */
+margin: 0;
+padding:0;
 }
 
 .contenido {
-  display: flex;
-  justify-content: center; /* Centrar horizontalmente */
+justify-content: center; /* Centrar horizontalmente */
+}
+
+.centered-table {
+margin: 0 auto; /* Centra la tabla horizontalmente */
+}
+
+.featured-icon {
+position: relative;
+width: 40px;
+height: 40px;
+background-color: rgba(244, 235, 255, 1);
+border-radius: 20px;
+display: inline-block; /* Hace que la imagen y el div se muestren en línea */
+vertical-align: middle; /* Alinea verticalmente con el texto */
+}
+
+th, td {
+vertical-align: middle;
+text-align: center;
+}
+
+tr:hover{
+background-color: #F9FAFB;
+}
+
+.image {
+position: absolute;
+width: 28px;
+height: 28px;
+top: 6px;
+left: 6px;
+object-fit: cover;
+}
+.container {
+justify-content: center; /* Centra horizontalmente */
 }

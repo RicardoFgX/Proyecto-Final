@@ -13,7 +13,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent },
   { path: 'adminDash', component: AdminDashComponent, canMatch: [roleoGuard] },
-  { path: 'adminDash/users', component: AdminDashListUsersComponent, canMatch: [roleoGuard] },
+  { path: 'adminDash/usuarios', component: AdminDashListUsersComponent, canMatch: [roleoGuard] },
   { path: 'adminDash/notas', component: AdminDashListNotesComponent, canMatch: [roleoGuard] },
   { path: 'adminDash/proyectos', component: AdminDashListProyectsComponent, canMatch: [roleoGuard] },
   { path: 'userDash', component: UserDashComponent, canMatch: [userGuard] },

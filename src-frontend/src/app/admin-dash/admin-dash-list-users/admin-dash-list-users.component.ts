@@ -3,6 +3,7 @@ import { UserServiceService } from '../../services/user-service.service';
 import { CommonModule } from '@angular/common';
 import { AdminSidebarComponent } from '../../components/admin-sidebar/admin-sidebar.component';
 
+
 @Component({
   selector: 'app-admin-dash-list-users',
   standalone: true,
@@ -37,6 +38,10 @@ export class AdminDashListUsersComponent {
     } else {
       console.error('No se encontró el token de autenticación.');
     }
+  }
+
+  confirmarborrarUsuario(id: number){
+
   }
 
   borrarUsuario(id: number) {

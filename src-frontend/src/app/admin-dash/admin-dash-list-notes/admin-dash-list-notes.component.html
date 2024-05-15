@@ -1,28 +1,49 @@
 <div class="adminDash">
-    <app-admin-sidebar></app-admin-sidebar>
-    <div class="contenido">
-      <table class="table table-bordered table-striped">
-        <thead class="thead-dark">
-          <tr>
-            <th>ID</th>
-            <th>Título</th>
-            <th>Contenido</th>
-            <th>Autor</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let note of notes">
-            <td>{{ note.id }}</td>
-            <td>{{ note.titulo }}</td>
-            <td>{{ note.contenido }}</td>
-            <td>{{ note.usuario.email }}</td>
-            <td>
-              <button class="btn btn-danger" (click)="borrarNota(note.id)">Borrar</button>
-              <button class="btn btn-primary" (click)="modificarNota(note.id)">Modificar</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <app-admin-sidebar></app-admin-sidebar>
+  <div class="contenido">
+    <section class="intro">
+      <div class="bg-image h-100"
+        style="background-image: url('https://st4.depositphotos.com/13324256/20097/i/450/depositphotos_200978284-stock-photo-blank-bright-blue-abstract-background.jpg');">
+        <div class="mask d-flex align-items-center h-100" style="background-color: rgba(0,0,0,.35);">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-12">
+                <div class="table-responsive bg-white" data-mdb-perfect-scrollbar="true"
+                  style="position: relative; height: 445px;">
+                  <table class="table .centered-table">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Contenido</th>
+                        <th>Autor</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let note of notes">
+                        <td>
+                          <div class="featured-icon">
+                            <img class="image" src="../../../assets/notas.png" />
+                          </div>
+                          <td>{{ note.id }}</td>
+                          <td>{{ note.titulo }}</td>
+                          <td>{{ note.contenido }}</td>
+                          <td>{{ note.usuario.email }}</td>
+                          <td>
+                            <button class="btn btn-primary" (click)="modificarNota(note.id)">Modificar</button>
+                            <button class="btn btn-danger" (click)="borrarNota(note.id)">Borrar</button>
+                          </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
+</div>
