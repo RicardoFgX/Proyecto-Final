@@ -14,6 +14,9 @@
                 <a class="nav-link logged" routerLink="/adminDash" routerLinkActive="active">boton dashAdmin</a>
               </li>
               <li *ngIf="isAuthenticated" class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                <a class="nav-link logged" routerLink="/userDash" routerLinkActive="active">boton userPage</a>
+              </li>
+              <li *ngIf="isAuthenticated" class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
                 <a class="nav-link logged" routerLinkActive="active">{{ userEmail }}</a>
               </li>
               <li *ngIf="isAuthenticated" class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">

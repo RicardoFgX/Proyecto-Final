@@ -2,17 +2,20 @@ import { Component } from '@angular/core';
 import { UserServiceService } from '../../services/user-service.service';
 import { CommonModule } from '@angular/common';
 import { AdminSidebarComponent } from '../../components/admin-sidebar/admin-sidebar.component';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 
 @Component({
   selector: 'app-admin-dash-list-users',
   standalone: true,
-  imports: [CommonModule, AdminSidebarComponent],
+  imports: [CommonModule, AdminSidebarComponent, RouterLink, RouterLinkActive],
   templateUrl: './admin-dash-list-users.component.html',
   styleUrl: './admin-dash-list-users.component.css'
 })
 export class AdminDashListUsersComponent {
   users: any[] = [];
+  usuarioBorradoID: any;
+  usuarioBorradoEmail: any;
 
   constructor(private userService: UserServiceService) { }
 
@@ -40,8 +43,13 @@ export class AdminDashListUsersComponent {
     }
   }
 
-  confirmarborrarUsuario(id: number){
-
+  confirmarborrarUsuario(id: number, email: any){
+    const elemento = document.getElementById('id01');
+    if (elemento) {
+      elemento.style.display = 'block';
+      this.usuarioBorradoID = id;
+      this.usuarioBorradoEmail = email;
+    }
   }
 
   borrarUsuario(id: number) {
@@ -63,8 +71,21 @@ export class AdminDashListUsersComponent {
     }
   }
 
-
   modificarUsuario(id: number) {
+    window.localStorage["idUsuario"] = id;
+  }
 
+  ocultarElemento(id: string) {
+    const elemento = document.getElementById(id);
+    if (elemento) {
+      console.log("Id de ejemplo", id);
+      elemento.style.display = 'none';
+    } else {
+      console.error('Elemento no encontrado con ID:', id);
+    }
+  }
+
+  otraFuncion() {
+    console.log("Segunda Función");
   }
 }

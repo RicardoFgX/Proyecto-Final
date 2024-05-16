@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.daw2.proyectoFinal.model.Proyecto;
 import com.daw2.proyectoFinal.model.Usuario;
+import com.daw2.proyectoFinal.services.AuthenticationService;
 import com.daw2.proyectoFinal.services.UsuarioService;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -26,6 +28,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+    
+    @Autowired
+    private AuthenticationService authService;
 
     // Endpoint para obtener todos los usuarios
     @GetMapping
@@ -48,7 +53,7 @@ public class UsuarioController {
     // Endpoint para crear un nuevo usuario
     @PostMapping
     public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
-        Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
+        Usuario nuevoUsuario = authService.crearUsuario(usuario);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 
@@ -58,7 +63,19 @@ public class UsuarioController {
         Usuario usuario = usuarioService.obtenerUsuarioPorId(id);
         if (usuario != null) {
             usuarioActualizado.setId(id);
-            Usuario usuarioActualizadoDb = usuarioService.actualizarUsuario(usuarioActualizado);
+            Usuario usuarioActualizadoDb = authService.actualizarUsuario(usuarioActualizado);
+            return new ResponseEntity<>(usuarioActualizadoDb, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    
+    @PatchMapping("/{id}")
+    public ResponseEntity<Usuario> actualizarParcialUsuario(@PathVariable Long id, @RequestBody Usuario usuarioActualizado) {
+        Usuario usuario = usuarioService.obtenerUsuarioPorId(id);
+        if (usuario != null) {
+            usuarioActualizado.setId(id);
+            Usuario usuarioActualizadoDb = authService.actualizarUsuario(usuarioActualizado);
             return new ResponseEntity<>(usuarioActualizadoDb, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

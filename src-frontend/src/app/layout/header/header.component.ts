@@ -30,6 +30,7 @@ export class HeaderComponent implements OnInit{
       try {
         // Decodificar el token para obtener el correo electrónico del usuario
         const decodedToken: any = jwtDecode(this.token);
+        console.log(decodedToken);
         this.userEmail = decodedToken?.sub; // "sub" es el campo donde se almacena el correo electrónico en el token
         this.isAuthenticated = true;
       } catch (error) {

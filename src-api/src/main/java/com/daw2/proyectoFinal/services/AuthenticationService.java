@@ -3,6 +3,7 @@ package com.daw2.proyectoFinal.services;
 import com.daw2.proyectoFinal.dtos.request.LoginRequest;
 import com.daw2.proyectoFinal.dtos.request.RegistroRequest;
 import com.daw2.proyectoFinal.dtos.response.JwtAuthenticationResponse;
+import com.daw2.proyectoFinal.model.Usuario;
 
 /**
  * Interfaz que define los métodos para la autenticación de usuarios.
@@ -24,5 +25,9 @@ public interface AuthenticationService {
      * @return La respuesta de autenticación JWT.
      */
     JwtAuthenticationResponse signin(LoginRequest request);
+    
+    Usuario crearUsuario(Usuario usuario);
+    
+    Usuario actualizarUsuario(Usuario usuario);
 }
 

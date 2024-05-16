@@ -51,6 +51,7 @@ public class Usuario implements UserDetails {
 
     @Column(unique = true)
     @Email(message = "La dirección de correo electrónico debe ser válida")
+    @NotBlank(message = "La contraseña no puede estar en blanco")
     private String email;
 
     @NotBlank(message = "La contraseña no puede estar en blanco")
