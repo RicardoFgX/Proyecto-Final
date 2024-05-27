@@ -147,7 +147,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			userOld.setContrasena(contrasenaCodificada);
 		}
 		if (usuario.getRoles() == null) {
-			usuario.getRoles().add(Rol.USUARIO);
+			userOld.getRoles().add(Rol.USUARIO);
 		}
 		// Actualizar el usuario en la base de datos
 		return usuarioRepository.save(userOld);

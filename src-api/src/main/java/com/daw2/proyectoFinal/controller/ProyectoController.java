@@ -47,6 +47,7 @@ public class ProyectoController {
     // Endpoint para crear un nuevo proyecto
     @PostMapping
     public ResponseEntity<Proyecto> crearProyecto(@RequestBody Proyecto proyecto) {
+    	System.out.println(proyecto);
         Proyecto nuevoProyecto = proyectoService.crearProyecto(proyecto);
         return new ResponseEntity<>(nuevoProyecto, HttpStatus.CREATED);
     }

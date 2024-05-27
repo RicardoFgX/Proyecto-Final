@@ -1,23 +1,22 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UserServiceService } from '../../services/user-service.service';
 import { NoteService } from '../../services/note.service';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ProyectService } from '../../services/proyect.service';
 
 @Component({
-  selector: 'app-admin-dash-mod-proyects',
+  selector: 'app-admin-dash-new-note',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
-  templateUrl: './admin-dash-mod-proyects.component.html',
-  styleUrl: './admin-dash-mod-proyects.component.css'
+  templateUrl: './admin-dash-new-note.component.html',
+  styleUrl: './admin-dash-new-note.component.css'
 })
-export class AdminDashModProyectsComponent {
-  proyecto = {
+export class AdminDashNewNoteComponent {
+  nota = {
     id: '',
     titulo: '',
-    descripcion: '',
+    contenido: '',
     usuario: {
       id: ''
     }
@@ -34,12 +33,11 @@ export class AdminDashModProyectsComponent {
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserServiceService,
-    private proyectService: ProyectService
+    private noteService: NoteService
   ) { }
 
   ngOnInit(): void {
     this.getAllUsers();
-    this.getProyect();
   }
 
   getAllUsers() {
@@ -62,47 +60,19 @@ export class AdminDashModProyectsComponent {
     }
   }
 
-  getProyect(): void {
-    // Obtener el ID del usuario de la URL
-    const noteID = Number(this.route.snapshot.paramMap.get('id'));
-    console.log(noteID);
-    const token = localStorage.getItem('token');
-    if (token) {
-      // Utilizar el servicio de usuario para obtener los datos del usuario por su ID
-      this.proyectService.getProyecto(noteID, token).subscribe({
-        next: (data: any) => {
-          this.proyecto.id = data.id;
-          this.proyecto.titulo = data.titulo;
-          this.proyecto.descripcion = data.descripcion;
-          this.usuario.email = data.usuario.email;
-          console.log(data);
-          console.log(this.usuario.email);
-        },
-        error: (error: any) => {
-          console.error('Error al cargar la nota', error);
-        },
-        complete: () => {
-          console.log('Petición para obtener la nota completada');
-        }
-      });
-    } else {
-      console.error('Algo ocurrió con el token');
-    }
-  }
-
-  modificarProyecto(): void {
+  crearNota(): void {
     const token = localStorage.getItem('token');
     this.buscarIdUsuario();
     if (token) {
         const newNote = {
-          id: this.proyecto.id,
-          titulo: this.proyecto.titulo,
-          contenido: this.proyecto.descripcion,
+          id: this.nota.id,
+          titulo: this.nota.titulo,
+          contenido: this.nota.contenido,
           usuario: {
             id: this.usuario.id
           }
         }
-        this.proyectService.modProyecto(newNote, token).subscribe({
+        this.noteService.createNota(newNote, token).subscribe({
           next: () => {
           },
           error: (error: any) => {

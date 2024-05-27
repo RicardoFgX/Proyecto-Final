@@ -1,1 +1,41 @@
-<p>admin-dash-mod-proyects works!</p>
+<div class="container mt-5">
+    <div class="back">
+        <button type="button" class="btn btn-primary" (click)="irAAdminDashUsuarios()">Volver</button>
+    </div>
+    <h2>Modificar Nota</h2>
+    <form>
+        <div class="form-group mb-3">
+            <label for="titulo">Título</label>
+            <input type="text" id="titulo" class="form-control" [(ngModel)]="proyecto.titulo" name="titulo" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="contenido">Contenido</label>
+            <textarea id="contenido" class="form-control" [(ngModel)]="proyecto.descripcion" name="contenido" rows="5"
+                required></textarea>
+        </div>
+    </form>
+</div>
+
+<div id="id01" class="modal">
+    <form class="modal-content">
+        <div class="contain">
+            <h1>Logrado</h1>
+            <div class="clearfix">
+                <button type="button" (click)="ocultarElemento('id01'); irAAdminDashUsuarios()"
+                    class="aceptar">Aceptar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Get the modal
+    var modal = document.getElementById('id01');
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>

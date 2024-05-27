@@ -1,52 +1,76 @@
 <div class="adminDash">
   <app-admin-sidebar></app-admin-sidebar>
-  <div class="contenido">
-    <section class="intro">
-      <div class="bg-image h-100"
-        style="background-image: url('https://st4.depositphotos.com/13324256/20097/i/450/depositphotos_200978284-stock-photo-blank-bright-blue-abstract-background.jpg');">
-        <div class="mask d-flex align-items-center h-100" style="background-color: rgba(0,0,0,.35);">
-          <div class="container">
-            <div class="row justify-content-center">
-              <div class="col-12">
-                <div class="table-responsive bg-white" data-mdb-perfect-scrollbar="true"
-                  style="position: relative; height: 445px;">
-                  <table class="table .centered-table">
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Fecha Creación</th>
-                        <th>Ultima Fecha de modificación</th>
-                        <th>Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let proyecto of proyectos">
-                        <td>
-                          <div class="featured-icon">
-                            <img class="image" src="../../../assets/carpeta.png" />
-                          </div>
-                        </td>
-                        <td>{{ proyecto.id }}</td>
-                        <td>{{ proyecto.nombre }}</td>
-                        <td>{{ proyecto.descripcion }}</td>
-                        <td>{{ proyecto.fechaCreacion }}</td>
-                        <td>{{ proyecto.ultimaFechaModificacion }}</td>
-                        <td>
-                          <button class="btn btn-primary" (click)="modificarProyecto(proyecto.id)">Modificar</button>
-                          <button class="btn btn-danger" (click)="borrarProyecto(proyecto.id)">Borrar</button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+  <div>
+    <section>
+      <div class="align-items-center">
+        <div class="justify-content-center">
+          <div class="d-flex justify-content-end mb-3" style="margin: 30px;">
+            <button class="btn btn-success" >Crear Proyecto</button>
+          </div>
+          <div class="table-responsive bg-white" data-mdb-perfect-scrollbar="true"
+            style="position: relative; height: 445px;">
+            <table class="table .centered-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Descripción</th>
+                  <th>Fecha Creación</th>
+                  <th>Ultima Fecha de modificación</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let proyecto of proyectos">
+                  <td>
+                    <div class="featured-icon">
+                      <img class="image" src="../../../assets/carpeta.png" />
+                    </div>
+                  </td>
+                  <td>{{ proyecto.id }}</td>
+                  <td>{{ proyecto.nombre }}</td>
+                  <td>{{ proyecto.descripcion }}</td>
+                  <td>{{ proyecto.fechaCreacion }}</td>
+                  <td>{{ proyecto.ultimaFechaModificacion }}</td>
+                  <td>
+                    <button class="btn btn-primary" (click)="modificarProyecto(proyecto.id)" [routerLink]="['/adminDash/proyectos', proyecto.id]"
+                    routerLinkActive="active">Modificar</button>
+                    <button class="btn btn-danger" (click)="confirmarborrarProyecto(proyecto.id, proyecto.nombre)">Borrar</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </section>
   </div>
 </div>
+
+<div id="id01" class="modal">
+  <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
+  <form class="modal-content">
+    <div class="container">
+      <h1>Borrando Proyecto {{ proyectoBorradoID }} - {{ proyectoBorradoTitulo }}</h1>
+      <p>¿Estas seguro de borrar este Proyecto?</p>
+
+      <div class="clearfix">
+        <button type="button" onclick="document.getElementById('id01').style.display='none'"
+          class="cancelbtn">Cancelar</button>
+        <button type="button" (click)="ocultarElemento('id01'); borrarProyecto(proyectoBorradoID)"
+          class="deletebtn">Borrar</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  var modal = document.getElementById('id01');
+
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+</script>

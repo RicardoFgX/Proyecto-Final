@@ -2,16 +2,19 @@ import { Component } from '@angular/core';
 import { ProyectService } from '../../services/proyect.service';
 import { CommonModule } from '@angular/common';
 import { AdminSidebarComponent } from '../../components/admin-sidebar/admin-sidebar.component';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-admin-dash-list-proyects',
   standalone: true,
-  imports: [CommonModule, AdminSidebarComponent],
+  imports: [CommonModule, AdminSidebarComponent, RouterLink, RouterLinkActive],
   templateUrl: './admin-dash-list-proyects.component.html',
   styleUrl: './admin-dash-list-proyects.component.css'
 })
 export class AdminDashListProyectsComponent {
   proyectos: any[] = [];
+  proyectoBorradoID: any;
+  proyectoBorradoTitulo: any;
 
   constructor(private proyectService: ProyectService) { }
 
@@ -39,6 +42,15 @@ export class AdminDashListProyectsComponent {
     }
   }
 
+  confirmarborrarProyecto(id: number, titulo: any){
+    const elemento = document.getElementById('id01');
+    if (elemento) {
+      elemento.style.display = 'block';
+      this.proyectoBorradoID = id;
+      this.proyectoBorradoTitulo = titulo;
+    }
+  }
+
   borrarProyecto(id: number) {
     const token = localStorage.getItem('token');
     if (token) {
@@ -58,8 +70,21 @@ export class AdminDashListProyectsComponent {
     }
   }
 
-
   modificarProyecto(id: number) {
+    window.localStorage["idProyecto"] = id;
+  }
 
+  ocultarElemento(id: string) {
+    const elemento = document.getElementById(id);
+    if (elemento) {
+      console.log("Id de ejemplo", id);
+      elemento.style.display = 'none';
+    } else {
+      console.error('Elemento no encontrado con ID:', id);
+    }
+  }
+
+  otraFuncion() {
+    console.log("Segunda Función");
   }
 }

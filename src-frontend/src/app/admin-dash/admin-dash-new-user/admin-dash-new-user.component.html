@@ -2,7 +2,7 @@
     <div class="back">
         <button type="button" class="btn btn-primary" (click)="irAAdminDashUsuarios()">Volver</button>
     </div>
-    <h2>Modificar Usuario</h2>
+    <h2>Crear Usuario</h2>
     <form>
         <div class="form-group">
             <label for="nombre">Nombre:</label>
@@ -20,14 +20,11 @@
                 [(ngModel)]="user.email" name="email">
         </div>
         <div class="form-group">
-            <label for="contrasena">Contraseña: <b>(Modificar solo en caso de emergencia para cambiar la
-                    contraseña)</b></label>
+            <label for="contrasena">Contraseña:</label>
             <input type="text" class="form-control" id="contrasena" placeholder="Ingrese la nueva contraseña"
                 [(ngModel)]="user.contrasena" name="contrasena">
         </div>
-        <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-primary me-2" (click)="modificarUsuario()">Guardar Cambios</button>
-      </div>
+        <button type="button" class="btn btn-primary" (click)="modificarUsuario()">Crear Usuario</button>
     </form>
 </div>
 

@@ -2,16 +2,19 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { AdminSidebarComponent } from '../../components/admin-sidebar/admin-sidebar.component';
 import { NoteService } from '../../services/note.service';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-admin-dash-list-notes',
   standalone: true,
-  imports: [CommonModule, AdminSidebarComponent],
+  imports: [CommonModule, AdminSidebarComponent, RouterLink, RouterLinkActive],
   templateUrl: './admin-dash-list-notes.component.html',
   styleUrl: './admin-dash-list-notes.component.css'
 })
 export class AdminDashListNotesComponent {
   notes: any[] = [];
+  notaBorradoID: any;
+  notaBorradoTitulo: any;
 
   constructor(private noteService: NoteService) { }
 
@@ -39,6 +42,15 @@ export class AdminDashListNotesComponent {
     }
   }
 
+  confirmarborrarNota(id: number, titulo: any){
+    const elemento = document.getElementById('id01');
+    if (elemento) {
+      elemento.style.display = 'block';
+      this.notaBorradoID = id;
+      this.notaBorradoTitulo = titulo;
+    }
+  }
+
   borrarNota(id: number) {
     const token = localStorage.getItem('token');
     if (token) {
@@ -60,6 +72,20 @@ export class AdminDashListNotesComponent {
 
 
   modificarNota(id: number) {
+    window.localStorage["idNota"] = id;
+  }
 
+  ocultarElemento(id: string) {
+    const elemento = document.getElementById(id);
+    if (elemento) {
+      console.log("Id de ejemplo", id);
+      elemento.style.display = 'none';
+    } else {
+      console.error('Elemento no encontrado con ID:', id);
+    }
+  }
+
+  otraFuncion() {
+    console.log("Segunda Función");
   }
 }

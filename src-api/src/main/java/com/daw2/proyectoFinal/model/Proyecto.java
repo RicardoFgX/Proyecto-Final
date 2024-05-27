@@ -107,4 +107,12 @@ public class Proyecto {
     public void setTareas(Set<Tarea> tareas) {
         this.tareas = tareas;
     }
+
+	@Override
+	public String toString() {
+		return "Proyecto [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", fechaCreacion="
+				+ fechaCreacion + ", ultimaFechaModificacion=" + ultimaFechaModificacion + ", usuarios=" + usuarios
+				+ ", tareas=" + tareas + "]";
+	}
+    
 }

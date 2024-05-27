@@ -168,4 +168,13 @@ public class Usuario implements UserDetails {
     public void setAnotaciones(Set<Anotacion> anotaciones) {
         this.anotaciones = anotaciones;
     }
+
+	@Override
+	public String toString() {
+		return "Usuario [id=" + id + ", nombre=" + nombre + ", apellidos=" + apellidos + ", email=" + email
+				+ ", contrasena=" + contrasena + ", rol=" + rol + ", proyectos=" + proyectos + ", anotaciones="
+				+ anotaciones + "]";
+	}
+    
+    
 }
