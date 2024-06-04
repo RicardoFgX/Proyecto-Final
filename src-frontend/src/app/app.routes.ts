@@ -13,6 +13,8 @@ import { AdminDashModNotesComponent } from './admin-dash/admin-dash-mod-notes/ad
 import { AdminDashNewNoteComponent } from './admin-dash/admin-dash-new-note/admin-dash-new-note.component';
 import { AdminDashModProyectsComponent } from './admin-dash/admin-dash-mod-proyects/admin-dash-mod-proyects.component';
 import { AdminDashNewProyectComponent } from './admin-dash/admin-dash-new-proyect/admin-dash-new-proyect.component';
+import { AdminDashModTareaComponent } from './admin-dash/admin-dash-mod-tarea/admin-dash-mod-tarea.component';
+import { AdminDashNewTareaComponent } from './admin-dash/admin-dash-new-tarea/admin-dash-new-tarea.component';
 
 
 export const routes: Routes = [
@@ -25,9 +27,12 @@ export const routes: Routes = [
   { path: 'adminDash/notas/:id', component: AdminDashModNotesComponent, canMatch: [roleoGuard] },
   { path: 'adminDash/crearNota', component: AdminDashNewNoteComponent, canMatch: [roleoGuard] },
   { path: 'adminDash/proyectos/:id', component: AdminDashModProyectsComponent, canMatch: [roleoGuard] },
+  { path: 'adminDash/proyectos/:id/tareas/:id', component: AdminDashModTareaComponent, canMatch: [roleoGuard] },
+  { path: 'adminDash/proyectos/:id/tareas', component: AdminDashNewTareaComponent, canMatch: [roleoGuard] },
   { path: 'adminDash/crearProyecto', component: AdminDashNewProyectComponent, canMatch: [roleoGuard] },
   { path: 'adminDash/notas', component: AdminDashListNotesComponent, canMatch: [roleoGuard] },
   { path: 'adminDash/proyectos', component: AdminDashListProyectsComponent, canMatch: [roleoGuard] },
-  { path: 'userDash', component: UserDashComponent, canMatch: [userGuard] },
+  { path: 'userDash', component: UserDashComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
+//canMatch: [userGuard]

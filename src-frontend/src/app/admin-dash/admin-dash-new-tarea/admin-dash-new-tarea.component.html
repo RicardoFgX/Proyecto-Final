@@ -1,0 +1,54 @@
+<div class="container mt-5">
+    <div class="back">
+        <button type="button" class="btn btn-primary" (click)="irAtras()">Volver</button>
+    </div>
+    <h2>Modificar Nota</h2>
+    <form>
+      <div class="form-group mb-3">
+        <label for="nombre">Título:</label>
+        <input type="text" class="form-control" id="nombre" placeholder="Ingrese el título de la tarea" [(ngModel)]="tarea.nombre" name="nombre">
+      </div>
+      <div class="form-group mb-3">
+        <label for="descripcion">Descripción:</label>
+        <textarea id="descripcion" class="form-control" placeholder="Ingrese la descripción" [(ngModel)]="tarea.descripcion" name="descripcion" rows="5"></textarea>
+    </div>
+      <div class="form-group mb-3">
+        <label for="fechaVencimiento">Fecha de Vencimiento:</label>
+        <input type="date" class="form-control" id="fechaVencimiento" placeholder="Ingrese la fecha de vencimiento" [(ngModel)]="tarea.fechaVencimiento" name="fechaVencimiento">
+      </div>
+      <div class="form-group mb-3">
+        <label for="estado">Estado:</label>
+        <select id="estado" class="form-select" [(ngModel)]="tarea.estado" name="estado">
+          <option value="">Seleccione el estado</option>
+          <option *ngFor="let estado of estados" [ngValue]="estado">{{ estado }}</option>
+        </select>
+      </div>
+      <div class="d-flex justify-content-between mt-4">
+        <button type="submit" class="btn btn-primary"  (click)="crearTarea()">Modificar</button>
+      </div>
+    </form>
+  </div>
+  
+  <div id="id01" class="modal">
+    <form class="modal-content">
+        <div class="contain">
+            <h1>Logrado</h1>
+            <div class="clearfix">
+                <button type="button" (click)="irAtras()"
+                    class="aceptar">Aceptar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Get the modal
+    var modal1 = document.getElementById('id01');
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal1) {
+            modal1.style.display = "none";
+        }
+    }
+</script>

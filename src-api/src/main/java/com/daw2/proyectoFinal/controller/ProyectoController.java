@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -55,6 +56,19 @@ public class ProyectoController {
     // Endpoint para actualizar un proyecto existente
     @PutMapping("/{id}")
     public ResponseEntity<Proyecto> actualizarProyecto(@PathVariable Long id, @RequestBody Proyecto proyectoActualizado) {
+        Proyecto proyecto = proyectoService.obtenerProyectoPorId(id);
+        if (proyecto != null) {
+            proyectoActualizado.setId(id);
+            Proyecto proyectoActualizadoDb = proyectoService.actualizarProyecto(proyectoActualizado);
+            return new ResponseEntity<>(proyectoActualizadoDb, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    
+ // Endpoint para actualizar un proyecto existente
+    @PatchMapping("/{id}")
+    public ResponseEntity<Proyecto> actualizarParcialProyecto(@PathVariable Long id, @RequestBody Proyecto proyectoActualizado) {
         Proyecto proyecto = proyectoService.obtenerProyectoPorId(id);
         if (proyecto != null) {
             proyectoActualizado.setId(id);

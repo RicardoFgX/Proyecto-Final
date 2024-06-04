@@ -1,52 +1,54 @@
 <div class="container mt-5">
-    <div class="back">
-        <button type="button" class="btn btn-primary" (click)="irAAdminDashUsuarios()">Volver</button>
+  <div class="back">
+    <button type="button" class="btn btn-primary" (click)="irAAdminDashUsuarios()">Volver</button>
+  </div>
+  <h2>Crear Usuario</h2>
+  <form>
+    <div class="form-group">
+      <label for="nombre">Nombre:</label>
+      <input type="text" class="form-control" id="nombre" placeholder="Ingrese el nombre" [(ngModel)]="user.nombre"
+        name="nombre">
     </div>
-    <h2>Crear Usuario</h2>
-    <form>
-        <div class="form-group">
-            <label for="nombre">Nombre:</label>
-            <input type="text" class="form-control" id="nombre" placeholder="Ingrese su nombre"
-                [(ngModel)]="user.nombre" name="nombre">
-        </div>
-        <div class="form-group">
-            <label for="apellidos">Apellidos:</label>
-            <input type="text" class="form-control" id="apellidos" placeholder="Ingrese sus apellidos"
-                [(ngModel)]="user.apellidos" name="apellidos">
-        </div>
-        <div class="form-group">
-            <label for="correo">Correo electrónico:</label>
-            <input type="email" class="form-control" id="correo" placeholder="Ingrese su correo electrónico"
-                [(ngModel)]="user.email" name="email">
-        </div>
-        <div class="form-group">
-            <label for="contrasena">Contraseña:</label>
-            <input type="text" class="form-control" id="contrasena" placeholder="Ingrese la nueva contraseña"
-                [(ngModel)]="user.contrasena" name="contrasena">
-        </div>
-        <button type="button" class="btn btn-primary" (click)="modificarUsuario()">Crear Usuario</button>
-    </form>
+    <div class="form-group">
+      <label for="apellidos">Apellidos:</label>
+      <input type="text" class="form-control" id="apellidos" placeholder="Ingrese los apellidos"
+        [(ngModel)]="user.apellidos" name="apellidos">
+    </div>
+    <div class="form-group">
+      <label for="correo">Correo electrónico:</label>
+      <input type="email" class="form-control" id="correo" placeholder="Ingrese el correo electrónico"
+        [(ngModel)]="user.email" name="email">
+    </div>
+    <div class="form-group">
+      <label for="contrasena">Contraseña:</label>
+      <input type="text" class="form-control" id="contrasena" placeholder="Ingrese la contraseña"
+        [(ngModel)]="user.contrasena" name="contrasena">
+    </div>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary me-2" (click)="modificarUsuario()">Crear Usuario</button>
+    </div>
+  </form>
 </div>
 
 <div id="id01" class="modal">
-    <form class="modal-content">
-      <div class="contain">
-        <h1>Logrado</h1>
-        <div class="clearfix">
-          <button type="button" (click)="ocultarElemento('id01'); irAAdminDashUsuarios()" class="aceptar">Aceptar</button>
-        </div>
+  <form class="modal-content">
+    <div class="contain">
+      <h1>Logrado</h1>
+      <div class="clearfix">
+        <button type="button" (click)="ocultarElemento('id01'); irAAdminDashUsuarios()" class="aceptar">Aceptar</button>
       </div>
-    </form>
-  </div>
-  
-  <script>
+    </div>
+  </form>
+</div>
+
+<script>
   // Get the modal
   var modal = document.getElementById('id01');
-  
+
   // When the user clicks anywhere outside of the modal, close it
-  window.onclick = function(event) {
+  window.onclick = function (event) {
     if (event.target == modal) {
       modal.style.display = "none";
     }
   }
-  </script>
+</script>

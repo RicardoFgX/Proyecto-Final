@@ -50,6 +50,21 @@
     width: 80%;
     /* Could be more or less, depending on screen size */
   }
+
+  .close {
+    position: absolute;
+    right: 35px;
+    top: 15px;
+    font-size: 40px;
+    font-weight: bold;
+    color: #f1f1f1;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #f44336;
+    cursor: pointer;
+  }
   
   /* Style the horizontal ruler */
   hr {
@@ -61,3 +76,74 @@
     display: flex;
     justify-content: flex-end;
   }
+
+  .mat-card {
+    margin-bottom: 10px;
+  }
+
+  .tarjeta{
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+  
+  .tarjeta:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+    cursor: pointer;
+  }
+  
+  .example-card {
+    width: 100%;
+  }
+  
+  .mat-card-title-group {
+    display: flex;
+    align-items: center;
+  }
+  
+  .mat-card-sm-image {
+    width: 40px;
+    height: 40px;
+    margin-left: auto;
+  }
+
+  .add-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  .add-card mat-icon {
+    color: #3f51b5; /* Color del ícono, puedes ajustarlo según tu diseño */
+  }
+  
+  .add-card:hover mat-icon {
+    color: #ffffff; /* Color del ícono al hacer hover */
+  }
+
+  .agregar:hover{
+    background-color: #007BFF;
+  }
+
+  .agregar {
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+
+  .notification {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #ffc107; /* Color naranja claro */
+    color: #333;
+    padding: 10px 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    z-index: 1000;
+  }
+
+  .warning {
+    width: 30px;
+    margin-right: 10px;
+  }
+  
+  

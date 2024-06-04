@@ -55,14 +55,11 @@
     <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
     <form class="modal-content">
       <div class="container">
-        <h1>Borrando Usuario {{ usuarioBorradoID }} - {{ usuarioBorradoEmail }}</h1>
-        <p>¿Estas seguro de borrar un usuario?</p>
-
+        <h1 style="color: #f44336;">Borrando Usuario {{ usuarioBorradoID }} - {{ usuarioBorradoEmail }}</h1>
+        <p>¿Estás seguro de que deseas borrar este usuario?</p>
         <div class="clearfix">
-          <button type="button" onclick="document.getElementById('id01').style.display='none'"
-            class="cancelbtn">Cancelar</button>
-          <button type="button" (click)="ocultarElemento('id01'); borrarUsuario(usuarioBorradoID)"
-            class="deletebtn">Borrar</button>
+          <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancelar</button>
+          <button type="button" (click)="ocultarElemento('id01'); borrarUsuario(usuarioBorradoID)" class="deletebtn">Borrar</button>
         </div>
       </div>
     </form>

@@ -2,26 +2,158 @@
     <div class="back">
         <button type="button" class="btn btn-primary" (click)="irAAdminDashUsuarios()">Volver</button>
     </div>
-    <h2>Modificar Nota</h2>
+    <div *ngIf="showNotification" class="notification">
+        <img src="../../../assets/warning.png" class="warning">
+        <span>{{ notificationMessage }}</span>
+    </div>
+
+    <h2>Modificar Proyecto</h2>
     <form>
         <div class="form-group mb-3">
-            <label for="titulo">Título</label>
+            <label for="titulo">
+                <h4>Título</h4>
+            </label>
             <input type="text" id="titulo" class="form-control" [(ngModel)]="proyecto.titulo" name="titulo" required>
         </div>
         <div class="form-group mb-3">
-            <label for="contenido">Contenido</label>
-            <textarea id="contenido" class="form-control" [(ngModel)]="proyecto.descripcion" name="contenido" rows="5"
-                required></textarea>
+            <label for="descripcion">
+                <h4>Descripción</h4>
+            </label>
+            <textarea id="descripcion" class="form-control" [(ngModel)]="proyecto.descripcion" name="descripcion"
+                rows="5" required></textarea>
+        </div>
+        <div class="form-group mb-3">
+            <label for="fechaCreacion">
+                <h4>Fecha Creación</h4>
+            </label>
+            <input type="text" id="fechaCreacion" class="form-control" [(ngModel)]="proyecto.fechaCreacion"
+                name="fechaCreacion" readonly>
+        </div>
+        <div class="form-group mb-3">
+            <label for="integrantes">
+                <h4>Integrantes</h4>
+            </label>
+            <div *ngFor="let integrante of proyecto.integrantes" class="mb-3 tarjeta">
+                <mat-card class="example-card"
+                    (click)="confirmarborrarUsuario(integrante.id, integrante.nombre, integrante.email)">
+                    <mat-card-header>
+                        <mat-card-title-group>
+                            <mat-card-title>{{integrante.nombre}}</mat-card-title>
+                            <mat-card-subtitle>{{integrante.email}}</mat-card-subtitle>
+                            <img mat-card-sm-image src="../../../assets/user.png">
+                        </mat-card-title-group>
+                    </mat-card-header>
+                </mat-card>
+            </div>
+            <div class="mb-3 tarjeta agregar">
+                <mat-card class="example-card add-card agregar" (click)="agregarIntegrante()">
+                    <mat-card-content>
+                        <mat-icon>add</mat-icon>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+        <div class="form-group mb-3">
+            <label for="tareas">
+                <h4>Tareas</h4>
+            </label>
+            <div *ngFor="let tarea of proyecto.tareas" class="mb-3 tarjeta">
+                <mat-card class="example-card" (click)="modificarTarea(tarea)">
+                    <mat-card-header>
+                        <mat-card-title-group>
+                            <mat-card-title>{{tarea.nombre}}</mat-card-title>
+                            <mat-card-subtitle>{{tarea.descripcion}}</mat-card-subtitle>
+                            <mat-card-subtitle>{{tarea.fechaVencimiento}}</mat-card-subtitle>
+                            <mat-card-subtitle>{{tarea.estado}}</mat-card-subtitle>
+                            <img mat-card-sm-image src="../../../assets/tarea.png">
+                        </mat-card-title-group>
+                    </mat-card-header>
+                </mat-card>
+            </div>
+            <div class="mb-3 tarjeta agregar">
+                <mat-card class="example-card add-card agregar" (click)="agregarTarea()">
+                    <mat-card-content>
+                        <mat-icon>add</mat-icon>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary me-2" (click)="confirmarModProyecto()">Guardar Cambios</button>
         </div>
     </form>
 </div>
 
 <div id="id01" class="modal">
+    <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
+    <form class="modal-content">
+        <div class="container">
+            <h1>Esta a punto de borrar al usuario {{ usuarioBorradoNombre }} - {{ usuarioBorradoEmail }} de este
+                proyecto</h1>
+            <p>¿Estas seguro?</p>
+
+            <div class="clearfix">
+                <button type="button" onclick="document.getElementById('id01').style.display='none'"
+                    class="cancelbtn">Cancelar</button>
+                <button type="button" (click)="ocultarElemento('id01'); borrarUsuarioConfirmado()"
+                    class="deletebtn">Borrar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="id02" class="modal">
+    <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
+    <form class="modal-content">
+        <div class="container">
+            <h1>Nuevo Usuario</h1>
+            <select id="autor" class="form-select" [(ngModel)]="usuarioN" name="autor">
+                <option *ngFor="let usuario of usuarios" [ngValue]="usuario">{{ usuario.email }}</option>
+            </select>
+            <div class="clearfix">
+                <button type="button" (click)="ocultarElemento('id02'); agregarUsuario()"
+                    class="aceptar">Aceptar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="id03" class="modal">
     <form class="modal-content">
         <div class="contain">
             <h1>Logrado</h1>
             <div class="clearfix">
-                <button type="button" (click)="ocultarElemento('id01'); irAAdminDashUsuarios()"
+                <button type="button" (click)="ocultarElemento('id03'); irAAdminDashUsuarios()"
+                    class="aceptar">Aceptar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="id04" class="modal">
+    <span onclick="document.getElementById('id04').style.display='none'" class="close" title="Close Modal">×</span>
+    <form class="modal-content">
+      <div class="container">
+        <div>
+            <h1>¿Qué acción quieres realizar?</h1>
+            <button class="btn btn-primary" (click)="modTarea(tarea.id)" routerLinkActive="active">Modificar</button>
+            <button type="button" (click)="ocultarElemento('id04'); borrarTareaConfirmado()"
+                class="btn btn-danger">Borrar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+<div id="id05" class="modal">
+    <span onclick="document.getElementById('id05').style.display='none'" class="close" title="Close Modal">×</span>
+    <form class="modal-content">
+        <div class="container">
+            <h1>Nuevo Usuario</h1>
+            <select id="autor" class="form-select" [(ngModel)]="usuarioN" name="autor">
+                <option *ngFor="let usuario of usuarios" [ngValue]="usuario">{{ usuario.email }}</option>
+            </select>
+            <div class="clearfix">
+                <button type="button" (click)="ocultarElemento('id02'); agregarUsuario()"
                     class="aceptar">Aceptar</button>
             </div>
         </div>
@@ -30,12 +162,48 @@
 
 <script>
     // Get the modal
-    var modal = document.getElementById('id01');
+    var modal1 = document.getElementById('id01');
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
+        if (event.target == modal1) {
+            modal1.style.display = "none";
+        }
+    }
+
+    var modal2 = document.getElementById('id02');
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal2) {
+            modal2.style.display = "none";
+        }
+    }
+
+    var modal3 = document.getElementById('id03');
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal3) {
+            modal3.style.display = "none";
+        }
+    }
+
+    var modal4 = document.getElementById('id04');
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal4) {
+            modal4.style.display = "none";
+        }
+    }
+
+    var modal5 = document.getElementById('id05');
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal5) {
+            modal5.style.display = "none";
         }
     }
 </script>

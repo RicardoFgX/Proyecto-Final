@@ -1,15 +1,19 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { UserServiceService } from '../../services/user-service.service';
-import { NoteService } from '../../services/note.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProyectService } from '../../services/proyect.service';
+import { MatCardModule } from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { TareaService } from '../../services/tarea.service';
+
 
 @Component({
   selector: 'app-admin-dash-mod-proyects',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, MatCardModule, MatInputModule, MatIconModule, RouterLink, RouterLinkActive],
   templateUrl: './admin-dash-mod-proyects.component.html',
   styleUrl: './admin-dash-mod-proyects.component.css'
 })
@@ -18,23 +22,52 @@ export class AdminDashModProyectsComponent {
     id: '',
     titulo: '',
     descripcion: '',
-    usuario: {
-      id: ''
-    }
+    fechaCreacion: '',
+    integrantes: [] as any[],
+    tareas: [] as any[]
   };
+
+  tarea = {
+    id: '',
+    nombre: '',
+    descripcion: '',
+    fechaVencimiento: '',
+    estado: '',
+    proyecto: {
+      id: ''
+  }
+  }
 
   usuario = {
     email: '',
+    nombre: '',
     id: '',
   };
 
+  usuarioN = {
+    email: '',
+    nombre: '',
+    id: '',
+  };
+
+  usuarioBorradoID: any;
+  usuarioBorradoEmail: any;
+  usuarioBorradoNombre: any;
+
+
   usuarios: any[] = [];
+
+  showNotification: boolean = false;
+  notificationMessage: string = '';
+
+  estados = ['COMPLETADA', 'EN_PROGRESO', 'PENDIENTE'];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserServiceService,
-    private proyectService: ProyectService
+    private proyectService: ProyectService,
+    private tareaService: TareaService
   ) { }
 
   ngOnInit(): void {
@@ -72,11 +105,14 @@ export class AdminDashModProyectsComponent {
       this.proyectService.getProyecto(noteID, token).subscribe({
         next: (data: any) => {
           this.proyecto.id = data.id;
-          this.proyecto.titulo = data.titulo;
+          this.proyecto.titulo = data.nombre;
           this.proyecto.descripcion = data.descripcion;
-          this.usuario.email = data.usuario.email;
+          this.proyecto.fechaCreacion = data.fechaCreacion;
+          this.proyecto.integrantes = data.usuarios;
+          this.proyecto.tareas = data.tareas;
           console.log(data);
-          console.log(this.usuario.email);
+          console.log(this.proyecto.integrantes);
+          console.log(this.proyecto.tareas);
         },
         error: (error: any) => {
           console.error('Error al cargar la nota', error);
@@ -115,11 +151,11 @@ export class AdminDashModProyectsComponent {
       } else {
       console.error('Algo ocurrió con el token');
     }
-    this.confirmarModNota();
+    this.confirmarModProyecto();
   }
-  
+
   irAAdminDashUsuarios() {
-    this.router.navigate(['/adminDash/notas']);
+    this.router.navigate(['/adminDash/proyectos']);
   }
 
   ocultarElemento(id: string) {
@@ -132,9 +168,8 @@ export class AdminDashModProyectsComponent {
     }
   }
 
-  confirmarModNota(){
-    console.log("hola?")
-    const elemento = document.getElementById('id01');
+  confirmarModProyecto(){
+    const elemento = document.getElementById('id03');
     if (elemento) {
       elemento.style.display = 'block';
     }
@@ -159,5 +194,103 @@ export class AdminDashModProyectsComponent {
     } else {
       console.log('No se ha seleccionado ningún correo electrónico');
     }
+  }
+
+  agregarIntegrante(): void {
+    const elemento = document.getElementById('id02');
+    if (elemento) {
+      elemento.style.display = 'block';
+    }
+  }
+
+  modificarTarea(tarea: any): void {
+    const elemento = document.getElementById('id04');
+    if (elemento) {
+      elemento.style.display = 'block';
+    }
+    this.tarea = tarea;
+    console.log(this.tarea);
+  }
+
+  borrarTareaConfirmado(): void {
+    console.log(this.usuarioBorradoID);
+    if (this.usuarioBorradoID) {
+      this.proyecto.integrantes = this.proyecto.integrantes.filter(
+        integrante => integrante.id !== this.usuarioBorradoID
+      );
+    }
+  }
+
+  confirmarborrarTarea(id: number, titulo:any){
+    const elemento = document.getElementById('id05');
+    if (elemento) {
+      elemento.style.display = 'block';
+      this.usuarioBorradoID = id;
+      this.usuarioBorradoNombre = titulo;
+    }
+  }
+
+  agregarUsuario(): void {
+    console.log(this.usuarioN.email);
+    if (this.usuarioN.email) {
+      const usuarioExistente = this.proyecto.integrantes.find(u => u.email === this.usuarioN.email);
+      if (usuarioExistente) {
+        console.log('El usuario ya existe en la lista de integrantes del proyecto.');
+        this.mostrarNotificacion('El usuario ya existe en la lista de integrantes del proyecto.');
+      } else {
+        console.log(this.usuarioN);
+        console.log('Usuario no encontrado, se añadirá a la lista de integrantes del proyecto.');
+        // Crear un nuevo usuario para agregarlo a la lista
+        const nuevoUsuario = {
+          id: this.usuarioN.id, // Podrías generar un ID único aquí
+          nombre: this.usuarioN.nombre, // Agrega el nombre si tienes esta información disponible
+          email: this.usuarioN.email
+        };
+        // Agregar el nuevo usuario a la lista de integrantes del proyecto
+        this.proyecto.integrantes.push(nuevoUsuario);
+      }
+    } else {
+      console.log('No se ha seleccionado ningún correo electrónico');
+    }
+  }
+  
+  
+
+  borrarUsuarioConfirmado(): void {
+    console.log(this.usuarioBorradoID);
+    if (this.usuarioBorradoID) {
+      this.proyecto.integrantes = this.proyecto.integrantes.filter(
+        integrante => integrante.id !== this.usuarioBorradoID
+      );
+    }
+  }
+
+  confirmarborrarUsuario(id: number, nombre:any, email: any){
+    const elemento = document.getElementById('id01');
+    if (elemento) {
+      elemento.style.display = 'block';
+      this.usuarioBorradoID = id;
+      this.usuarioBorradoNombre = nombre;
+      this.usuarioBorradoEmail = email;
+    }
+  }
+
+  mostrarNotificacion(message: string): void {
+    this.notificationMessage = message;
+    this.showNotification = true;
+
+    // Oculta la notificación después de 3 segundos
+    setTimeout(() => {
+      this.showNotification = false;
+    }, 3000);
+  }
+
+  modTarea(id: any) {
+    // Navegar a la ruta relativa 'tarea/tarea.id' desde la ruta actual
+    this.router.navigate(['tareas', id], { relativeTo: this.route });
+  }
+
+  agregarTarea() {
+    this.router.navigate(['tareas'], { relativeTo: this.route });
   }
 }
