@@ -43,7 +43,7 @@ export class ProyectService {
     return this.http.get<any[]>(`${this.apiUrl}/proyectos/${id}`, { headers });
   }
 
-  modProyecto(nota: any, token: string): Observable<any[]> {
+  modProyecto(id: any, proyecto: any, token: string): Observable<any[]> {
     // Agregar el token de autenticación al encabezado de la solicitud
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
@@ -51,10 +51,10 @@ export class ProyectService {
     headers.set('Access-Control-Allow-Origin', 'http://localhost:4200');
 
     // Hacer la solicitud HTTP con el encabezado de autenticación y las cabeceras CORS
-    return this.http.put<any[]>(`${this.apiUrl}/proyectos/${nota.id}`, nota, { headers });
+    return this.http.put<any[]>(`${this.apiUrl}/proyectos/${id}`, proyecto, { headers });
   }
 
-  createProyecto(nota: any, token: string): Observable<any[]> {
+  createProyecto(proyecto: any, token: string): Observable<any[]> {
     // Agregar el token de autenticación al encabezado de la solicitud
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
@@ -62,7 +62,7 @@ export class ProyectService {
     headers.set('Access-Control-Allow-Origin', 'http://localhost:4200');
 
     // Hacer la solicitud HTTP con el encabezado de autenticación y las cabeceras CORS
-    return this.http.post<any[]>(`${this.apiUrl}/proyectos`, nota, { headers });
+    return this.http.post<any[]>(`${this.apiUrl}/proyectos`, proyecto, { headers });
   }
   
 }

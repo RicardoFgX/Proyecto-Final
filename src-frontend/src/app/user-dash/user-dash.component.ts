@@ -18,17 +18,20 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
+import {MatMenuModule} from '@angular/material/menu';
+
 
 @Component({
   selector: 'app-user-dash',
   standalone: true,
-  imports: [MatButtonModule, FormsModule, CommonModule, CdkDropListGroup, CdkDropList, CdkDrag],
+  imports: [MatButtonModule,MatMenuModule, FormsModule, CommonModule, CdkDropListGroup, CdkDropList, CdkDrag],
   templateUrl: './user-dash.component.html',
   styleUrl: './user-dash.component.css'
 })
 export class UserDashComponent {
   objetos1: string[] = ['Item 1', 'Item 2', 'Item 3'];
   objetos2: string[] = [];
+  
 
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {

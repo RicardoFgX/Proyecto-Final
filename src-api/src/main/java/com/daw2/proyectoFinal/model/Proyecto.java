@@ -34,7 +34,7 @@ public class Proyecto {
     @Column(name = "ultima_fecha_modificacion")
     private LocalDate ultimaFechaModificacion;
 
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToMany
     @JoinTable(
         name = "usuario_proyecto",
         joinColumns = @JoinColumn(name = "proyecto_id"),
@@ -110,9 +110,7 @@ public class Proyecto {
 
 	@Override
 	public String toString() {
-		return "Proyecto [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", fechaCreacion="
-				+ fechaCreacion + ", ultimaFechaModificacion=" + ultimaFechaModificacion + ", usuarios=" + usuarios
-				+ ", tareas=" + tareas + "]";
+		return "Proyecto [id=" + id + ", nombre=" + nombre + "]";
 	}
     
 }

@@ -26,15 +26,12 @@ export class AdminSidebarComponent implements OnInit{
     });
     switch (currentRoute) {
       case '/adminDash/usuarios':
-        console.log("Usuarios coloreados");
         document.querySelector(".usuarios")?.classList.add("active");
         break;
       case '/adminDash/notas':
-        console.log("Notas coloreados");
         document.querySelector(".notas")?.classList.add("active");
         break;
       case '/adminDash/proyectos':
-        console.log("Proyectos coloreados");
         document.querySelector(".proyectos")?.classList.add("active");
         break;
       default:

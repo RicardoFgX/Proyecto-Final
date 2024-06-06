@@ -91,4 +91,9 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .collect(Collectors.toList());
         return usuarios;
     }
+    
+    @Override
+    public Optional<Usuario> encontrarPorEmailNativo(String email) {
+        return usuarioRepository.encontrarPorEmailNativo(email);
+    }
 }

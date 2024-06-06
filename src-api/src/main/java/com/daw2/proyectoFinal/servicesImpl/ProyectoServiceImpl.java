@@ -1,6 +1,5 @@
 package com.daw2.proyectoFinal.servicesImpl;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.daw2.proyectoFinal.model.Proyecto;
 import com.daw2.proyectoFinal.model.Usuario;
@@ -34,16 +34,17 @@ public class ProyectoServiceImpl implements ProyectoService {
 
 		Set<Usuario> usuariosOriginales = proyecto.getUsuarios();
 		Set<Usuario> usuariosCompletos = new HashSet<>();
-
-		for (Usuario usuarioOriginal : usuariosOriginales) {
-			Usuario usuarioCompleto = usuarioService.obtenerUsuarioPorId(usuarioOriginal.getId());
-			if (usuarioCompleto != null) {
-				usuariosCompletos.add(usuarioCompleto);
-			} else {
-				// Manejar el caso en el que no se pueda encontrar el usuario
-				// Aquí puedes lanzar una excepción, registrar un error, etc.
-				// En este ejemplo, simplemente imprimimos un mensaje
-				System.out.println("No se pudo encontrar el usuario con ID: " + usuarioOriginal.getId());
+		if (usuariosOriginales != null) {
+			for (Usuario usuarioOriginal : usuariosOriginales) {
+				Usuario usuarioCompleto = usuarioService.obtenerUsuarioPorId(usuarioOriginal.getId());
+				if (usuarioCompleto != null) {
+					usuariosCompletos.add(usuarioCompleto);
+				} else {
+					// Manejar el caso en el que no se pueda encontrar el usuario
+					// Aquí puedes lanzar una excepción, registrar un error, etc.
+					// En este ejemplo, simplemente imprimimos un mensaje
+					System.out.println("No se pudo encontrar el usuario con ID: " + usuarioOriginal.getId());
+				}
 			}
 		}
 
@@ -72,16 +73,18 @@ public class ProyectoServiceImpl implements ProyectoService {
 	}
 
 	@Override
+	@Transactional // Asegura que este método se ejecute dentro de una transacción
 	public Proyecto actualizarProyecto(Proyecto proyecto) {
-		System.out.println(usuarioService.obtenerUsuarioPorId(5L));
 		Set<Usuario> usuariosEncontrados = new HashSet<>();
 		for (Usuario usuario : proyecto.getUsuarios()) {
 			// Busca el usuario por su ID
 			Usuario optionalUsuario = usuarioService.obtenerUsuarioPorId(usuario.getId());
-			usuariosEncontrados.add(optionalUsuario);
+			if (optionalUsuario != null) {
+				usuariosEncontrados.add(optionalUsuario);
+			}
 		}
 		proyecto.setUsuarios(usuariosEncontrados);
-		System.out.println(proyecto.getTareas());
+		System.out.println(usuariosEncontrados);
 		return proyectoRepository.save(proyecto);
 	}
 

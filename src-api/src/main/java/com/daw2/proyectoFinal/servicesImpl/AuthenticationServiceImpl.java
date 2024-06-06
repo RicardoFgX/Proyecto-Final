@@ -133,6 +133,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	public Usuario actualizarUsuario(Usuario usuario) {
 		// Verificar si se proporcionó una contraseña y si necesita ser codificada
 		Usuario userOld = usuarioService.obtenerUsuarioPorId(usuario.getId());
+		System.out.println(userOld);
 		if (usuario.getNombre() != null) {
 			userOld.setNombre(usuario.getNombre());
 		}

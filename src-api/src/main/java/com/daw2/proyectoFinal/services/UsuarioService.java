@@ -1,6 +1,7 @@
 package com.daw2.proyectoFinal.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -17,5 +18,6 @@ public interface UsuarioService {
     List<Proyecto> obtenerProyectosDeUsuario(Long usuarioId);
     UserDetailsService userDetailsService();
     List<UsuarioDTO> obtenerTodos();
+    Optional<Usuario> encontrarPorEmailNativo(String email);
 }
 

@@ -27,6 +27,8 @@ export class AdminDashModProyectsComponent {
     tareas: [] as any[]
   };
 
+  ultimaFechaModificacion: string = '';
+
   tarea = {
     id: '',
     nombre: '',
@@ -43,7 +45,7 @@ export class AdminDashModProyectsComponent {
     nombre: '',
     id: '',
   };
-
+  
   usuarioN = {
     email: '',
     nombre: '',
@@ -73,6 +75,9 @@ export class AdminDashModProyectsComponent {
   ngOnInit(): void {
     this.getAllUsers();
     this.getProyect();
+    console.log(this.proyecto);
+    this.ultimaFechaModificacion = this.getFechaActual();
+    console.log(this.ultimaFechaModificacion);  // Imprime la fecha de creación en el formato correcto
   }
 
   getAllUsers() {
@@ -118,7 +123,7 @@ export class AdminDashModProyectsComponent {
           console.error('Error al cargar la nota', error);
         },
         complete: () => {
-          console.log('Petición para obtener la nota completada');
+          console.log('Petición para obtener el proyecto completada');
         }
       });
     } else {
@@ -126,32 +131,58 @@ export class AdminDashModProyectsComponent {
     }
   }
 
+  
   modificarProyecto(): void {
     const token = localStorage.getItem('token');
-    this.buscarIdUsuario();
     if (token) {
-        const newNote = {
-          id: this.proyecto.id,
-          titulo: this.proyecto.titulo,
-          contenido: this.proyecto.descripcion,
-          usuario: {
-            id: this.usuario.id
-          }
+        const newProyecto = {
+          nombre: this.proyecto.titulo,
+          descripcion: this.proyecto.descripcion,
+          fechaCreacion: this.proyecto.fechaCreacion,
+          ultimaFechaModificacion: this.proyecto.fechaCreacion,
+          usuarios: this.proyecto.integrantes.map((integrante: any) => ({ id: integrante.id }))
         }
-        this.proyectService.modProyecto(newNote, token).subscribe({
+        console.log(newProyecto);
+        this.proyectService.modProyecto(this.proyecto.id, newProyecto, token).subscribe({
           next: () => {
           },
           error: (error: any) => {
-            console.error('Error al guardar al usuario', error);
+            console.error('Error al guardar el proyecto', error);
           },
           complete: () => {
-            console.log('Petición para modificar el usuario completada'); 
+            console.log('Petición para modificar el proyecto completada'); 
           }
         });
       } else {
       console.error('Algo ocurrió con el token');
     }
     this.confirmarModProyecto();
+  }
+
+  modificarProyecto2(): void {
+    const token = localStorage.getItem('token');
+    if (token) {
+        const newProyecto = {
+          nombre: this.proyecto.titulo,
+          descripcion: this.proyecto.descripcion,
+          fechaCreacion: this.proyecto.fechaCreacion,
+          ultimaFechaModificacion: this.proyecto.fechaCreacion,
+          usuarios: this.proyecto.integrantes.map((integrante: any) => ({ id: integrante.id }))
+        }
+        console.log(newProyecto);
+        this.proyectService.modProyecto(this.proyecto.id, newProyecto, token).subscribe({
+          next: () => {
+          },
+          error: (error: any) => {
+            console.error('Error al guardar el proyecto', error);
+          },
+          complete: () => {
+            console.log('Petición para modificar el proyecto completada'); 
+          }
+        });
+      } else {
+      console.error('Algo ocurrió con el token');
+    }
   }
 
   irAAdminDashUsuarios() {
@@ -201,6 +232,14 @@ export class AdminDashModProyectsComponent {
     if (elemento) {
       elemento.style.display = 'block';
     }
+  }
+  getFechaActual(): string {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
   }
 
   modificarTarea(tarea: any): void {
@@ -291,6 +330,7 @@ export class AdminDashModProyectsComponent {
   }
 
   agregarTarea() {
+    this.modificarProyecto2();
     this.router.navigate(['tareas'], { relativeTo: this.route });
   }
 }

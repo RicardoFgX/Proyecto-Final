@@ -1,0 +1,14 @@
+.content {
+    margin: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+.notas, .grupo{
+    width: 200px;
+}
+
+.titulo{
+    text-align: center;
+    margin-top: 100px;
+}

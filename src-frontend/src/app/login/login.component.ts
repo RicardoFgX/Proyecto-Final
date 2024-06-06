@@ -39,6 +39,7 @@ export class LoginComponent {
 
         // Lo guardo en local
         this.jwtService.saveToken(resp.user.token);
+        window.localStorage["varemo"] = this.password;
         this.redirectUserByRole();
       },
       error: (error) => {

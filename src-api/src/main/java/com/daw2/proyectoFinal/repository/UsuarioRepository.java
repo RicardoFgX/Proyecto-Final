@@ -3,6 +3,8 @@ package com.daw2.proyectoFinal.repository;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.daw2.proyectoFinal.model.Usuario;
@@ -32,4 +34,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
      * @return Verdadero si existe un usuario con la dirección de correo electrónico proporcionada, falso en caso contrario.
      */
     Boolean existsByEmail(String email);
+    
+    @Query(value = "SELECT * FROM usuarios WHERE email = :email", nativeQuery = true)
+    Optional<Usuario> encontrarPorEmailNativo(@Param("email") String email);
 }

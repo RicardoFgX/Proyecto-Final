@@ -3,18 +3,23 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { JwtService } from '../../services/jwt-service.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule],
+  imports: [RouterLink, RouterLinkActive, CommonModule, MatMenuModule, MatButtonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
 export class HeaderComponent implements OnInit{
   isAuthenticated: boolean = false;
+  admin: boolean = false;
   userEmail: string | null = null;
   token: string | null = null;
+
+  expectedRole = 'ADMINISTRADOR'; // Define el rol esperado
 
 
   constructor(private jwtService: JwtService) { }
@@ -33,6 +38,9 @@ export class HeaderComponent implements OnInit{
         console.log(decodedToken);
         this.userEmail = decodedToken?.sub; // "sub" es el campo donde se almacena el correo electrónico en el token
         this.isAuthenticated = true;
+        if(decodedToken.role[0].authority === this.expectedRole){
+          this.admin = true;
+        }
       } catch (error) {
         console.error('Error al decodificar el token:', error);
       }

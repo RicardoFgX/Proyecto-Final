@@ -59,8 +59,13 @@ export class AdminDashModUserComponent {
 
   modificarUsuario(): void {
     const token = localStorage.getItem('token');
+    console.log(this.user.contrasena);
+    if(this.user.contrasena == ''){
+      console.log("vacio");
+    }
     if (token) {
-      if (this.user.contrasena !== null) {
+      if (this.user.contrasena !== '') {
+        console.log("NuevaContra");
         this.userService.modUser(this.user, token).subscribe({
           next: () => {
           },
@@ -72,6 +77,7 @@ export class AdminDashModUserComponent {
           }
         });
       } else {
+        console.log("sin contra");
         const userNoP = {
           id: this.user.id,
           nombre: this.user.nombre,
@@ -110,7 +116,6 @@ export class AdminDashModUserComponent {
   }
 
   confirmarModUsuario(){
-    console.log("hola?")
     const elemento = document.getElementById('id01');
     if (elemento) {
       elemento.style.display = 'block';
