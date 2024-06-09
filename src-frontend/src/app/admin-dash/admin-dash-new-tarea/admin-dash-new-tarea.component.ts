@@ -58,13 +58,13 @@ export class AdminDashNewTareaComponent {
       }
       this.tareaService.createTarea(newTarea, token).subscribe({
         next: () => {
+          this.openModalCerrar();
         },
         error: (error: any) => {
           console.error('Error al crear la tarea', error);
         },
         complete: () => {
           console.log('Petición para crear la tarea completada');
-          this.confirmarModTarea();
         }
       });
     } else {
@@ -72,10 +72,14 @@ export class AdminDashNewTareaComponent {
     }
   }
 
-  confirmarModTarea() {
-    const elemento = document.getElementById('id01');
-    if (elemento) {
-      elemento.style.display = 'block';
-    }
+  isModalOpen = false;
+  isModalCerrar = false;
+
+  openModalCerrar() {
+    this.isModalCerrar = true;
+  }
+
+  closeModalCerrar() {
+    this.isModalCerrar = false;
   }
 }

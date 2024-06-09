@@ -2,17 +2,17 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { UserServiceService } from '../../services/user-service.service';
-import { NoteService } from '../../services/note.service';
+import { NoteService } from '../../../services/note.service';
+import { UserServiceService } from '../../../services/user-service.service';
 
 @Component({
-  selector: 'app-admin-dash-new-note',
+  selector: 'app-user-mod-notes',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
-  templateUrl: './admin-dash-new-note.component.html',
-  styleUrl: './admin-dash-new-note.component.css'
+  templateUrl: './user-mod-notes.component.html',
+  styleUrl: './user-mod-notes.component.css'
 })
-export class AdminDashNewNoteComponent {
+export class UserModNotesComponent {
   nota = {
     id: '',
     titulo: '',
@@ -38,6 +38,7 @@ export class AdminDashNewNoteComponent {
 
   ngOnInit(): void {
     this.getAllUsers();
+    this.getNote();
   }
 
   getAllUsers() {
@@ -60,7 +61,35 @@ export class AdminDashNewNoteComponent {
     }
   }
 
-  crearNota(): void {
+  getNote(): void {
+    // Obtener el ID del usuario de la URL
+    const noteID = Number(this.route.snapshot.paramMap.get('id'));
+    console.log(noteID);
+    const token = localStorage.getItem('token');
+    if (token) {
+      // Utilizar el servicio de usuario para obtener los datos del usuario por su ID
+      this.noteService.getNota(noteID, token).subscribe({
+        next: (data: any) => {
+          this.nota.id = data.id;
+          this.nota.titulo = data.titulo;
+          this.nota.contenido = data.contenido;
+          this.usuario.email = data.usuario.email;
+          console.log(data);
+          console.log(this.usuario.email);
+        },
+        error: (error: any) => {
+          console.error('Error al cargar la nota', error);
+        },
+        complete: () => {
+          console.log('Petición para obtener la nota completada');
+        }
+      });
+    } else {
+      console.error('Algo ocurrió con el token');
+    }
+  }
+
+  modificarNota(): void {
     const token = localStorage.getItem('token');
     this.buscarIdUsuario();
     if (token) {
@@ -72,9 +101,8 @@ export class AdminDashNewNoteComponent {
             id: this.usuario.id
           }
         }
-        this.noteService.createNota(newNote, token).subscribe({
+        this.noteService.modNota(newNote, token).subscribe({
           next: () => {
-            this.openModalCerrar()
           },
           error: (error: any) => {
             console.error('Error al guardar al usuario', error);
@@ -86,21 +114,28 @@ export class AdminDashNewNoteComponent {
       } else {
       console.error('Algo ocurrió con el token');
     }
+    this.confirmarModNota();
   }
   
-  irAAdminDashNotas() {
-    this.router.navigate(['/adminDash/notas']);
+  irAAdminDashUsuarios() {
+    this.router.navigate(['/notas']);
   }
 
-  isModalOpen = false;
-  isModalCerrar = false;
-
-  openModalCerrar() {
-    this.isModalCerrar = true;
+  ocultarElemento(id: string) {
+    const elemento = document.getElementById(id);
+    if (elemento) {
+      console.log("Id de ejemplo", id);
+      elemento.style.display = 'none';
+    } else {
+      console.error('Elemento no encontrado con ID:', id);
+    }
   }
 
-  closeModalCerrar() {
-    this.isModalCerrar = false;
+  confirmarModNota(){
+    const elemento = document.getElementById('id01');
+    if (elemento) {
+      elemento.style.display = 'block';
+    }
   }
 
   mostrarIdUsuario(email: string): void {

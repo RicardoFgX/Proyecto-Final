@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: 250px auto; /* Sidebar ocupa 250px y el contenido el espacio restante */
   margin: 0;
-  padding:0;
+  padding: 0;
 }
 
 .contenido {
@@ -28,7 +28,7 @@ th, td {
   text-align: center;
 }
 
-tr:hover{
+tr:hover {
   background-color: #F9FAFB;
 }
 
@@ -40,12 +40,15 @@ tr:hover{
   left: 6px;
   object-fit: cover;
 }
+
 .container {
+  text-align: center;
+  margin-top: 50px;
+  padding: 16px;
   justify-content: center; /* Centra horizontalmente */
 }
 
 /* Set a style for all buttons */
-
 button:hover {
   opacity: 1;
 }
@@ -69,11 +72,7 @@ button:hover {
   color: white;
 }
 
-.container {
-  padding: 16px;
-  text-align: center;
-}
-
+/* Modal styling */
 .modal {
   display: none; 
   position: fixed;
@@ -83,43 +82,83 @@ button:hover {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding-top: 50px;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: 0.3s;
+}
+
+.modal.show {
+  display: block;
 }
 
 .modal-content {
-  background-color: #fefefe;
-  margin: 5% auto 15% auto;
+  background-color: #3282B5;
+  margin: 15% auto;
+  padding: 20px;
   border: 1px solid #888;
   width: 80%;
+  max-width: 500px;
   border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-hr {
-  border: 1px solid #f1f1f1;
-  margin-bottom: 25px;
+  text-align: center;
+  color: white;
 }
 
 .close {
   position: absolute;
-  right: 35px;
-  top: 15px;
-  font-size: 40px;
+  right: 15px;
+  top: 10px;
+  font-size: 28px;
   font-weight: bold;
-  color: #f1f1f1;
+  color: white;
+  cursor: pointer;
 }
 
 .close:hover,
 .close:focus {
-  color: #f44336;
-  cursor: pointer;
+  color: #000;
+  text-decoration: none;
 }
 
-.clearfix::after {
-  content: "";
-  clear: both;
-  display: table;
+.buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.btn.confirm {
+  background-color: #28a745;
+  border-radius: 4px;
+  height: 44px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: all 200ms linear;
+  padding: 0 30px;
+  letter-spacing: 1px;
+}
+
+.btn.confirm:hover {
+  background-color: #218838;
+}
+
+.btn.cancel {
+  background-color: #dc3545;
+  border-radius: 4px;
+  height: 44px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: all 200ms linear;
+  padding: 0 30px;
+  letter-spacing: 1px;
+}
+
+.btn.cancel:hover {
+  background-color: #c82333;
 }
 
 @media screen and (max-width: 300px) {
@@ -129,5 +168,72 @@ hr {
   }
 }
 
+.check-animation {
+  margin-bottom: 30px;
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
 
+.check-animation svg {
+  width: 100px; /* Aumenta el tamaño del SVG */
+  height: 100px; /* Aumenta el tamaño del SVG */
+}
 
+.check-animation circle {
+  stroke: white;
+  stroke-dasharray: 314; /* Ajustado para un círculo más grande */
+  stroke-dashoffset: 314; /* Ajustado para un círculo más grande */
+  animation: dash 1s linear forwards;
+}
+
+.check-animation path {
+  stroke-dasharray: 50; /* Ajustado para el tamaño más grande */
+  stroke-dashoffset: 50; /* Ajustado para el tamaño más grande */
+  animation: dash-check 0.5s 1s linear forwards;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes dash-check {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.check-svg {
+  transform: translateX(3px); /* Desplaza el SVG 10px hacia la derecha */
+}
+
+.btnCerrar{
+  border-radius: 4px;
+  height: 44px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: all 200ms linear;
+  padding: 0 30px;
+  letter-spacing: 1px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: none;
+  background-color: #AEE6FF;
+  color: #102770;
+}
+
+.btnCerrar:active,
+.btnCerrar:focus {  
+  background-color: #102770;
+  color: #fff; /* Para mantener el contraste del texto */
+}
+
+.btnCerrar:hover {  
+  background-color: #102770;
+  color: #fff; /* Para mantener el contraste del texto */
+}

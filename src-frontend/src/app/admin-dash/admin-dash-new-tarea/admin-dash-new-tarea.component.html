@@ -2,7 +2,7 @@
     <div class="back">
         <button type="button" class="btn btn-primary" (click)="irAtras()">Volver</button>
     </div>
-    <h2>Modificar Nota</h2>
+    <h2>Crear Tarea</h2>
     <form>
       <div class="form-group mb-3">
         <label for="nombre">Título:</label>
@@ -23,32 +23,23 @@
           <option *ngFor="let estado of estados" [ngValue]="estado">{{ estado }}</option>
         </select>
       </div>
-      <div class="d-flex justify-content-between mt-4">
+      <div class="d-flex justify-content-end">
         <button type="submit" class="btn btn-primary"  (click)="crearTarea()">Modificar</button>
       </div>
     </form>
   </div>
   
-  <div id="id01" class="modal">
-    <form class="modal-content">
-        <div class="contain">
-            <h1>Logrado</h1>
-            <div class="clearfix">
-                <button type="button" (click)="irAtras()"
-                    class="aceptar">Aceptar</button>
-            </div>
-        </div>
-    </form>
-</div>
-
-<script>
-    // Get the modal
-    var modal1 = document.getElementById('id01');
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target == modal1) {
-            modal1.style.display = "none";
-        }
-    }
-</script>
+  <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
+    <div class="modal-content">
+      <span class="close" (click)="closeModalCerrar(); irAtras()">&times;</span>
+      <div class="check-animation">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+          <circle cx="26" cy="26" r="25" fill="none" />
+          <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
+            d="M14 27l5 5 14-14" class="check-svg" />
+        </svg>
+      </div>
+      <p>Se ha realizado la acción satisfactorimente</p>
+      <button class="btnCerrar" (click)="closeModalCerrar(); irAtras()">Cerrar</button>
+    </div>
+  </div>

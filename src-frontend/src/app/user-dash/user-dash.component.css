@@ -114,3 +114,208 @@
 .show {
   display: block;
 }
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.btn {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: 0.3s;
+}
+
+.modal.show {
+  display: block;
+}
+
+.modal-content {
+  background-color: #007bff;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 500px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+}
+
+.close {
+  color: white;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.check-animation {
+  margin: 20px 0;
+}
+
+.check-animation svg {
+  width: 50px;
+  height: 50px;
+}
+
+.check-animation circle {
+  stroke: white;
+  stroke-dasharray: 150;
+  stroke-dashoffset: 150;
+  animation: dash 1s linear forwards;
+}
+
+.check-animation path {
+  stroke-dasharray: 36;
+  stroke-dashoffset: 36;
+  animation: dash-check 0.5s 1s linear forwards;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes dash-check {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.container {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.btn {
+  border-radius: 4px;
+  height: 44px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: all 200ms linear;
+  padding: 0 30px;
+  letter-spacing: 1px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: none;
+  background-color: #AEE6FF;
+  color: #102770;
+}
+
+
+.btn:active,
+.btn:focus {  
+  background-color: #102770;
+  color: #fff; /* Para mantener el contraste del texto */
+}
+
+.btn:hover {  
+  background-color: #102770;
+  color: #fff; /* Para mantener el contraste del texto */
+}
+
+.btn.confirm {
+  background-color: #28a745;
+}
+
+.btn.confirm:hover {
+  background-color: #218838;
+}
+
+.btn.cancel {
+  background-color: #dc3545;
+}
+
+.btn.cancel:hover {
+  background-color: #c82333;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: 0.3s;
+}
+
+.modal.show {
+  display: block;
+}
+
+.modal-content {
+  background-color: #3282B5;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 500px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+}
+
+.close {
+  color: white;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.buttons {
+  margin-top: 20px;
+}
+
+.check-svg {
+  transform: translateX(3px); /* Desplaza el SVG 10px hacia la derecha */
+}
+

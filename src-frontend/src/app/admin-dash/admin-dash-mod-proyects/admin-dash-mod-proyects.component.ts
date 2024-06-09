@@ -145,6 +145,7 @@ export class AdminDashModProyectsComponent {
         console.log(newProyecto);
         this.proyectService.modProyecto(this.proyecto.id, newProyecto, token).subscribe({
           next: () => {
+            this.openModalCerrar();
           },
           error: (error: any) => {
             console.error('Error al guardar el proyecto', error);
@@ -156,7 +157,6 @@ export class AdminDashModProyectsComponent {
       } else {
       console.error('Algo ocurrió con el token');
     }
-    this.confirmarModProyecto();
   }
 
   modificarProyecto2(): void {
@@ -185,25 +185,46 @@ export class AdminDashModProyectsComponent {
     }
   }
 
-  irAAdminDashUsuarios() {
+  irAAdminDashProyectos() {
     this.router.navigate(['/adminDash/proyectos']);
   }
 
-  ocultarElemento(id: string) {
-    const elemento = document.getElementById(id);
-    if (elemento) {
-      console.log("Id de ejemplo", id);
-      elemento.style.display = 'none';
-    } else {
-      console.error('Elemento no encontrado con ID:', id);
-    }
+  isModalBorrarUserOpen = false;
+  isModalBorrarTareaOpen = false;
+  isModalNuevoUserOpen = false;
+  isModalConfirmarBorrarTareaOpen = false;
+  isModalCerrar = false;
+
+  openModalCerrar() {
+    this.isModalCerrar = true;
+  }
+  openBorrarUser() {
+    this.isModalBorrarUserOpen = true;
+  }
+  openNuevoUser() {
+    this.isModalNuevoUserOpen = true;
+  }
+  openBorrarTarea() {
+    this.isModalBorrarTareaOpen = true;
+  }
+  openConfirmarBorrarTarea() {
+    this.isModalConfirmarBorrarTareaOpen = true;
   }
 
-  confirmarModProyecto(){
-    const elemento = document.getElementById('id03');
-    if (elemento) {
-      elemento.style.display = 'block';
-    }
+  closeModalCerrar() {
+    this.isModalCerrar = false;
+  }
+  closeBorrarUser() {
+    this.isModalBorrarUserOpen = false;
+  }
+  closeNuevoUser() {
+    this.isModalNuevoUserOpen = false;
+  }
+  closeBorrarTarea() {
+    this.isModalBorrarTareaOpen = false;
+  }
+  closeConfirmarBorrarTarea() {
+    this.isModalConfirmarBorrarTareaOpen = false;
   }
 
   mostrarIdUsuario(email: string): void {
@@ -228,11 +249,9 @@ export class AdminDashModProyectsComponent {
   }
 
   agregarIntegrante(): void {
-    const elemento = document.getElementById('id02');
-    if (elemento) {
-      elemento.style.display = 'block';
-    }
+    this.openNuevoUser();
   }
+
   getFechaActual(): string {
     const today = new Date();
     const year = today.getFullYear();
@@ -243,11 +262,8 @@ export class AdminDashModProyectsComponent {
   }
 
   modificarTarea(tarea: any): void {
-    const elemento = document.getElementById('id04');
-    if (elemento) {
-      elemento.style.display = 'block';
-    }
     this.tarea = tarea;
+    this.openBorrarTarea();
     console.log(this.tarea);
   }
 
@@ -260,13 +276,8 @@ export class AdminDashModProyectsComponent {
     }
   }
 
-  confirmarborrarTarea(id: number, titulo:any){
-    const elemento = document.getElementById('id05');
-    if (elemento) {
-      elemento.style.display = 'block';
-      this.usuarioBorradoID = id;
-      this.usuarioBorradoNombre = titulo;
-    }
+  confirmarborrarTarea(){
+    this.openConfirmarBorrarTarea();
   }
 
   agregarUsuario(): void {
@@ -287,13 +298,12 @@ export class AdminDashModProyectsComponent {
         };
         // Agregar el nuevo usuario a la lista de integrantes del proyecto
         this.proyecto.integrantes.push(nuevoUsuario);
+        this.closeNuevoUser();
       }
     } else {
       console.log('No se ha seleccionado ningún correo electrónico');
     }
   }
-  
-  
 
   borrarUsuarioConfirmado(): void {
     console.log(this.usuarioBorradoID);
@@ -305,32 +315,47 @@ export class AdminDashModProyectsComponent {
   }
 
   confirmarborrarUsuario(id: number, nombre:any, email: any){
-    const elemento = document.getElementById('id01');
-    if (elemento) {
-      elemento.style.display = 'block';
       this.usuarioBorradoID = id;
       this.usuarioBorradoNombre = nombre;
       this.usuarioBorradoEmail = email;
-    }
+      this.openBorrarUser();
   }
 
   mostrarNotificacion(message: string): void {
     this.notificationMessage = message;
     this.showNotification = true;
 
-    // Oculta la notificación después de 3 segundos
     setTimeout(() => {
       this.showNotification = false;
     }, 3000);
   }
 
   modTarea(id: any) {
-    // Navegar a la ruta relativa 'tarea/tarea.id' desde la ruta actual
     this.router.navigate(['tareas', id], { relativeTo: this.route });
   }
 
   agregarTarea() {
     this.modificarProyecto2();
     this.router.navigate(['tareas'], { relativeTo: this.route });
+  }
+
+  eliminarTarea(): void {
+    const token = localStorage.getItem('token');
+    if (token) {
+        this.tareaService.deleteTarea(this.tarea.id, token).subscribe({
+          next: () => {
+            this.openConfirmarBorrarTarea();
+            this.getProyect();
+          },
+          error: (error: any) => {
+            console.error('Error al guardar el proyecto', error);
+          },
+          complete: () => {
+            console.log('Petición para modificar el proyecto completada'); 
+          }
+        });
+      } else {
+      console.error('Algo ocurrió con el token');
+    }
   }
 }

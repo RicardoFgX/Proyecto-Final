@@ -5,10 +5,11 @@
       <div class="align-items-center">
         <div class="justify-content-center">
           <div class="d-flex justify-content-end mb-3" style="margin: 30px;">
-            <button class="btn btn-success" [routerLink]="['/adminDash/crearProyecto']" routerLinkActive="active">Crear Proyecto</button>
+            <button class="btn btn-success" [routerLink]="['/adminDash/crearProyecto']" routerLinkActive="active">Crear
+              Proyecto</button>
           </div>
           <div class="table-responsive bg-white" data-mdb-perfect-scrollbar="true"
-            style="position: relative; height: 445px;">
+            style="position: relative; height: 70vh;">
             <table class="table .centered-table">
               <thead>
                 <tr>
@@ -34,9 +35,10 @@
                   <td>{{ proyecto.fechaCreacion }}</td>
                   <td>{{ proyecto.ultimaFechaModificacion }}</td>
                   <td>
-                    <button class="btn btn-primary" (click)="modificarProyecto(proyecto.id)" [routerLink]="['/adminDash/proyectos', proyecto.id]"
-                    routerLinkActive="active">Modificar</button>
-                    <button class="btn btn-danger" (click)="confirmarborrarProyecto(proyecto.id, proyecto.nombre)">Borrar</button>
+                    <button class="btn btn-primary" (click)="modificarProyecto(proyecto.id)"
+                      [routerLink]="['/adminDash/proyectos', proyecto.id]" routerLinkActive="active">Modificar</button>
+                    <button class="btn btn-danger"
+                      (click)="confirmarborrarProyecto(proyecto.id, proyecto.nombre)">Borrar</button>
                   </td>
                 </tr>
               </tbody>
@@ -46,31 +48,32 @@
       </div>
     </section>
   </div>
-</div>
 
-<div id="id01" class="modal">
-  <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
-  <form class="modal-content">
-    <div class="container">
+  <div id="myModal" class="modal" [ngClass]="{'show': isModalOpen}">
+    <div class="modal-content">
+      <span class="close" (click)="closeModal()">&times;</span>
       <h1>Borrando Proyecto {{ proyectoBorradoID }} - {{ proyectoBorradoTitulo }}</h1>
-      <p>¿Estas seguro de borrar este Proyecto?</p>
-
-      <div class="clearfix">
-        <button type="button" onclick="document.getElementById('id01').style.display='none'"
-          class="cancelbtn">Cancelar</button>
-        <button type="button" (click)="ocultarElemento('id01'); borrarProyecto(proyectoBorradoID)"
-          class="deletebtn">Borrar</button>
+      <p>¿Estás seguro que quieres borrar?</p>
+      <div class="buttons">
+        <button class="btn confirm" (click)="confirmAction(); borrarProyecto(proyectoBorradoID)">Confirmar</button>
+        <button class="btn cancel" (click)="closeModal()">Cancelar</button>
       </div>
     </div>
-  </form>
+  </div>
+
+  <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
+    <div class="modal-content">
+      <span class="close" (click)="closeModalCerrar()">&times;</span>
+      <div class="check-animation">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+          <circle cx="26" cy="26" r="25" fill="none" />
+          <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
+            d="M14 27l5 5 14-14" class="check-svg" />
+        </svg>
+      </div>
+      <p>Se ha realizado la acción satisfactorimente</p>
+      <button class="btnCerrar" (click)="closeModalCerrar()">Cerrar</button>
+    </div>
+  </div>
 </div>
 
-<script>
-  var modal = document.getElementById('id01');
-
-  window.onclick = function (event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  }
-</script>

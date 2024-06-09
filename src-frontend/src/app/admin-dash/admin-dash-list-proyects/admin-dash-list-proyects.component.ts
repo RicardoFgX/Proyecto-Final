@@ -43,12 +43,9 @@ export class AdminDashListProyectsComponent {
   }
 
   confirmarborrarProyecto(id: number, titulo: any){
-    const elemento = document.getElementById('id01');
-    if (elemento) {
-      elemento.style.display = 'block';
       this.proyectoBorradoID = id;
       this.proyectoBorradoTitulo = titulo;
-    }
+      this.openModal();
   }
 
   borrarProyecto(id: number) {
@@ -86,5 +83,30 @@ export class AdminDashListProyectsComponent {
 
   otraFuncion() {
     console.log("Segunda Función");
+  }
+
+  isModalOpen = false;
+  isModalCerrar = false;
+
+  openModal() {
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  confirmAction() {
+    // Acción de confirmación (ej. eliminar un elemento)
+    console.log('Elemento borrado');
+    this.closeModal();
+  }
+
+  openModalCerrar() {
+    this.isModalCerrar = true;
+  }
+
+  closeModalCerrar() {
+    this.isModalCerrar = false;
   }
 }

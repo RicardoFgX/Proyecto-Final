@@ -32,6 +32,7 @@ export class AdminDashNewUserComponent {
       if (this.user.contrasena !== null) {
         this.userService.createUser(this.user, token).subscribe({
           next: () => {
+            this.openModalCerrar();
           },
           error: (error) => {
             console.error('Error al guardar al usuario', error);
@@ -61,28 +62,20 @@ export class AdminDashNewUserComponent {
     } else {
       console.error('Algo ocurrió con el token');
     }
-    this.confirmarModUsuario();
   }
 
   irAAdminDashUsuarios() {
     this.router.navigate(['/adminDash/usuarios']);
   }
 
-  ocultarElemento(id: string) {
-    const elemento = document.getElementById(id);
-    if (elemento) {
-      console.log("Id de ejemplo", id);
-      elemento.style.display = 'none';
-    } else {
-      console.error('Elemento no encontrado con ID:', id);
-    }
+  isModalOpen = false;
+  isModalCerrar = false;
+
+  openModalCerrar() {
+    this.isModalCerrar = true;
   }
 
-  confirmarModUsuario(){
-    console.log("hola?")
-    const elemento = document.getElementById('id01');
-    if (elemento) {
-      elemento.style.display = 'block';
-    }
+  closeModalCerrar() {
+    this.isModalCerrar = false;
   }
 }

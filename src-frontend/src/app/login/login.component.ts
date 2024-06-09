@@ -101,7 +101,7 @@ export class LoginComponent {
           if (userRole === 'ADMINISTRADOR') {
             window.location.href = '/adminDash';
           } else {
-            window.location.href = '/userDash';
+            window.location.href = '/home';
           }
         } else {
           console.error('El token no contiene información de rol.');

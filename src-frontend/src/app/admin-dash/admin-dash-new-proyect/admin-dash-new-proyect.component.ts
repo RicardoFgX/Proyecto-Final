@@ -143,6 +143,7 @@ export class AdminDashNewProyectComponent {
         console.log(newProyecto);
         this.proyectService.createProyecto(newProyecto, token).subscribe({
           next: () => {
+            this.openModalCerrar();
           },
           error: (error: any) => {
             console.error('Error al guardar el proyecto', error);
@@ -154,7 +155,6 @@ export class AdminDashNewProyectComponent {
       } else {
       console.error('Algo ocurrió con el token');
     }
-    this.confirmarModProyecto();
   }
 
   modificarProyecto2(): void {
@@ -183,8 +183,46 @@ export class AdminDashNewProyectComponent {
     }
   }
 
-  irAAdminDashUsuarios() {
+  irAAdminDashProyectos() {
     this.router.navigate(['/adminDash/proyectos']);
+  }
+
+  isModalBorrarUserOpen = false;
+  isModalBorrarTareaOpen = false;
+  isModalNuevoUserOpen = false;
+  isModalConfirmarBorrarTareaOpen = false;
+  isModalCerrar = false;
+
+  openModalCerrar() {
+    this.isModalCerrar = true;
+  }
+  openBorrarUser() {
+    this.isModalBorrarUserOpen = true;
+  }
+  openNuevoUser() {
+    this.isModalNuevoUserOpen = true;
+  }
+  openBorrarTarea() {
+    this.isModalBorrarTareaOpen = true;
+  }
+  openConfirmarBorrarTarea() {
+    this.isModalConfirmarBorrarTareaOpen = true;
+  }
+
+  closeModalCerrar() {
+    this.isModalCerrar = false;
+  }
+  closeBorrarUser() {
+    this.isModalBorrarUserOpen = false;
+  }
+  closeNuevoUser() {
+    this.isModalNuevoUserOpen = false;
+  }
+  closeBorrarTarea() {
+    this.isModalBorrarTareaOpen = false;
+  }
+  closeConfirmarBorrarTarea() {
+    this.isModalConfirmarBorrarTareaOpen = false;
   }
 
   ocultarElemento(id: string) {
@@ -226,10 +264,7 @@ export class AdminDashNewProyectComponent {
   }
 
   agregarIntegrante(): void {
-    const elemento = document.getElementById('id02');
-    if (elemento) {
-      elemento.style.display = 'block';
-    }
+    this.openNuevoUser();
   }
   getFechaActual(): string {
     const today = new Date();
@@ -241,11 +276,8 @@ export class AdminDashNewProyectComponent {
   }
 
   modificarTarea(tarea: any): void {
-    const elemento = document.getElementById('id04');
-    if (elemento) {
-      elemento.style.display = 'block';
-    }
     this.tarea = tarea;
+    this.openBorrarTarea();
     console.log(this.tarea);
   }
 
@@ -259,12 +291,7 @@ export class AdminDashNewProyectComponent {
   }
 
   confirmarborrarTarea(id: number, titulo:any){
-    const elemento = document.getElementById('id05');
-    if (elemento) {
-      elemento.style.display = 'block';
-      this.usuarioBorradoID = id;
-      this.usuarioBorradoNombre = titulo;
-    }
+    this.openConfirmarBorrarTarea();
   }
 
   agregarUsuario(): void {
@@ -284,10 +311,12 @@ export class AdminDashNewProyectComponent {
           email: this.usuarioN.email
         };
         // Agregar el nuevo usuario a la lista de integrantes del proyecto
+        this.closeNuevoUser();
         this.proyecto.integrantes.push(nuevoUsuario);
       }
     } else {
       console.log('No se ha seleccionado ningún correo electrónico');
+      this.closeNuevoUser();
     }
   }
   
@@ -303,14 +332,11 @@ export class AdminDashNewProyectComponent {
   }
 
   confirmarborrarUsuario(id: number, nombre:any, email: any){
-    const elemento = document.getElementById('id01');
-    if (elemento) {
-      elemento.style.display = 'block';
-      this.usuarioBorradoID = id;
-      this.usuarioBorradoNombre = nombre;
-      this.usuarioBorradoEmail = email;
-    }
-  }
+    this.usuarioBorradoID = id;
+    this.usuarioBorradoNombre = nombre;
+    this.usuarioBorradoEmail = email;
+    this.openBorrarUser();
+}
 
   mostrarNotificacion(message: string): void {
     this.notificationMessage = message;
@@ -330,5 +356,25 @@ export class AdminDashNewProyectComponent {
   agregarTarea() {
     this.modificarProyecto2();
     this.router.navigate(['tareas'], { relativeTo: this.route });
+  }
+
+  eliminarTarea(): void {
+    const token = localStorage.getItem('token');
+    if (token) {
+        this.tareaService.deleteTarea(this.tarea.id, token).subscribe({
+          next: () => {
+            this.openConfirmarBorrarTarea();
+            this.getProyect();
+          },
+          error: (error: any) => {
+            console.error('Error al guardar el proyecto', error);
+          },
+          complete: () => {
+            console.log('Petición para modificar el proyecto completada'); 
+          }
+        });
+      } else {
+      console.error('Algo ocurrió con el token');
+    }
   }
 }

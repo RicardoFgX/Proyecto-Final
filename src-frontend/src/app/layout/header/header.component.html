@@ -34,8 +34,8 @@
                 </a>
                 <mat-menu #menu="matMenu" class="pepe">
                   <button mat-menu-item routerLink="/perfil" routerLinkActive="active">Ver Perfil</button>
-                  <button mat-menu-item>Mis Notas</button>
-                  <button mat-menu-item>Mis Proyectos</button>
+                  <button mat-menu-item routerLink="/notas" routerLinkActive="active">Mis Notas</button>
+                  <button mat-menu-item routerLink="/proyectos" routerLinkActive="active">Mis Proyectos</button>
                   <button mat-menu-item (click)="logout()">Cerrar sesión</button>
                 </mat-menu>
             </li>

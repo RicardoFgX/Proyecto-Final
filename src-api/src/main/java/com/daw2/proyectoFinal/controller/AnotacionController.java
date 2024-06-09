@@ -46,12 +46,12 @@ public class AnotacionController {
 
 	// Endpoint para obtener anotaciones por ID de usuario
 	@GetMapping("/usuario/{usuarioId}")
-	public ResponseEntity<List<Anotacion>> obtenerAnotacionesPorUsuario(@PathVariable Long usuarioId) {
+	public ResponseEntity<?> obtenerAnotacionesPorUsuario(@PathVariable Long usuarioId) {
 		List<Anotacion> anotaciones = anotacionService.obtenerAnotacionesDeUsuario(usuarioId);
 		if (!anotaciones.isEmpty()) {
 			return new ResponseEntity<>(anotaciones, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("No se encontraron anotaciones", HttpStatus.OK);
 		}
 	}
 

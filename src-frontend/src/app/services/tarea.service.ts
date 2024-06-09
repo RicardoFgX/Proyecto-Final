@@ -43,4 +43,10 @@ export class TareaService {
     // Hacer la solicitud HTTP con el encabezado de autenticación y las cabeceras CORS
     return this.http.post<any[]>(`${this.apiUrl}/tareas`, tarea, { headers });
   }
+
+  deleteTarea(tareaId: string, token: string): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    headers.set('Access-Control-Allow-Origin', 'http://localhost:4200');
+    return this.http.delete<any>(`${this.apiUrl}/tareas/${tareaId}`, { headers });
+  }
 }

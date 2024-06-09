@@ -1,6 +1,6 @@
 <div class="container mt-5">
     <div class="back">
-        <button type="button" class="btn btn-primary" (click)="irAAdminDashUsuarios()">Volver</button>
+        <button type="button" class="btn btn-primary" (click)="irAAdminDashProyectos()">Volver</button>
     </div>
     <div *ngIf="showNotification" class="notification">
         <img src="../../../assets/warning.png" class="warning">
@@ -84,126 +84,67 @@
     </form>
 </div>
 
-<div id="id01" class="modal">
-    <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
-    <form class="modal-content">
-        <div class="container">
-            <h1>Esta a punto de borrar al usuario {{ usuarioBorradoNombre }} - {{ usuarioBorradoEmail }} de este
-                proyecto</h1>
-            <p>¿Estas seguro?</p>
-
-            <div class="clearfix">
-                <button type="button" onclick="document.getElementById('id01').style.display='none'"
-                    class="cancelbtn">Cancelar</button>
-                <button type="button" (click)="ocultarElemento('id01'); borrarUsuarioConfirmado()"
-                    class="deletebtn">Borrar</button>
-            </div>
+<div id="myModal" class="modal" [ngClass]="{'show': isModalBorrarUserOpen}">
+    <div class="modal-content">
+        <span class="close" (click)="closeBorrarUser()">&times;</span>
+        <h2>Esta a punto de borrar a un usuario de este proyecto</h2>
+        <p>¿Estas seguro?</p>
+        <div class="buttons">
+            <button class="btn confirm" (click)="closeBorrarUser(); borrarUsuarioConfirmado()">Confirmar</button>
+            <button class="btn cancel" (click)="closeBorrarUser()">Cancelar</button>
         </div>
-    </form>
+    </div>
 </div>
 
-<div id="id02" class="modal">
-    <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">×</span>
-    <form class="modal-content">
-        <div class="container">
-            <h1>Nuevo Usuario</h1>
-            <select id="autor" class="form-select" [(ngModel)]="usuarioN" name="autor">
-                <option *ngFor="let usuario of usuarios" [ngValue]="usuario">{{ usuario.email }}</option>
-            </select>
-            <div class="clearfix">
-                <button type="button" (click)="ocultarElemento('id02'); agregarUsuario()"
-                    class="aceptar">Aceptar</button>
-            </div>
-        </div>
-    </form>
+<div id="myModal2" class="modal" [ngClass]="{'show': isModalNuevoUserOpen}">
+    <div class="modal-content">
+        <span class="close" (click)="closeNuevoUser()">&times;</span>
+        <h1>Nuevo Usuario</h1>
+        <select id="autor" class="form-select" [(ngModel)]="usuarioN" name="autor">
+            <option *ngFor="let usuario of usuarios" [ngValue]="usuario">{{ usuario.email }}</option>
+        </select>
+        <button class="btnCerrar" (click)="agregarUsuario()" style="margin-top: 20px; margin-bottom: 20px;">Añadir</button>
+    </div>
 </div>
 
-<div id="id03" class="modal">
-    <form class="modal-content">
-        <div class="contain">
-            <h1>Logrado</h1>
-            <div class="clearfix">
-                <button type="button" (click)="ocultarElemento('id03'); irAAdminDashUsuarios()"
-                    class="aceptar">Aceptar</button>
-            </div>
+<div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
+    <div class="modal-content">
+        <span class="close" (click)="closeModalCerrar(); irAAdminDashProyectos()">&times;</span>
+        <div class="check-animation">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle cx="26" cy="26" r="25" fill="none" />
+                <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
+                    d="M14 27l5 5 14-14" class="check-svg" />
+            </svg>
         </div>
-    </form>
+        <p>Se ha realizado la acción satisfactorimente</p>
+        <button class="btnCerrar" (click)="closeModalCerrar(); irAAdminDashProyectos()">Cerrar</button>
+    </div>
 </div>
 
-<div id="id04" class="modal">
-    <span onclick="document.getElementById('id04').style.display='none'" class="close" title="Close Modal">×</span>
-    <form class="modal-content">
-      <div class="container">
-        <div>
-            <h1>¿Qué acción quieres realizar?</h1>
-            <button class="btn btn-primary" (click)="modTarea(tarea.id)" routerLinkActive="active">Modificar</button>
-            <button type="button" (click)="ocultarElemento('id04'); borrarTareaConfirmado()"
-                class="btn btn-danger">Borrar</button>
+<div id="myModal" class="modal" [ngClass]="{'show': isModalBorrarTareaOpen}">
+    <div class="modal-content">
+        <span class="close" (click)="closeBorrarTarea()">&times;</span>
+        <h1>¿Qué acción quieres realizar?</h1>
+        <div class="buttons">
+            <button class="btn confirm" (click)="closeBorrarTarea(); modTarea(tarea.id)"
+                routerLinkActive="active">Modificar</button>
+            <button class="btn cancel" (click)="closeBorrarTarea(); eliminarTarea()">Borrar</button>
         </div>
-      </div>
-    </form>
-  </div>
-
-<div id="id05" class="modal">
-    <span onclick="document.getElementById('id05').style.display='none'" class="close" title="Close Modal">×</span>
-    <form class="modal-content">
-        <div class="container">
-            <h1>Nuevo Usuario</h1>
-            <select id="autor" class="form-select" [(ngModel)]="usuarioN" name="autor">
-                <option *ngFor="let usuario of usuarios" [ngValue]="usuario">{{ usuario.email }}</option>
-            </select>
-            <div class="clearfix">
-                <button type="button" (click)="ocultarElemento('id02'); agregarUsuario()"
-                    class="aceptar">Aceptar</button>
-            </div>
-        </div>
-    </form>
+    </div>
 </div>
 
-<script>
-    // Get the modal
-    var modal1 = document.getElementById('id01');
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target == modal1) {
-            modal1.style.display = "none";
-        }
-    }
-
-    var modal2 = document.getElementById('id02');
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target == modal2) {
-            modal2.style.display = "none";
-        }
-    }
-
-    var modal3 = document.getElementById('id03');
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target == modal3) {
-            modal3.style.display = "none";
-        }
-    }
-
-    var modal4 = document.getElementById('id04');
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target == modal4) {
-            modal4.style.display = "none";
-        }
-    }
-
-    var modal5 = document.getElementById('id05');
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target == modal5) {
-            modal5.style.display = "none";
-        }
-    }
-</script>
+<div id="myModal5" class="modal" [ngClass]="{'show': isModalConfirmarBorrarTareaOpen}">
+    <div class="modal-content">
+        <span class="close" (click)="closeModalCerrar(); irAAdminDashProyectos()">&times;</span>
+        <div class="check-animation">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle cx="26" cy="26" r="25" fill="none" />
+                <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
+                    d="M14 27l5 5 14-14" class="check-svg" />
+            </svg>
+        </div>
+        <p>Se ha realizado la acción satisfactorimente</p>
+        <button class="btnCerrar" (click)="closeConfirmarBorrarTarea();">Cerrar</button>
+    </div>
+</div>

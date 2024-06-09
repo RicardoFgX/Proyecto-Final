@@ -44,12 +44,9 @@ export class AdminDashListUsersComponent {
   }
 
   confirmarborrarUsuario(id: number, email: any){
-    const elemento = document.getElementById('id01');
-    if (elemento) {
-      elemento.style.display = 'block';
-      this.usuarioBorradoID = id;
-      this.usuarioBorradoEmail = email;
-    }
+    this.usuarioBorradoID = id;
+    this.usuarioBorradoEmail = email;
+    this.openModal();
   }
 
   borrarUsuario(id: number) {
@@ -60,6 +57,7 @@ export class AdminDashListUsersComponent {
           console.log('Usuario borrado exitosamente:', response);
           // Actualizar la lista de usuarios después de borrar uno
           this.getAllUsers();
+          this.openModalCerrar();
         },
         error: (error) => {
           console.error('Error al borrar usuario:', error);
@@ -88,4 +86,30 @@ export class AdminDashListUsersComponent {
   otraFuncion() {
     console.log("Segunda Función");
   }
+
+  isModalOpen = false;
+  isModalCerrar = false;
+
+  openModal() {
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  confirmAction() {
+    // Acción de confirmación (ej. eliminar un elemento)
+    console.log('Elemento borrado');
+    this.closeModal();
+  }
+
+  openModalCerrar() {
+    this.isModalCerrar = true;
+  }
+
+  closeModalCerrar() {
+    this.isModalCerrar = false;
+  }
+
 }

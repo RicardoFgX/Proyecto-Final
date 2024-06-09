@@ -6,7 +6,6 @@
       cdkDropList
       [cdkDropListData]="objetos1"
       class="example-list"
-      cdkDropListSortingDisabled
       (cdkDropListDropped)="drop($event)" id="LaColumnaUno">
       <div *ngFor="let item of objetos1" class="example-box" cdkDrag>{{item}}</div>
     </div>
@@ -35,4 +34,107 @@
     <a href="#">Link 3</a>
   </div>
 </div>
+
+<br>
+<br>
+
+<mat-accordion>
+  <mat-expansion-panel (opened)="panelOpenState = true"
+                       (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Notas
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <p>  Nueva Nota1</p>
+    <p>  Anotaciones random</p>
+    <p>  Pedro1234</p>
+  </mat-expansion-panel>
+  <mat-expansion-panel (opened)="panelOpenState = true"
+                       (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Proyectos
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <p>Proyecto1</p>
+    <p>Pepe</p>
+    <p>Pepe</p>
+    <p>Invencion de ejemplo</p>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<div class="sections">
+  <a class="nav-link" routerLink="/notas" routerLinkActive="active">
+      <div class="sidenav-item notas">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g id="Document duplicate">
+                  <g id="Vector">
+                      <path
+                          d="M9.58579 4.58579C9.96086 4.21071 10.4696 4 11 4H14.586C15.1164 4.00011 15.625 4.2109 16 4.586L18.414 7C18.7891 7.37499 18.9999 7.88361 19 8.414V14C19 14.5304 18.7893 15.0391 18.4142 15.4142C18.0391 15.7893 17.5304 16 17 16H11C10.4696 16 9.96086 15.7893 9.58579 15.4142C9.21071 15.0391 9 14.5304 9 14V6C9 5.46957 9.21071 4.96086 9.58579 4.58579Z"
+                          fill="#84919A" />
+                      <path
+                          d="M5.58579 8.58579C5.21071 8.96086 5 9.46957 5 10V18C5 18.5304 5.21071 19.0391 5.58579 19.4142C5.96086 19.7893 6.46957 20 7 20H13C13.5304 20 14.0391 19.7893 14.4142 19.4142C14.7893 19.0391 15 18.5304 15 18H7V8C6.46957 8 5.96086 8.21071 5.58579 8.58579Z"
+                          fill="#84919A" />
+                  </g>
+              </g>
+          </svg>
+
+          <div class="title-2">Notas</div>
+      </div>
+  </a>
+  <a class="nav-link" routerLink="/proyectos" routerLinkActive="active">
+      <div class="sidenav-item proyectos">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g id="Collection">
+                  <path id="Vector"
+                      d="M9 5C8.73478 5 8.48043 5.10536 8.29289 5.29289C8.10536 5.48043 8 5.73478 8 6C8 6.26522 8.10536 6.51957 8.29289 6.70711C8.48043 6.89464 8.73478 7 9 7H15C15.2652 7 15.5196 6.89464 15.7071 6.70711C15.8946 6.51957 16 6.26522 16 6C16 5.73478 15.8946 5.48043 15.7071 5.29289C15.5196 5.10536 15.2652 5 15 5H9ZM6 9C6 8.73478 6.10536 8.48043 6.29289 8.29289C6.48043 8.10536 6.73478 8 7 8H17C17.2652 8 17.5196 8.10536 17.7071 8.29289C17.8946 8.48043 18 8.73478 18 9C18 9.26522 17.8946 9.51957 17.7071 9.70711C17.5196 9.89464 17.2652 10 17 10H7C6.73478 10 6.48043 9.89464 6.29289 9.70711C6.10536 9.51957 6 9.26522 6 9ZM4 13C4 12.4696 4.21071 11.9609 4.58579 11.5858C4.96086 11.2107 5.46957 11 6 11H18C18.5304 11 19.0391 11.2107 19.4142 11.5858C19.7893 11.9609 20 12.4696 20 13V17C20 17.5304 19.7893 18.0391 19.4142 18.4142C19.0391 18.7893 18.5304 19 18 19H6C5.46957 19 4.96086 18.7893 4.58579 18.4142C4.21071 18.0391 4 17.5304 4 17V13Z"
+                      fill="#84919A" />
+              </g>
+          </svg>
+
+          <div class="title-2">Proyectos</div>
+      </div>
+  </a>
+  <div class="sidenav-divider">
+      <div class="divider-2"></div>
+  </div>
+</div>
+
+<div class="container">
+  <p>Este es un texto aleatorio.</p>
+  <button class="btn" (click)="openModal('modal1')">Abrir Modal</button>
+</div>
+
+<div class="container">
+  <p>Este es un texto aleatorio.</p>
+  <button class="btn" (click)="openModal('modal2')">Abrir Modal 2</button>
+</div>
+
+<div id="myModal1" class="modal" [ngClass]="{'show': isModal1Open}">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal('modal1')">&times;</span>
+    <div class="check-animation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="25" fill="none" />
+        <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M14 27l5 5 14-14" class="check-svg"/>
+      </svg>
+    </div>
+    <p>El modal funciona</p>
+    <button class="btn" (click)="closeModal('modal1')">Cerrar</button>
+  </div>
+</div>
+
+
+<div id="myModal2" class="modal" [ngClass]="{'show': isModal2Open}">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal('modal2')">&times;</span>
+    <p>¿Estás seguro que quieres borrar?</p>
+    <div class="buttons">
+      <button class="btn confirm" (click)="confirmAction()">Confirmar</button>
+      <button class="btn cancel" (click)="closeModal('modal2')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 

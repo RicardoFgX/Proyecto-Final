@@ -42,13 +42,10 @@ export class AdminDashListNotesComponent {
     }
   }
 
-  confirmarborrarNota(id: number, titulo: any){
-    const elemento = document.getElementById('id01');
-    if (elemento) {
-      elemento.style.display = 'block';
-      this.notaBorradoID = id;
-      this.notaBorradoTitulo = titulo;
-    }
+  confirmarborrarNota(id: number, titulo: any) {
+    this.notaBorradoID = id;
+    this.notaBorradoTitulo = titulo;
+    this.openModal();
   }
 
   borrarNota(id: number) {
@@ -87,5 +84,30 @@ export class AdminDashListNotesComponent {
 
   otraFuncion() {
     console.log("Segunda Función");
+  }
+
+  isModalOpen = false;
+  isModalCerrar = false;
+
+  openModal() {
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  confirmAction() {
+    // Acción de confirmación (ej. eliminar un elemento)
+    console.log('Elemento borrado');
+    this.closeModal();
+  }
+
+  openModalCerrar() {
+    this.isModalCerrar = true;
+  }
+
+  closeModalCerrar() {
+    this.isModalCerrar = false;
   }
 }

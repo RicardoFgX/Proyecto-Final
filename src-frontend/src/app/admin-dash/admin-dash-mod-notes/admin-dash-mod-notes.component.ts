@@ -103,6 +103,7 @@ export class AdminDashModNotesComponent {
         }
         this.noteService.modNota(newNote, token).subscribe({
           next: () => {
+            this.openModalCerrar();
           },
           error: (error: any) => {
             console.error('Error al guardar al usuario', error);
@@ -114,29 +115,21 @@ export class AdminDashModNotesComponent {
       } else {
       console.error('Algo ocurrió con el token');
     }
-    this.confirmarModNota();
   }
   
-  irAAdminDashUsuarios() {
+  irAAdminDashNotas() {
     this.router.navigate(['/adminDash/notas']);
   }
 
-  ocultarElemento(id: string) {
-    const elemento = document.getElementById(id);
-    if (elemento) {
-      console.log("Id de ejemplo", id);
-      elemento.style.display = 'none';
-    } else {
-      console.error('Elemento no encontrado con ID:', id);
-    }
+  isModalOpen = false;
+  isModalCerrar = false;
+
+  openModalCerrar() {
+    this.isModalCerrar = true;
   }
 
-  confirmarModNota(){
-    console.log("hola?")
-    const elemento = document.getElementById('id01');
-    if (elemento) {
-      elemento.style.display = 'block';
-    }
+  closeModalCerrar() {
+    this.isModalCerrar = false;
   }
 
   mostrarIdUsuario(email: string): void {

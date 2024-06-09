@@ -1,12 +1,11 @@
 <div class="adminDash">
-  <app-admin-sidebar></app-admin-sidebar>
+  <app-user-sidebar></app-user-sidebar>
   <div>
     <section>
       <div class="align-items-center">
         <div class="justify-content-center">
           <div class="d-flex justify-content-end mb-3" style="margin: 30px;">
-            <button class="btn btn-success" [routerLink]="['/adminDash/crearNota']" routerLinkActive="active">Crear
-              Nota</button>
+            <button class="btn btn-success" [routerLink]="['/crearNota']" routerLinkActive="active">Crear Nota</button>
           </div>
           <div class="table-responsive bg-white" data-mdb-perfect-scrollbar="true"
             style="position: relative; height: 70vh;">
@@ -22,7 +21,8 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let note of notes">
+                <tr *ngFor="let note of notes" [routerLink]="['/notas', note.id]"
+                routerLinkActive="active">
                   <td>
                     <div class="featured-icon">
                       <img class="image" src="../../../assets/notas.png" />
@@ -32,10 +32,10 @@
                   <td>{{ note.contenido }}</td>
                   <td>{{ note.usuario.email }}</td>
                   <td>
-                    <button class="btn btn-primary" [routerLink]="['/adminDash/notas', note.id]"
-                      routerLinkActive="active">Modificar</button>
+                    <button class="btn btn-primary" [routerLink]="['/notas', note.id]"
+                    routerLinkActive="active">Modificar</button>
                     <button mat-raised-button class="btn btn-danger"
-                      (click)="confirmarborrarNota(note.id, note.titulo)">Borrar</button>
+                    (click)="confirmarborrarNota(note.id, note.titulo)">Borrar</button>
                   </td>
                 </tr>
               </tbody>
@@ -63,33 +63,13 @@
     </form>
   </div>
 
-  <div id="myModal" class="modal" [ngClass]="{'show': isModalOpen}">
-    <div class="modal-content">
-      <span class="close" (click)="closeModal()">&times;</span>
-      <h1>Borrando Nota {{ notaBorradoID }} - {{ notaBorradoTitulo }}</h1>
-      <p>¿Estás seguro que quieres borrar?</p>
-      <div class="buttons">
-        <button class="btn confirm" (click)="confirmAction(); borrarNota(notaBorradoID)">Confirmar</button>
-        <button class="btn cancel" (click)="closeModal()">Cancelar</button>
-      </div>
-    </div>
-  </div>
+  <script>
+    var modal = document.getElementById('id01');
 
-  <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
-    <div class="modal-content">
-      <span class="close" (click)="closeModalCerrar()">&times;</span>
-      <div class="check-animation">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-          <circle cx="26" cy="26" r="25" fill="none" />
-          <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
-            d="M14 27l5 5 14-14" class="check-svg" />
-        </svg>
-      </div>
-      <p>Se ha realizado la acción satisfactorimente</p>
-      <button class="btnCerrar" (click)="closeModalCerrar()">Cerrar</button>
-    </div>
-  </div>
-
-
-
+    window.onclick = function (event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+  </script>
 </div>

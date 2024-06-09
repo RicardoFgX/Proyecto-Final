@@ -19,18 +19,22 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatExpansionModule} from '@angular/material/expansion';
+
 
 
 @Component({
   selector: 'app-user-dash',
   standalone: true,
-  imports: [MatButtonModule,MatMenuModule, FormsModule, CommonModule, CdkDropListGroup, CdkDropList, CdkDrag],
+  imports: [MatButtonModule,MatMenuModule, FormsModule, CommonModule, CdkDropListGroup, CdkDropList, CdkDrag, MatExpansionModule],
   templateUrl: './user-dash.component.html',
   styleUrl: './user-dash.component.css'
 })
 export class UserDashComponent {
   objetos1: string[] = ['Item 1', 'Item 2', 'Item 3'];
   objetos2: string[] = [];
+
+  panelOpenState = false;
   
 
   drop(event: CdkDragDrop<string[]>) {
@@ -55,5 +59,30 @@ export class UserDashComponent {
   mostrarElementos() {
     console.log("Elementos en la lista de disponibles:", this.objetos1.join(', '));
     console.log("Elementos en la lista de la cesta de compras:", this.objetos2.join(', '));
+  }
+
+  isModal1Open = false;
+  isModal2Open = false;
+
+  openModal(modal: string) {
+    if (modal === 'modal1') {
+      this.isModal1Open = true;
+    } else if (modal === 'modal2') {
+      this.isModal2Open = true;
+    }
+  }
+
+  closeModal(modal: string) {
+    if (modal === 'modal1') {
+      this.isModal1Open = false;
+    } else if (modal === 'modal2') {
+      this.isModal2Open = false;
+    }
+  }
+
+  confirmAction() {
+    // Acción de confirmación (ej. eliminar un elemento)
+    console.log('Elemento borrado');
+    this.closeModal('modal2');
   }
 }
