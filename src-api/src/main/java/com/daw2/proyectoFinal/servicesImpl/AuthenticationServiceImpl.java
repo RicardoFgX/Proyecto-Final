@@ -3,7 +3,6 @@ package com.daw2.proyectoFinal.servicesImpl;
 import java.util.Optional;
 
 import lombok.Builder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,137 +20,86 @@ import com.daw2.proyectoFinal.services.AuthenticationService;
 import com.daw2.proyectoFinal.services.JwtService;
 import com.daw2.proyectoFinal.services.UsuarioService;
 
-/**
- * Implementación del servicio de autenticación que proporciona funcionalidades
- * para registro (signup) e inicio de sesión (signin) de usuarios.
- */
 @Builder
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-	/**
-	 * Inyección del repositorio de usuario.
-	 */
-	@Autowired
-	private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final UsuarioService usuarioService;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
-	@Autowired
-	private UsuarioService usuarioService;
+    public AuthenticationServiceImpl(UsuarioRepository usuarioRepository, UsuarioService usuarioService, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
+        this.usuarioRepository = usuarioRepository;
+        this.usuarioService = usuarioService;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
+    }
 
-	private final PasswordEncoder passwordEncoder;
-	private final JwtService jwtService;
-	private final AuthenticationManager authenticationManager;
+    @Override
+    public JwtAuthenticationResponse signup(RegistroRequest request) {
+        if (usuarioRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("Email ya está en uso.");
+        }
 
-	/**
-	 * Constructor de la clase AuthenticationServiceImpl.
-	 *
-	 * @param usuarioRepository     Repositorio de usuarios para acceder a los datos
-	 *                              de los usuarios.
-	 * @param passwordEncoder       Codificador de contraseñas para codificar las
-	 *                              contraseñas de los usuarios.
-	 * @param jwtService            Servicio JWT para generar tokens de
-	 *                              autenticación.
-	 * @param authenticationManager Administrador de autenticación para autenticar a
-	 *                              los usuarios.
-	 */
-	public AuthenticationServiceImpl(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder,
-			JwtService jwtService, AuthenticationManager authenticationManager) {
-		this.usuarioRepository = usuarioRepository;
-		this.passwordEncoder = passwordEncoder;
-		this.jwtService = jwtService;
-		this.authenticationManager = authenticationManager;
-	}
+        Usuario user = new Usuario();
+        user.setNombre(request.getNombre());
+        user.setEmail(request.getEmail());
+        user.setContrasena(passwordEncoder.encode(request.getContrasena()));
+        user.getRoles().add(Rol.USUARIO);
+        usuarioRepository.save(user);
+        String jwt = jwtService.generateToken(user);
 
-	/**
-	 * Registra a un nuevo usuario en el sistema.
-	 *
-	 * @param request Objeto RegistroRequest con los datos del usuario a registrar.
-	 * @return Objeto JwtAuthenticationResponse con el token de autenticación
-	 *         generado.
-	 * @throws IllegalArgumentException Si el email proporcionado ya está en uso.
-	 */
-	public String decodedPassword(String contra) {
-		return passwordEncoder.encode(contra);
-	}
+        JwtAuthenticationResponse.UserResponse userResponse = new JwtAuthenticationResponse.UserResponse(user, jwt);
 
-	@Override
-	public JwtAuthenticationResponse signup(RegistroRequest request) {
-		if (usuarioRepository.existsByEmail(request.getEmail())) {
-			throw new IllegalArgumentException("Email ya está en uso.");
-		}
+        return JwtAuthenticationResponse.builder().user(userResponse).build();
+    }
 
-		Usuario user = new Usuario();
-		user.setNombre(request.getNombre());
-		user.setEmail(request.getEmail());
-		user.setContrasena(passwordEncoder.encode(request.getContrasena()));
-		user.getRoles().add(Rol.USUARIO);
-		usuarioRepository.save(user);
-		String jwt = jwtService.generateToken(user);
+    @Override
+    public JwtAuthenticationResponse signin(LoginRequest request) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getContrasena()));
 
-		JwtAuthenticationResponse.UserResponse userResponse = new JwtAuthenticationResponse.UserResponse(user, jwt);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		return JwtAuthenticationResponse.builder().user(userResponse).build();
-	}
+        Optional<Usuario> optionalUser = usuarioRepository.findByEmail(request.getEmail());
 
-	/**
-	 * Inicia sesión para un usuario existente.
-	 *
-	 * @param request Objeto LoginRequest con las credenciales del usuario.
-	 * @return Objeto JwtAuthenticationResponse con el token de autenticación
-	 *         generado.
-	 * @throws IllegalArgumentException Si el email o la contraseña proporcionados
-	 *                                  son inválidos.
-	 */
-	@Override
-	public JwtAuthenticationResponse signin(LoginRequest request) {
-		Authentication authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getContrasena()));
+        Usuario user = optionalUser.orElseThrow(() -> new IllegalArgumentException("Email o contraseña inválidos."));
+        String jwt = jwtService.generateToken(user);
 
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+        JwtAuthenticationResponse.UserResponse userResponse = new JwtAuthenticationResponse.UserResponse(user, jwt);
 
-		Optional<Usuario> optionalUser = usuarioRepository.findByEmail(request.getEmail());
+        return JwtAuthenticationResponse.builder().user(userResponse).build();
+    }
 
-		Usuario user = optionalUser.orElseThrow(() -> new IllegalArgumentException("Email o contraseña inválidos."));
-		String jwt = jwtService.generateToken(user);
+    @Override
+    public Usuario crearUsuario(Usuario usuario) {
+        String contrasenaCodificada = passwordEncoder.encode(usuario.getContrasena());
+        usuario.setContrasena(contrasenaCodificada);
+        usuario.getRoles().add(Rol.USUARIO);
+        return usuarioRepository.save(usuario);
+    }
 
-		JwtAuthenticationResponse.UserResponse userResponse = new JwtAuthenticationResponse.UserResponse(user, jwt);
-
-		return JwtAuthenticationResponse.builder().user(userResponse).build();
-	}
-
-	@Override
-	public Usuario crearUsuario(Usuario usuario) {
-		// Codificar la contraseña antes de guardarla
-		String contrasenaCodificada = passwordEncoder.encode(usuario.getContrasena());
-		usuario.setContrasena(contrasenaCodificada);
-		usuario.getRoles().add(Rol.USUARIO);
-		// Guardar el usuario en la base de datos
-		return usuarioRepository.save(usuario);
-	}
-
-	@Override
-	public Usuario actualizarUsuario(Usuario usuario) {
-		// Verificar si se proporcionó una contraseña y si necesita ser codificada
-		Usuario userOld = usuarioService.obtenerUsuarioPorId(usuario.getId());
-		System.out.println(userOld);
-		if (usuario.getNombre() != null) {
-			userOld.setNombre(usuario.getNombre());
-		}
-		if (usuario.getApellidos() != null) {
-			userOld.setApellidos(usuario.getApellidos());
-		}
-		if (usuario.getEmail() != null) {
-			userOld.setEmail(usuario.getEmail());
-		}
-		if (usuario.getContrasena() != null) {
-			String contrasenaCodificada = passwordEncoder.encode(usuario.getContrasena());
-			userOld.setContrasena(contrasenaCodificada);
-		}
-		if (usuario.getRoles() == null) {
-			userOld.getRoles().add(Rol.USUARIO);
-		}
-		// Actualizar el usuario en la base de datos
-		return usuarioRepository.save(userOld);
-	}
-
+    @Override
+    public Usuario actualizarUsuario(Usuario usuario) {
+        Usuario userOld = usuarioService.obtenerUsuarioPorId(usuario.getId());
+        if (usuario.getNombre() != null) {
+            userOld.setNombre(usuario.getNombre());
+        }
+        if (usuario.getApellidos() != null) {
+            userOld.setApellidos(usuario.getApellidos());
+        }
+        if (usuario.getEmail() != null) {
+            userOld.setEmail(usuario.getEmail());
+        }
+        if (usuario.getContrasena() != null) {
+            String contrasenaCodificada = passwordEncoder.encode(usuario.getContrasena());
+            userOld.setContrasena(contrasenaCodificada);
+        }
+        if (usuario.getRoles() == null) {
+            userOld.getRoles().add(Rol.USUARIO);
+        }
+        return usuarioRepository.save(userOld);
+    }
 }
