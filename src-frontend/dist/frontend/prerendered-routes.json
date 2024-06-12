@@ -1,0 +1,18 @@
+{
+  "routes": [
+    "/adminDash",
+    "/adminDash/crearNota",
+    "/adminDash/crearProyecto",
+    "/adminDash/crearProyecto/tareas",
+    "/adminDash/crearUsuario",
+    "/adminDash/notas",
+    "/adminDash/proyectos",
+    "/adminDash/usuarios",
+    "/home",
+    "/login",
+    "/notas",
+    "/perfil",
+    "/proyectos",
+    "/userDash"
+  ]
+}
