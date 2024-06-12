@@ -4,15 +4,17 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NoteService } from '../../../services/note.service';
 import { UserServiceService } from '../../../services/user-service.service';
+import { jwtDecode } from 'jwt-decode';
+import { JwtService } from '../../../services/jwt-service.service';
 
 @Component({
-  selector: 'app-user-mod-notes',
+  selector: 'app-user-new-notes',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
-  templateUrl: './user-mod-notes.component.html',
-  styleUrl: './user-mod-notes.component.css'
+  templateUrl: './user-new-notes.component.html',
+  styleUrl: './user-new-notes.component.css'
 })
-export class UserModNotesComponent {
+export class UserNewNotesComponent {
   nota = {
     id: '',
     titulo: '',
@@ -27,18 +29,82 @@ export class UserModNotesComponent {
     id: '',
   };
 
+  emailInicial: string = '';
+
+
+  emailRequest = {
+    email: ''
+  };
+
+  user = {
+    id: '',
+    nombre: '',
+    apellidos: '',
+    email: '',
+    contrasena: '',
+  };
+
+  userEmail: string | null = null;
+  token: string | null = null;
+
+  checkAuthStatus() {
+    // Verificar si hay un token guardado en el almacenamiento local
+    this.token = this.jwtService.getToken();
+    if (this.token != null) {
+      try {
+        // Decodificar el token para obtener el correo electrónico del usuario
+        const decodedToken: any = jwtDecode(this.token);
+        console.log(decodedToken?.sub);
+        this.emailRequest.email = decodedToken?.sub; // "sub" es el campo donde se almacena el correo electrónico en el token
+        console.log(this.emailRequest)
+      } catch (error) {
+        console.error('Error al decodificar el token:', error);
+      }
+    }
+  }
+
+  getUser(): void {
+    // Obtener el ID del usuario de la URL
+    const token = localStorage.getItem('token');
+    if (token) {
+      // Utilizar el servicio de usuario para obtener los datos del usuario por su ID
+      console.log(this.emailRequest)
+      this.userService.getUserEmail(this.emailRequest, token).subscribe({
+        next: (data: any) => {
+          this.user.id = data.id;
+          this.usuario.id = data.id;
+          this.user.nombre = data.nombre;
+          this.user.apellidos = data.apellidos;
+          this.user.email = data.email;
+          this.emailInicial = data.email;
+          console.log(data);
+        },
+        error: (error) => {
+          console.error('Error al cargar al usuario', error);
+        },
+        complete: () => {
+          console.log('Petición para obtener el usuario completada');
+        }
+      });
+    } else {
+      console.error('Algo ocurrió con el token');
+    }
+  }
+
   usuarios: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserServiceService,
-    private noteService: NoteService
+    private noteService: NoteService,
+    private jwtService: JwtService
   ) { }
 
   ngOnInit(): void {
     this.getAllUsers();
-    this.getNote();
+    this.checkAuthStatus();
+    this.getUser();
   }
 
   getAllUsers() {
@@ -61,35 +127,7 @@ export class UserModNotesComponent {
     }
   }
 
-  getNote(): void {
-    // Obtener el ID del usuario de la URL
-    const noteID = Number(this.route.snapshot.paramMap.get('id'));
-    console.log(noteID);
-    const token = localStorage.getItem('token');
-    if (token) {
-      // Utilizar el servicio de usuario para obtener los datos del usuario por su ID
-      this.noteService.getNota(noteID, token).subscribe({
-        next: (data: any) => {
-          this.nota.id = data.id;
-          this.nota.titulo = data.titulo;
-          this.nota.contenido = data.contenido;
-          this.usuario.email = data.usuario.email;
-          console.log(data);
-          console.log(this.usuario.email);
-        },
-        error: (error: any) => {
-          console.error('Error al cargar la nota', error);
-        },
-        complete: () => {
-          console.log('Petición para obtener la nota completada');
-        }
-      });
-    } else {
-      console.error('Algo ocurrió con el token');
-    }
-  }
-
-  modificarNota(): void {
+  crearNota(): void {
     const token = localStorage.getItem('token');
     this.buscarIdUsuario();
     if (token) {
@@ -101,9 +139,9 @@ export class UserModNotesComponent {
             id: this.usuario.id
           }
         }
-        this.noteService.modNota(newNote, token).subscribe({
+        this.noteService.createNota(newNote, token).subscribe({
           next: () => {
-            this.openModalCerrar();
+            this.openModalCerrar()
           },
           error: (error: any) => {
             console.error('Error al guardar al usuario', error);
@@ -117,25 +155,19 @@ export class UserModNotesComponent {
     }
   }
   
-  irAAdminDashUsuarios() {
+  irAAdminDashNotas() {
     this.router.navigate(['/notas']);
+    }
+
+  isModalOpen = false;
+  isModalCerrar = false;
+
+  openModalCerrar() {
+    this.isModalCerrar = true;
   }
 
-  ocultarElemento(id: string) {
-    const elemento = document.getElementById(id);
-    if (elemento) {
-      console.log("Id de ejemplo", id);
-      elemento.style.display = 'none';
-    } else {
-      console.error('Elemento no encontrado con ID:', id);
-    }
-  }
-
-  confirmarModNota(){
-    const elemento = document.getElementById('id01');
-    if (elemento) {
-      elemento.style.display = 'block';
-    }
+  closeModalCerrar() {
+    this.isModalCerrar = false;
   }
 
   mostrarIdUsuario(email: string): void {
@@ -158,16 +190,4 @@ export class UserModNotesComponent {
       console.log('No se ha seleccionado ningún correo electrónico');
     }
   }
-
-  isModalCerrar = false;
-
-  openModalCerrar() {
-    this.isModalCerrar = true;
-  }
-
-  closeModalCerrar() {
-    this.isModalCerrar = false;
-  }
-
-  
 }

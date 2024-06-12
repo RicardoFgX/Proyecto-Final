@@ -1,0 +1,999 @@
+{
+	"info": {
+		"_postman_id": "4c44c394-b386-45c8-9035-fc077be1ad91",
+		"name": "Blue Bull - Task Manager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31929458",
+		"_collection_link": "https://lively-meteor-894720.postman.co/workspace/EVIDEN_DUAL~09c02d01-1635-4104-be48-65662ef77dc0/collection/31929458-4c44c394-b386-45c8-9035-fc077be1ad91?action=share&source=collection_link&creator=31929458"
+	},
+	"item": [
+		{
+			"name": "AUTH",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Pabl22o22\",\r\n  \"email\": \"1asdasdadas@pepe.com\",\r\n  \"contrasena\": \"123224\"\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						},
+						"description": "### Auth Signup\n\nEste endpoint se usa para registrar a un nuevo usuario.\n\n#### Request Body\n\n- nombre (text, requerido): El nombre del usuario\n- apellidos (text, opcional): Los\n- email (email, requerido): El email del usuario\n- contrasena (text, requerido): La contraseña del usuario"
+					},
+					"response": []
+				},
+				{
+					"name": "Signin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"admin@gmail.com\",\r\n  \"contrasena\": \"admin\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/signin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"signin"
+							]
+						},
+						"description": "### Auth Signin\n\nEste endpoint sirve para autentificar y logear a un usuario\n\n### Request Body\n\n- email (text, requerido): El email del usuario\n    \n- contrasena (text, requerido): La contraseña del usuario"
+					},
+					"response": []
+				}
+			],
+			"description": "Aquí se evaluan los endpoints para hacer login y register"
+		},
+		{
+			"name": "USUARIOS",
+			"item": [
+				{
+					"name": "Todos los Usuarios",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTU4MTMxNTQsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxNTg0OTE1NH0.mJNhS7te-S3c6GgAgqR2iC2TTvxyp_dj1jkz6yYt2rE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/usuarios",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuarios"
+							]
+						},
+						"description": "### Get Usuarios\n\nEste endpoint realiza una petición GET que devuelve a todos los usuarios."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Usuario especifico",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTU4MTMzNDUsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxNTg0OTM0NX0.CF2DJ204DV9PI6hBGALkQasy_AyWp-qQi5GGsktuI8A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/usuarios/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuarios",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Usuario por Email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTc2MjQ5NzUsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxNzY2MDk3NX0.iOkh2PW1A7cp0oDj1fyUJrjENax_hG8FPmSzYZqsj5c",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"ricardofg2000@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/usuarios/email",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuarios",
+								"email"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "admin@gmail.com",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar Usuario específico",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTc2Mjg4NTgsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxNzY2NDg1OH0.E7wXC6Fe6tgMuPeIf_OVncRWTBIIVty3M54XjDYor6U",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"funciona2\",\r\n    \"email\": \"julio1234@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/usuarios/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuarios",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Usuario",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTc2Mjg4NTgsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxNzY2NDg1OH0.E7wXC6Fe6tgMuPeIf_OVncRWTBIIVty3M54XjDYor6U",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"pablo11\",\r\n    \"apellidos\": \"Jimenez Skibidi\",\r\n    \"email\": \"pepe1111@1234.com\",\r\n    \"contrasena\": \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/usuarios",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar todos los Proyectos de un Usuario específico",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTgxMzcyMjIsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxODE3MzIyMn0.TIIttRgTivB15YT5yy_S_VMxSwgvZRgq5BKPecVovBI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/usuarios/1/proyectos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuarios",
+								"1",
+								"proyectos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "NOTAS",
+			"item": [
+				{
+					"name": "Todas las notas",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTQ2MDA5MzQsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxNDYzNjkzNH0.oHKMy-zlAs7HvDtmJvg2GlMLyzM0EOKoNPu25vcAgQM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titulo\": \"Mi Anotación\",\r\n    \"contenido\": \"Contenido de mi anotación\",\r\n    \"usuario\": {\r\n        \"id\": 1\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/anotaciones",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"anotaciones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar una Anotación específica",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titulo\": \"Mi Anotación\",\r\n    \"contenido\": \"Contenido de mi anotación\",\r\n    \"usuario\": {\r\n        \"id\": 1\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/anotaciones/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"anotaciones",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar Anotación específica",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTczNjkxMzIsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxNzQwNTEzMn0.X4CKF1jz428fHraQAF4Imy3ccasgOXMf3KgJgexRmZw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titulo\": \"Mi Anotación\",\r\n    \"contenido\": \"Contenido de mi anotación\",\r\n    \"usuario\": {\r\n        \"id\": 1\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/anotaciones/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"anotaciones",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Anotación",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titulo\": \"Prueba21\",\r\n    \"contenido\": \"prueba 2/2\",\r\n    \"usuario\": {\r\n        \"id\": 1,\r\n        \"nombre\": \"usuarioejemplo\",\r\n        \"apellidos\": \"1234\",\r\n        \"email\": \"usuarioejemplo@gmail.com\",\r\n        \"contrasena\": \"$2a$10$kMZEZiw688wxQ2LHddk9eul9DlZWcZ5P9XrwPFjX6W1ec979TxBDO\",\r\n        \"enabled\": true,\r\n        \"roles\": [\r\n            \"USUARIO\"\r\n        ],\r\n        \"authorities\": [\r\n            {\r\n                \"authority\": \"USUARIO\"\r\n            }\r\n        ],\r\n        \"username\": \"usuarioejemplo@gmail.com\",\r\n        \"password\": \"$2a$10$kMZEZiw688wxQ2LHddk9eul9DlZWcZ5P9XrwPFjX6W1ec979TxBDO\",\r\n        \"accountNonLocked\": true,\r\n        \"accountNonExpired\": true,\r\n        \"credentialsNonExpired\": true\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/anotaciones",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"anotaciones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar todas las Anotaciones de un Usuario específico",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTc2ODYwMTEsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxNzcyMjAxMX0.SV7Rc3ZgFVrj8zp0A0faa5yWDQE1ffDm6rarFN5rqxk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titulo\": \"Mi Anotación\",\r\n    \"contenido\": \"Contenido de mi anotación\",\r\n    \"usuario\": {\r\n        \"id\": 1\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/anotaciones/usuario/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"anotaciones",
+								"usuario",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PROYECTOS",
+			"item": [
+				{
+					"name": "Todos los Proyectos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTU2MzQ1MDUsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxNTY3MDUwNX0.Fr4KY4kUtTjrH2BXifa40OHonqHp0jiJcI54J90CoGw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/proyectos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"proyectos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Proyecto específico",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTczNjkxMzIsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxNzQwNTEzMn0.X4CKF1jz428fHraQAF4Imy3ccasgOXMf3KgJgexRmZw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/proyectos/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"proyectos",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Borrar Proyecto específico",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTczNjkxMzIsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxNzQwNTEzMn0.X4CKF1jz428fHraQAF4Imy3ccasgOXMf3KgJgexRmZw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/proyectos/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"proyectos",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear proyecto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTc1ODI1MzYsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxNzYxODUzNn0.nO72LP0yc0nDT2j8cPVARBr3lgZmC6cp46WMeKilz28",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"PruebaFinal122\",\r\n    \"descripcion\": \"De locos\",\r\n    \"fechaCreacion\": \"2024-05-16\",\r\n    \"ultimaFechaModificacion\": \"2024-06-05\",\r\n    \"usuarios\": [\r\n        {\r\n            \"id\": 2\r\n        },\r\n        {\r\n            \"id\": 1\r\n        }\r\n    ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/proyectos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"proyectos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar Proyecto Específico",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTc1ODI4ODcsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxNzYxODg4N30.ianb1xZul_QIXsxCdj6nwXmk7sh1v8DXPBP5KH17SyE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"l\",\r\n    \"descripcion\": \"Y me voy a dormir\",\r\n    \"fechaCreacion\": \"2024-05-16\",\r\n    \"ultimaFechaModificacion\": null,\r\n    \"usuarios\": [\r\n        {\r\n            \"id\": 1\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/proyectos/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"proyectos",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TAREAS",
+			"item": [
+				{
+					"name": "Todas las Tareas",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTc5NzMyNDEsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxODAwOTI0MX0.Kbt96j0wuqmvnV01CpAQMoh7OrQ4DvrcGc37W7zifx0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/tareas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"tareas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Borrar Tarea Especifica",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTc5NzMyNDEsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxODAwOTI0MX0.Kbt96j0wuqmvnV01CpAQMoh7OrQ4DvrcGc37W7zifx0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/tareas/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"tareas",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Tarea específica",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTczNjkxMzIsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxNzQwNTEzMn0.X4CKF1jz428fHraQAF4Imy3ccasgOXMf3KgJgexRmZw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/tareas/proyecto/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"tareas",
+								"proyecto",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar Tarea",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTczNjkxMzIsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxNzQwNTEzMn0.X4CKF1jz428fHraQAF4Imy3ccasgOXMf3KgJgexRmZw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Nerfear la w\",\r\n    \"descripcion\": \"Descripción de la TareaNueva\",\r\n    \"fechaVencimiento\": \"2024-04-25\",\r\n    \"estado\": \"COMPLETADA\",\r\n    \"proyecto\": {\r\n        \"id\": 1\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/tareas/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"tareas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Tarea",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTczNjkxMzIsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxNzQwNTEzMn0.X4CKF1jz428fHraQAF4Imy3ccasgOXMf3KgJgexRmZw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Nerfear la R\",\r\n    \"descripcion\": \"Descripción de la TareaNueva\",\r\n    \"fechaVencimiento\": \"2024-04-25\",\r\n    \"estado\": \"PENDIENTE\",\r\n    \"proyecto\": {\r\n        \"id\": 1\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/tareas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"tareas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar todas la Tareas de un Proyecto específico",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/tareas/proyecto/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"tareas",
+								"proyecto",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SWAGGER-UI",
+			"item": [
+				{
+					"name": "swagger",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MTgxODk4OTIsInJvbGUiOlt7ImF1dGhvcml0eSI6IkFETUlOSVNUUkFET1IifV0sImV4cCI6MTcxODIyNTg5Mn0.o1z7T-q1nB9t5YggmdYY16upfuVq_NOEWW2v6dja0OY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/swagger-ui/index.html",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"swagger-ui",
+								"index.html"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

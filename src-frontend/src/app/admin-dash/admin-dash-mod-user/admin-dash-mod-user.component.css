@@ -24,7 +24,7 @@
 
 /* Modal styling */
 .modal {
-  display: none; 
+  display: none;
   position: fixed;
   z-index: 1;
   left: 0;
@@ -112,6 +112,7 @@
 }
 
 @media screen and (max-width: 300px) {
+
   .cancelbtn,
   .deletebtn {
     width: 100%;
@@ -126,20 +127,26 @@
 }
 
 .check-animation svg {
-  width: 100px; /* Aumenta el tamaño del SVG */
-  height: 100px; /* Aumenta el tamaño del SVG */
+  width: 100px;
+  /* Aumenta el tamaño del SVG */
+  height: 100px;
+  /* Aumenta el tamaño del SVG */
 }
 
 .check-animation circle {
   stroke: white;
-  stroke-dasharray: 314; /* Ajustado para un círculo más grande */
-  stroke-dashoffset: 314; /* Ajustado para un círculo más grande */
+  stroke-dasharray: 314;
+  /* Ajustado para un círculo más grande */
+  stroke-dashoffset: 314;
+  /* Ajustado para un círculo más grande */
   animation: dash 1s linear forwards;
 }
 
 .check-animation path {
-  stroke-dasharray: 50; /* Ajustado para el tamaño más grande */
-  stroke-dashoffset: 50; /* Ajustado para el tamaño más grande */
+  stroke-dasharray: 50;
+  /* Ajustado para el tamaño más grande */
+  stroke-dashoffset: 50;
+  /* Ajustado para el tamaño más grande */
   animation: dash-check 0.5s 1s linear forwards;
 }
 
@@ -156,10 +163,11 @@
 }
 
 .check-svg {
-  transform: translateX(3px); /* Desplaza el SVG 10px hacia la derecha */
+  transform: translateX(3px);
+  /* Desplaza el SVG 10px hacia la derecha */
 }
 
-.btnCerrar{
+.btnCerrar {
   border-radius: 4px;
   height: 44px;
   font-size: 13px;
@@ -178,24 +186,30 @@
 }
 
 .btnCerrar:active,
-.btnCerrar:focus {  
+.btnCerrar:focus {
   background-color: #102770;
-  color: #fff; /* Para mantener el contraste del texto */
+  color: #fff;
+  /* Para mantener el contraste del texto */
 }
 
-.btnCerrar:hover {  
+.btnCerrar:hover {
   background-color: #102770;
-  color: #fff; /* Para mantener el contraste del texto */
+  color: #fff;
+  /* Para mantener el contraste del texto */
 }
 
-  
-  /* Style the horizontal ruler */
-  hr {
-    border: 1px solid #f1f1f1;
-    margin-bottom: 25px;
-  }
 
-  .back {
-    display: flex;
-    justify-content: flex-end;
-  }
+/* Style the horizontal ruler */
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+.back {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.espaciado {
+  margin-bottom: 200px;
+}

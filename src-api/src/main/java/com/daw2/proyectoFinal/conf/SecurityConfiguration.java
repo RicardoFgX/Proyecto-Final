@@ -19,6 +19,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.daw2.proyectoFinal.services.UsuarioService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 /**
  * Configuración de seguridad para la aplicación.
@@ -50,9 +53,11 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Habilita CORS con la configuración definida
                 .authorizeHttpRequests(request -> 
                     request
                         // Endpoints públicos
+                    	.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/usuario/**").authenticated()
                         .requestMatchers("/api/anotacion/**").authenticated()
@@ -102,6 +107,22 @@ public class SecurityConfiguration {
         return config.getAuthenticationManager();
     }
     
-    
+    /**
+     * Configuración de CORS.
+     *
+     * @return Un objeto CorsConfigurationSource configurado.
+     */
+    @Bean
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://mi-app-angular.s3-website-us-east-1.amazonaws.com");
+        config.addAllowedOrigin("http://otro-origen-permitido.com");
+        config.addAllowedOrigin("http://localhost:4200");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
 }
-

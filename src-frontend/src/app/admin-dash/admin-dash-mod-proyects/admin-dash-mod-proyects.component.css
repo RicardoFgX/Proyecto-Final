@@ -265,6 +265,7 @@
 
   .agregar {
     transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    border-radius: 10px;
   }
 
   .notification {
@@ -284,4 +285,7 @@
     margin-right: 10px;
   }
   
+  .espaciado{
+    margin-bottom: 200px;
+  }
   

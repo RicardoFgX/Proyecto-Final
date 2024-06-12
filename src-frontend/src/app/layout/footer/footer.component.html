@@ -1,9 +1,30 @@
-<footer class="bg-dark text-white fixed-bottom">
+<footer>
   <div class="container">
     <div class="row">
-      <div class="col">
-        <p>&copy; 2024 Mi Proyecto</p>
+      <div class="col-md-6 item text">
+        <h3>Sobre el proyecto</h3>
+        <p>Este proyecto trata de ser una forma eficiente de organizar las tareas que uno quiera hacer
+          ya sea de manera individual o colectiva...
+        </p>
       </div>
+      <div class="col-sm-6 col-md-3 item">
+        <h3>Funciones Admin</h3>
+        <ul>
+          <li><a [routerLink]="['/adminDash/usuarios']" routerLinkActive="active">Usuarios</a></li>
+          <li><a [routerLink]="['/adminDash/notas']" routerLinkActive="active">Notas</a></li>
+          <li><a [routerLink]="['/adminDash/proyectos']" routerLinkActive="active">Proyectos</a></li>
+        </ul>
+      </div>
+      <div class="col-sm-6 col-md-3 item">
+        <h3>Funciones Usuarios</h3>
+        <ul>
+          <li><a [routerLink]="['/perfil']" routerLinkActive="active">Perfil</a></li>
+          <li><a [routerLink]="['/notas']" routerLinkActive="active">Mis Notas</a></li>
+          <li><a [routerLink]="['/proyectos']" routerLinkActive="active">Mis Proyectos</a></li>
+        </ul>
+      </div>
+      
     </div>
+    <p class="copyright">Company Name © 2018</p>
   </div>
 </footer>

@@ -19,6 +19,9 @@ import { UserProfileComponent } from './user-dash/user-profile/user-profile.comp
 import { UserNotesComponent } from './user-dash/user-notes/user-notes.component';
 import { UserProyectsComponent } from './user-dash/user-proyects/user-proyects.component';
 import { UserModNotesComponent } from './user-dash/user-notes/user-mod-notes/user-mod-notes.component';
+import { UserNewNotesComponent } from './user-dash/user-notes/user-new-notes/user-new-notes.component';
+import { UserNewProyectsComponent } from './user-dash/user-proyects/user-new-proyects/user-new-proyects.component';
+import { UserModProyectsComponent } from './user-dash/user-proyects/user-mod-proyects/user-mod-proyects.component';
 
 
 export const routes: Routes = [
@@ -27,7 +30,10 @@ export const routes: Routes = [
   { path: 'perfil', component: UserProfileComponent },
   { path: 'notas', component: UserNotesComponent },
   { path: 'notas/:id', component: UserModNotesComponent },
+  { path: 'crearNota', component: UserNewNotesComponent },
   { path: 'proyectos', component: UserProyectsComponent },
+  { path: 'proyectos/:id', component: UserModProyectsComponent },
+  { path: 'crearProyecto', component: UserNewProyectsComponent },
   { path: 'adminDash', component: AdminDashComponent, canMatch: [roleoGuard] },
   { path: 'adminDash/usuarios', component: AdminDashListUsersComponent, canMatch: [roleoGuard] },
   { path: 'adminDash/usuarios/:id', component: AdminDashModUserComponent, canMatch: [roleoGuard] },

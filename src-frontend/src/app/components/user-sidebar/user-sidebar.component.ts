@@ -50,7 +50,6 @@ export class UserSidebarComponent {
   getAllNotesUser() {
     const token = localStorage.getItem('token');
     if (token) {
-      console.log("El usuario es este " + this.user.id);
       this.noteService.getAllNotesUser(Number(this.user.id), token).subscribe({
         next: (data: any[]) => {
           this.notes = data;
@@ -65,8 +64,6 @@ export class UserSidebarComponent {
           }
         },
         complete: () => {
-          console.log('Petición para obtener la lista de anotaciones completada');
-          console.log(this.notes);
         }
       });
     } else {
@@ -88,7 +85,6 @@ export class UserSidebarComponent {
           this.user.apellidos = data.apellidos;
           this.user.email = data.email;
           this.emailInicial = data.email;
-          console.log(data);
           this.getAllNotesUser();
           this.getAllProyectoID();
         },
@@ -96,7 +92,6 @@ export class UserSidebarComponent {
           console.error('Error al cargar al usuario', error);
         },
         complete: () => {
-          console.log('Petición para obtener el usuario completada');
         }
       });
     } else {
@@ -111,9 +106,7 @@ export class UserSidebarComponent {
       try {
         // Decodificar el token para obtener el correo electrónico del usuario
         const decodedToken: any = jwtDecode(this.token);
-        console.log(decodedToken?.sub);
         this.emailRequest.email = decodedToken?.sub; // "sub" es el campo donde se almacena el correo electrónico en el token
-        console.log(this.emailRequest)
       } catch (error) {
         console.error('Error al decodificar el token:', error);
       }

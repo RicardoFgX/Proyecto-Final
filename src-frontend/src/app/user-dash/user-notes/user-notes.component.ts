@@ -115,12 +115,9 @@ export class UserNotesComponent {
   }
 
   confirmarborrarNota(id: number, titulo: any){
-    const elemento = document.getElementById('id01');
-    if (elemento) {
-      elemento.style.display = 'block';
       this.notaBorradoID = id;
       this.notaBorradoTitulo = titulo;
-    }
+      this.openModal();
   }
 
   borrarNota(id: number) {
@@ -159,5 +156,20 @@ export class UserNotesComponent {
 
   otraFuncion() {
     console.log("Segunda Función");
+  }
+
+  isModalOpen = false;
+
+  openModal() {
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  confirmAction() {
+    console.log('Elemento borrado');
+    this.closeModal();
   }
 }

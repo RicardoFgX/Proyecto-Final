@@ -193,3 +193,7 @@
     display: flex;
     justify-content: flex-end;
   }
+
+  .espaciado{
+    margin-bottom: 200px;
+  }

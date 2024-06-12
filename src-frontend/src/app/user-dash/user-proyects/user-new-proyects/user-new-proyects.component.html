@@ -53,31 +53,6 @@
                 </mat-card>
             </div>
         </div>
-        <div class="form-group mb-3">
-            <label for="tareas">
-                <h4>Tareas</h4>
-            </label>
-            <div *ngFor="let tarea of proyecto.tareas" class="mb-3 tarjeta">
-                <mat-card class="example-card" (click)="modificarTarea(tarea)">
-                    <mat-card-header>
-                        <mat-card-title-group>
-                            <mat-card-title>{{tarea.nombre}}</mat-card-title>
-                            <mat-card-subtitle>{{tarea.descripcion}}</mat-card-subtitle>
-                            <mat-card-subtitle>{{tarea.fechaVencimiento}}</mat-card-subtitle>
-                            <mat-card-subtitle>{{tarea.estado}}</mat-card-subtitle>
-                            <img mat-card-sm-image src="../../../assets/tarea.png">
-                        </mat-card-title-group>
-                    </mat-card-header>
-                </mat-card>
-            </div>
-            <div class="mb-3 tarjeta agregar">
-                <mat-card class="example-card add-card agregar" (click)="agregarTarea()">
-                    <mat-card-content>
-                        <mat-icon>add</mat-icon>
-                    </mat-card-content>
-                </mat-card>
-            </div>
-        </div>
         <div class="d-flex justify-content-end">
             <button type="submit" class="btn btn-primary me-2" (click)="modificarProyecto()">Crear Proyecto</button>
         </div>
@@ -119,18 +94,6 @@
         </div>
         <p>Se ha realizado la acción satisfactorimente</p>
         <button class="btnCerrar" (click)="closeModalCerrar(); irAAdminDashProyectos()">Cerrar</button>
-    </div>
-</div>
-
-<div id="myModal" class="modal" [ngClass]="{'show': isModalBorrarTareaOpen}">
-    <div class="modal-content">
-        <span class="close" (click)="closeBorrarTarea()">&times;</span>
-        <h1>¿Qué acción quieres realizar?</h1>
-        <div class="buttons">
-            <button class="btn confirm" (click)="closeBorrarTarea(); modTarea(tarea.id)"
-                routerLinkActive="active">Modificar</button>
-            <button class="btn cancel" (click)="closeBorrarTarea(); eliminarTarea()">Borrar</button>
-        </div>
     </div>
 </div>
 

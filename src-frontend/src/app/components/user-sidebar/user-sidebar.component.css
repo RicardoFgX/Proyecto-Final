@@ -172,3 +172,17 @@
 .mat-accordion{
   width: 220px;
 }
+
+p:hover{
+  background-color: #F5F5F5;
+}
+
+p {
+  padding-left: 20px;
+  border-radius: 5px;
+  margin: 0px;
+  height: 35px;
+  display: flex;
+  align-items: center; 
+  cursor: pointer;
+}

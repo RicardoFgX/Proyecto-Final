@@ -1,0 +1,206 @@
+<div class="espaciado">
+  <div class="inicial">
+    <div class="d-flex justify-content-end" style="margin-bottom: 20px;">
+      <button type="button" class="btn btn-primary" (click)="irAAdminDashProyectos()">Volver</button>
+    </div>
+    <div *ngIf="showNotification" class="alert alert-warning d-flex align-items-center">
+      <img src="../../../assets/warning.png" class="warning">
+      <span>{{ notificationMessage }}</span>
+    </div>
+
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Modificar Proyecto
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <form>
+          <div class="form-group mb-3">
+            <label for="titulo">
+              <h4>Título</h4>
+            </label>
+            <input type="text" id="titulo" class="form-control" [(ngModel)]="proyecto.titulo" name="titulo" required>
+          </div>
+          <div class="form-group mb-3">
+            <label for="descripcion">
+              <h4>Descripción</h4>
+            </label>
+            <textarea id="descripcion" class="form-control" [(ngModel)]="proyecto.descripcion" name="descripcion"
+              rows="5" required></textarea>
+          </div>
+          <div class="form-group mb-3">
+            <label for="fechaCreacion">
+              <h4>Fecha Creación</h4>
+            </label>
+            <input type="text" id="fechaCreacion" class="form-control" [(ngModel)]="proyecto.fechaCreacion"
+              name="fechaCreacion" readonly>
+          </div>
+          <div class="form-group mb-3">
+            <label for="integrantes">
+              <h4>Integrantes</h4>
+            </label>
+            <div *ngFor="let integrante of proyecto.integrantes" class="mb-3 tarjeta">
+              <mat-card class="example-card"
+                (click)="confirmarborrarUsuario(integrante.id, integrante.nombre, integrante.email)">
+                <mat-card-header>
+                  <mat-card-title-group>
+                    <mat-card-title>{{integrante.nombre}}</mat-card-title>
+                    <mat-card-subtitle>{{integrante.email}}</mat-card-subtitle>
+                    <img mat-card-sm-image src="../../../assets/user.png">
+                  </mat-card-title-group>
+                </mat-card-header>
+              </mat-card>
+            </div>
+            <div class="mb-3 tarjeta agregar">
+              <mat-card class="example-card add-card agregar" (click)="agregarIntegrante()">
+                <mat-card-content>
+                  <mat-icon>add</mat-icon>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary me-2" (click)="modificarProyecto()">Guardar Cambios</button>
+          </div>
+        </form>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+
+  <div cdkDropListGroup class="columns-container">
+    <div class="example-container">
+      <div class="column-header">
+        <h2>PENDIENTE</h2>
+        <button class="add-button" (click)="nuevatareaForm('PENDIENTE')">+</button>
+      </div>
+      <div cdkDropList [cdkDropListData]="pendiente" class="example-list" (cdkDropListDropped)="drop($event)"
+        id="PENDIENTE">
+        <div *ngFor="let tarea of pendiente" class="example-box" cdkDrag>
+          <div class="drag-handle" cdkDragHandle>☰</div>
+          <div class="tarea-content" (click)="accionClick(tarea)">{{tarea.nombre}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-container">
+      <div class="column-header">
+        <h2>EN PROGRESO</h2>
+        <button class="add-button" (click)="nuevatareaForm('EN_PROGRESO')">+</button>
+      </div>
+      <div cdkDropList [cdkDropListData]="enProgreso" class="example-list" (cdkDropListDropped)="drop($event)"
+        id="EN_PROGRESO">
+        <div *ngFor="let tarea of enProgreso" class="example-box" cdkDrag>
+          <div class="drag-handle" cdkDragHandle>☰</div>
+          <div class="tarea-content" (click)="accionClick(tarea)">{{tarea.nombre}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-container">
+      <div class="column-header">
+        <h2>COMPLETADO</h2>
+        <button class="add-button" (click)="nuevatareaForm('COMPLETADA')">+</button>
+      </div>
+      <div cdkDropList [cdkDropListData]="completado" class="example-list" (cdkDropListDropped)="drop($event)"
+        id="COMPLETADA">
+        <div *ngFor="let tarea of completado" class="example-box" cdkDrag>
+          <div class="drag-handle" cdkDragHandle>☰</div>
+          <div class="tarea-content" (click)="accionClick(tarea)">{{tarea.nombre}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="myModal" class="modal" [ngClass]="{'show': isModalBorrarUserOpen}">
+    <div class="modal-content">
+      <span class="close" (click)="closeBorrarUser()">&times;</span>
+      <h2>Esta a punto de borrar a un usuario de este proyecto</h2>
+      <p>¿Estas seguro?</p>
+      <div class="buttons">
+        <button class="btn confirm" (click)="closeBorrarUser(); borrarUsuarioConfirmado()">Confirmar</button>
+        <button class="btn cancel" (click)="closeBorrarUser()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="myModal2" class="modal" [ngClass]="{'show': isModalNuevoUserOpen}">
+    <div class="modal-content">
+      <span class="close" (click)="closeNuevoUser()">&times;</span>
+      <h1>Nuevo Usuario</h1>
+      <select id="autor" class="form-select" [(ngModel)]="usuarioN" name="autor">
+        <option *ngFor="let usuario of usuarios" [ngValue]="usuario">{{ usuario.email }}</option>
+      </select>
+      <button class="btnCerrar" (click)="agregarUsuario()"
+        style="margin-top: 20px; margin-bottom: 20px;">Añadir</button>
+    </div>
+  </div>
+
+  <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
+    <div class="modal-content">
+      <span class="close" (click)="closeModalCerrar(); irAAdminDashProyectos()">&times;</span>
+      <div class="check-animation">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+          <circle cx="26" cy="26" r="25" fill="none" />
+          <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
+            d="M14 27l5 5 14-14" class="check-svg" />
+        </svg>
+      </div>
+      <p>Se ha realizado la acción satisfactorimente</p>
+      <button class="btnCerrar" (click)="closeModalCerrar(); irAAdminDashProyectos()">Cerrar</button>
+    </div>
+  </div>
+
+  <div id="myModal" class="modal" [ngClass]="{'show': isModalBorrarTareaOpen}">
+    <div class="modal-content">
+      <span class="close" (click)="closeBorrarTarea()">&times;</span>
+      <h1>¿Qué acción quieres realizar?</h1>
+      <div class="buttons">
+        <button class="btn confirm" (click)="closeBorrarTarea(); modTarea(tarea.id)"
+          routerLinkActive="active">Modificar</button>
+        <button class="btn cancel" (click)="closeBorrarTarea(); eliminarTarea()">Borrar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="myModal5" class="modal" [ngClass]="{'show': isModalConfirmarBorrarTareaOpen}">
+    <div class="modal-content">
+      <span class="close" (click)="closeModalCerrar(); irAAdminDashProyectos()">&times;</span>
+      <div class="check-animation">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+          <circle cx="26" cy="26" r="25" fill="none" />
+          <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
+            d="M14 27l5 5 14-14" class="check-svg" />
+        </svg>
+      </div>
+      <p>Se ha realizado la acción satisfactorimente</p>
+      <button class="btnCerrar" (click)="closeConfirmarBorrarTarea();">Cerrar</button>
+    </div>
+  </div>
+
+  <div id="myModalTareaNueva" class="modal" [ngClass]="{'show': isModalNuevoTareaOpen}">
+    <div class="modal-content nueva-tarea-modal-content">
+      <span class="close nueva-tarea-close" (click)="closeNuevaTarea()">&times;</span>
+      <h1>Nueva Tarea</h1>
+      <form id="nuevaTareaForm">
+        <div class="form-group">
+          <label for="nuevaTareaNombre">Nombre</label>
+          <input type="text" id="nuevaTareaNombre" [(ngModel)]="tareaNueva.nombre" name="nombre" required>
+        </div>
+        <div class="form-group">
+          <label for="nuevaTareaDescripcion">Descripción</label>
+          <textarea id="nuevaTareaDescripcion" [(ngModel)]="tareaNueva.descripcion" name="descripcion"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="nuevaTareaFechaVencimiento">Fecha de Vencimiento</label>
+          <input type="date" id="nuevaTareaFechaVencimiento" [(ngModel)]="tareaNueva.fechaVencimiento"
+            name="fechaVencimiento">
+        </div>
+        <button type="submit" class="btnCerrar nueva-tarea-btn" style="margin-top: 20px; margin-bottom: 20px;"
+          (click)="crearTarea()">Añadir</button>
+      </form>
+    </div>
+  </div>
+</div>

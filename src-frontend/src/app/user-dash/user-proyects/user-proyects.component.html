@@ -1,1 +1,78 @@
-<p>user-proyects works!</p>
+<div class="adminDash">
+    <app-user-sidebar></app-user-sidebar>
+    <div>
+      <section>
+        <div class="align-items-center">
+          <div class="justify-content-center">
+            <div class="d-flex justify-content-end mb-3" style="margin: 30px;">
+              <button class="btn btn-success" [routerLink]="['/crearProyecto']" routerLinkActive="active">Crear
+                Proyecto</button>
+            </div>
+            <div class="table-responsive bg-white" data-mdb-perfect-scrollbar="true"
+              style="position: relative; height: 70vh;">
+              <table class="table .centered-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Fecha Creación</th>
+                    <th>Ultima Fecha de modificación</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let proyecto of proyectos">
+                    <td>
+                      <div class="featured-icon">
+                        <img class="image" src="../../../assets/carpeta.png" />
+                      </div>
+                    </td>
+                    <td>{{ proyecto.nombre }}</td>
+                    <td>{{ proyecto.descripcion }}</td>
+                    <td>{{ proyecto.fechaCreacion }}</td>
+                    <td>{{ proyecto.ultimaFechaModificacion }}</td>
+                    <td>
+                      <button class="btn btn-primary" (click)="modificarProyecto(proyecto.id)"
+                        [routerLink]="['/proyectos', proyecto.id]" routerLinkActive="active">Ver</button>
+                      <button class="btn btn-danger"
+                        (click)="confirmarborrarProyecto(proyecto.id, proyecto.nombre)">Borrar</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  
+    <div id="myModal" class="modal" [ngClass]="{'show': isModalOpen}">
+      <div class="modal-content">
+        <span class="close" (click)="closeModal()">&times;</span>
+        <h1>Borrando Proyecto {{ proyectoBorradoID }} - {{ proyectoBorradoTitulo }}</h1>
+        <p>¿Estás seguro que quieres borrar?</p>
+        <div class="buttons">
+          <button class="btn confirm" (click)="confirmAction(); borrarProyecto(proyectoBorradoID)">Confirmar</button>
+          <button class="btn cancel" (click)="closeModal()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  
+    <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
+      <div class="modal-content">
+        <span class="close" (click)="closeModalCerrar()">&times;</span>
+        <div class="check-animation">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+            <circle cx="26" cy="26" r="25" fill="none" />
+            <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
+              d="M14 27l5 5 14-14" class="check-svg" />
+          </svg>
+        </div>
+        <p>Se ha realizado la acción satisfactorimente</p>
+        <button class="btnCerrar" (click)="closeModalCerrar()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+  
+  

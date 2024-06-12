@@ -20,13 +20,15 @@ import {
 } from '@angular/cdk/drag-drop';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatExpansionModule} from '@angular/material/expansion';
+import { UserSidebarComponent } from '../components/user-sidebar/user-sidebar.component';
 
 
 
 @Component({
   selector: 'app-user-dash',
   standalone: true,
-  imports: [MatButtonModule,MatMenuModule, FormsModule, CommonModule, CdkDropListGroup, CdkDropList, CdkDrag, MatExpansionModule],
+  imports: [MatButtonModule,MatMenuModule, FormsModule, CommonModule, CdkDropListGroup, CdkDropList, CdkDrag, MatExpansionModule, UserSidebarComponent
+  ],
   templateUrl: './user-dash.component.html',
   styleUrl: './user-dash.component.css'
 })

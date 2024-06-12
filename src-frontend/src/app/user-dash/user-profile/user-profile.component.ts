@@ -105,6 +105,7 @@ export class UserProfileComponent {
         console.log("NuevaContra");
         this.userService.modUser(this.user, token).subscribe({
           next: () => {
+            this.openModalCerrar();
           },
           error: (error) => {
             console.error('Error al guardar al usuario', error);
@@ -123,6 +124,7 @@ export class UserProfileComponent {
         }
         this.userService.modUser(userNoP, token).subscribe({
           next: () => {
+            this.openModalCerrar();
           },
           error: (error) => {
             console.error('Error al guardar al usuario', error);
@@ -135,19 +137,6 @@ export class UserProfileComponent {
     } else {
       console.error('Algo ocurrió con el token');
     }
-    console.log(this.user.email);
-    console.log(this.emailInicial);
-    if (this.user.email !== this.emailInicial) {
-      console.log("nuevo correo");
-      if(this.user.contrasena == ''){
-        this.contrasena = window.localStorage["varemo"];
-      } else {
-        this.contrasena = this.user.contrasena;
-      }
-      this.login();
-    }
-
-    this.confirmarModUsuario();
   }
 
   confirmarModUsuario() {
@@ -187,6 +176,16 @@ export class UserProfileComponent {
         console.log('He terminado la petición')
       }
     });
+  }
+
+  isModalCerrar = false;
+
+  openModalCerrar() {
+    this.isModalCerrar = true;
+  }
+
+  closeModalCerrar() {
+    this.isModalCerrar = false;
   }
 
 }

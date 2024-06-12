@@ -12,8 +12,7 @@
             <table class="table .centered-table">
               <thead>
                 <tr>
-                  <th></th>
-                  <th>ID</th>
+                  <th>#</th>
                   <th>Título</th>
                   <th>Contenido</th>
                   <th>Autor</th>
@@ -21,13 +20,11 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let note of notes" [routerLink]="['/notas', note.id]"
-                routerLinkActive="active">
+                <tr *ngFor="let note of notes">
                   <td>
                     <div class="featured-icon">
                       <img class="image" src="../../../assets/notas.png" />
                     </div>
-                  <td>{{ note.id }}</td>
                   <td>{{ note.titulo }}</td>
                   <td>{{ note.contenido }}</td>
                   <td>{{ note.usuario.email }}</td>
@@ -45,31 +42,16 @@
       </div>
     </section>
   </div>
+</div>
 
-  <div id="id01" class="modal">
-    <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
-    <form class="modal-content">
-      <div class="container">
-        <h1>Borrando Nota {{ notaBorradoID }} - {{ notaBorradoTitulo }}</h1>
-        <p>¿Estas seguro de borrar esta nota?</p>
-
-        <div class="clearfix">
-          <button type="button" onclick="document.getElementById('id01').style.display='none'"
-            class="cancelbtn">Cancelar</button>
-          <button type="button" (click)="ocultarElemento('id01'); borrarNota(notaBorradoID)"
-            class="deletebtn">Borrar</button>
-        </div>
-      </div>
-    </form>
+<div id="myModal" class="modal" [ngClass]="{'show': isModalOpen}">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal()">&times;</span>
+    <h1>Borrando Nota {{ notaBorradoID }} - {{ notaBorradoTitulo }}</h1>
+    <p>¿Estás seguro que quieres borrar?</p>
+    <div class="buttons">
+      <button class="btn confirm" (click)="confirmAction(); borrarNota(notaBorradoID)">Confirmar</button>
+      <button class="btn cancel" (click)="closeModal()">Cancelar</button>
+    </div>
   </div>
-
-  <script>
-    var modal = document.getElementById('id01');
-
-    window.onclick = function (event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    }
-  </script>
 </div>
