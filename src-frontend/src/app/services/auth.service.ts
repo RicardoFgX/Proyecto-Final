@@ -9,6 +9,7 @@ export class AuthService {
 
   private apiUrl = 'http://localhost:8080/api/auth'; // Cambia esto si tu API está en otro puerto o dominio
   //private apiUrl = 'http://ec2-44-204-237-104.compute-1.amazonaws.com:8080/api/auth'; // Cambia esto si tu API está en otro puerto o dominio
+  //private apiUrl = 'http://ec2-44-201-118-139.compute-1.amazonaws.com:8080/api/auth'; // Cambia esto si tu API está en otro puerto o dominio
 
   constructor(private http: HttpClient) { }
 

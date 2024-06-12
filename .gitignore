@@ -7,7 +7,6 @@ node_modules
 
 # Carpetas específicas a ignorar
 .metadata
-src-api/target/
 src-api/.idea/
 src-api/.vscode/
 src-api/.metadata/
