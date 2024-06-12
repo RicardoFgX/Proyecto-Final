@@ -21,7 +21,6 @@ import com.daw2.proyectoFinal.services.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 /**
  * Configuración de seguridad para la aplicación.
