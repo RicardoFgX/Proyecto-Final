@@ -1,18 +1,18 @@
 <div class="espaciado">
   <div class="inicial">
-    <div class="d-flex justify-content-end" style="margin-bottom: 20px;">
+    <div class="d-flex justify-content-end mb-3">
       <button type="button" class="btn btn-primary" (click)="irAAdminDashProyectos()">Volver</button>
     </div>
-    <div *ngIf="showNotification" class="alert alert-warning d-flex align-items-center">
+    <div *ngIf="showNotification" class="notification alert alert-warning d-flex align-items-center">
       <img src="../../../assets/warning.png" class="warning">
       <span>{{ notificationMessage }}</span>
     </div>
-
+    <h1>{{proyecto.titulo}}</h1>
     <mat-accordion>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            Modificar Proyecto
+            Detalles Avanzados
           </mat-panel-title>
         </mat-expansion-panel-header>
 
@@ -69,7 +69,6 @@
     </mat-accordion>
   </div>
 
-
   <div cdkDropListGroup class="columns-container">
     <div class="example-container">
       <div class="column-header">
@@ -79,8 +78,12 @@
       <div cdkDropList [cdkDropListData]="pendiente" class="example-list" (cdkDropListDropped)="drop($event)"
         id="PENDIENTE">
         <div *ngFor="let tarea of pendiente" class="example-box" cdkDrag>
-          <div class="drag-handle" cdkDragHandle>☰</div>
-          <div class="tarea-content" (click)="accionClick(tarea)">{{tarea.nombre}}</div>
+          <div class="tarea-content" (click)="modtareaForm(tarea)">
+            <div class="tarea-titulo">
+              <h3>{{tarea.nombre}}</h3>
+            </div>
+            <div class="tarea-descripcion">{{tarea.descripcion}}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -93,8 +96,12 @@
       <div cdkDropList [cdkDropListData]="enProgreso" class="example-list" (cdkDropListDropped)="drop($event)"
         id="EN_PROGRESO">
         <div *ngFor="let tarea of enProgreso" class="example-box" cdkDrag>
-          <div class="drag-handle" cdkDragHandle>☰</div>
-          <div class="tarea-content" (click)="accionClick(tarea)">{{tarea.nombre}}</div>
+          <div class="tarea-content" (click)="modtareaForm(tarea)">
+            <div class="tarea-titulo">
+              <h3>{{tarea.nombre}}</h3>
+            </div>
+            <div class="tarea-descripcion">{{tarea.descripcion}}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -107,18 +114,23 @@
       <div cdkDropList [cdkDropListData]="completado" class="example-list" (cdkDropListDropped)="drop($event)"
         id="COMPLETADA">
         <div *ngFor="let tarea of completado" class="example-box" cdkDrag>
-          <div class="drag-handle" cdkDragHandle>☰</div>
-          <div class="tarea-content" (click)="accionClick(tarea)">{{tarea.nombre}}</div>
+          <div class="tarea-content" (click)="modtareaForm(tarea)">
+            <div class="tarea-titulo">
+              <h3>{{tarea.nombre}}</h3>
+            </div>
+            <div class="tarea-descripcion">{{tarea.descripcion}}</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Modal Borrar Usuario -->
   <div id="myModal" class="modal" [ngClass]="{'show': isModalBorrarUserOpen}">
     <div class="modal-content">
       <span class="close" (click)="closeBorrarUser()">&times;</span>
-      <h2>Esta a punto de borrar a un usuario de este proyecto</h2>
-      <p>¿Estas seguro?</p>
+      <h2>Está a punto de borrar a un usuario de este proyecto</h2>
+      <p>¿Estás seguro?</p>
       <div class="buttons">
         <button class="btn confirm" (click)="closeBorrarUser(); borrarUsuarioConfirmado()">Confirmar</button>
         <button class="btn cancel" (click)="closeBorrarUser()">Cancelar</button>
@@ -126,6 +138,20 @@
     </div>
   </div>
 
+  <!-- Modal Borrar Usuario Actual -->
+  <div id="myModal" class="modal" [ngClass]="{'show': isModalBorrarUserActualOpen}">
+    <div class="modal-content">
+      <span class="close" (click)="closeBorrarUser()">&times;</span>
+      <h2>Está a punto de salirte de este proyecto</h2>
+      <p>¿Estás seguro?</p>
+      <div class="buttons">
+        <button class="btn confirm" (click)="closeBorrarUserActual(); borrarUsuarioActualConfirmado()">Confirmar</button>
+        <button class="btn cancel" (click)="closeBorrarUserActual(); openBorrarUser()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Nuevo Usuario -->
   <div id="myModal2" class="modal" [ngClass]="{'show': isModalNuevoUserOpen}">
     <div class="modal-content">
       <span class="close" (click)="closeNuevoUser()">&times;</span>
@@ -138,6 +164,7 @@
     </div>
   </div>
 
+  <!-- Modal Confirmación -->
   <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
     <div class="modal-content">
       <span class="close" (click)="closeModalCerrar(); irAAdminDashProyectos()">&times;</span>
@@ -148,26 +175,29 @@
             d="M14 27l5 5 14-14" class="check-svg" />
         </svg>
       </div>
-      <p>Se ha realizado la acción satisfactorimente</p>
+      <p>Se ha realizado la acción satisfactoriamente</p>
       <button class="btnCerrar" (click)="closeModalCerrar(); irAAdminDashProyectos()">Cerrar</button>
     </div>
   </div>
 
+  <!-- Modal Borrar Tarea -->
   <div id="myModal" class="modal" [ngClass]="{'show': isModalBorrarTareaOpen}">
     <div class="modal-content">
       <span class="close" (click)="closeBorrarTarea()">&times;</span>
-      <h1>¿Qué acción quieres realizar?</h1>
+      <h1>¿Estás seguro de que quieres borrar la tarea?</h1>
+      <p><i>Esta acción es irreversible</i></p>
       <div class="buttons">
-        <button class="btn confirm" (click)="closeBorrarTarea(); modTarea(tarea.id)"
-          routerLinkActive="active">Modificar</button>
-        <button class="btn cancel" (click)="closeBorrarTarea(); eliminarTarea()">Borrar</button>
+        <button class="btn confirm" (click)="closeBorrarTarea(); eliminarTarea()">Confirmar</button>
+        <button class="btn cancel" (click)="closeBorrarTarea(); openModTarea()">Cancelar</button>
       </div>
     </div>
   </div>
 
+
+  <!-- Modal Confirmar Borrar Tarea -->
   <div id="myModal5" class="modal" [ngClass]="{'show': isModalConfirmarBorrarTareaOpen}">
     <div class="modal-content">
-      <span class="close" (click)="closeModalCerrar(); irAAdminDashProyectos()">&times;</span>
+      <span class="close" (click)="closeModalCerrar();">&times;</span>
       <div class="check-animation">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
           <circle cx="26" cy="26" r="25" fill="none" />
@@ -175,11 +205,12 @@
             d="M14 27l5 5 14-14" class="check-svg" />
         </svg>
       </div>
-      <p>Se ha realizado la acción satisfactorimente</p>
+      <p>Se ha realizado la acción satisfactoriamente</p>
       <button class="btnCerrar" (click)="closeConfirmarBorrarTarea();">Cerrar</button>
     </div>
   </div>
 
+  <!-- Modal Nueva Tarea -->
   <div id="myModalTareaNueva" class="modal" [ngClass]="{'show': isModalNuevoTareaOpen}">
     <div class="modal-content nueva-tarea-modal-content">
       <span class="close nueva-tarea-close" (click)="closeNuevaTarea()">&times;</span>
@@ -200,6 +231,34 @@
         </div>
         <button type="submit" class="btnCerrar nueva-tarea-btn" style="margin-top: 20px; margin-bottom: 20px;"
           (click)="crearTarea()">Añadir</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Modificar Tarea -->
+  <div id="myModalTareaMod" class="modal" [ngClass]="{'show': isModalModTareaOpen}">
+    <div class="modal-content nueva-tarea-modal-content">
+      <span class="close nueva-tarea-close" (click)="closeModTarea()">&times;</span>
+      <h1>Modificar Tarea</h1>
+      <form id="nuevaTareaForm">
+        <div class="form-group">
+          <label for="modTareaNombre">Nombre</label>
+          <input type="text" id="modTareaNombre" [(ngModel)]="tareaModificada.nombre" name="nombre" required>
+        </div>
+        <div class="form-group">
+          <label for="modTareaDescripcion">Descripción</label>
+          <textarea id="modTareaDescripcion" [(ngModel)]="tareaModificada.descripcion" name="descripcion"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="modTareaFechaVencimiento">Fecha de Vencimiento</label>
+          <input type="date" id="modTareaFechaVencimiento" [(ngModel)]="tareaModificada.fechaVencimiento"
+            name="fechaVencimiento">
+        </div>
+        <div class="buttons">
+          <button type="submit" class="btn confirm" style="margin: 20px;" (click)="modificarTarea()">Modificar</button>
+          <button type="submit" class="btn cancel" style="margin: 20px;"
+            (click)="confirmarBorrarTarea(); closeModTarea()">Borrar</button>
+        </div>
       </form>
     </div>
   </div>

@@ -47,7 +47,7 @@ export const routes: Routes = [
   { path: 'adminDash/crearProyecto/tareas', component: AdminDashNewTareaComponent, canMatch: [roleoGuard] },
   { path: 'adminDash/notas', component: AdminDashListNotesComponent, canMatch: [roleoGuard] },
   { path: 'adminDash/proyectos', component: AdminDashListProyectsComponent, canMatch: [roleoGuard] },
-  { path: 'userDash', component: UserDashComponent },
+  { path: 'userHome', component: UserDashComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
 //canMatch: [userGuard]

@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProyectService } from '../../../services/proyect.service';
 import { TareaService } from '../../../services/tarea.service';
 import { UserServiceService } from '../../../services/user-service.service';
+import { jwtDecode } from 'jwt-decode';
 import {
   CdkDrag,
   CdkDragDrop,
@@ -19,7 +20,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSelectModule } from '@angular/material/select';
-
+import { JwtService } from '../../../services/jwt-service.service';
 
 @Component({
   selector: 'app-user-mod-proyects',
@@ -37,13 +38,11 @@ import { MatSelectModule } from '@angular/material/select';
     CdkDropListGroup,
     CdkDropList,
     CdkDrag,
-    // any other modules you need
   ],
   templateUrl: './user-mod-proyects.component.html',
-  styleUrl: './user-mod-proyects.component.css'
+  styleUrls: ['./user-mod-proyects.component.css']
 })
-export class UserModProyectsComponent {
-
+export class UserModProyectsComponent implements OnInit {
   proyecto = {
     id: '',
     titulo: '',
@@ -53,6 +52,10 @@ export class UserModProyectsComponent {
     tareas: [] as any[]
   };
 
+  token: string | null = null;
+
+  emailUsuario: string = '';
+  
   ultimaFechaModificacion: string = '';
 
   tarea = {
@@ -93,16 +96,11 @@ export class UserModProyectsComponent {
   usuarioBorradoEmail: any;
   usuarioBorradoNombre: any;
 
-
   usuarios: any[] = [];
-
   showNotification: boolean = false;
   notificationMessage: string = '';
 
   estados = ['COMPLETADA', 'EN_PROGRESO', 'PENDIENTE'];
-
-  objetos1: string[] = ['Item 1', 'Item 2', 'Item 3'];
-  objetos2: string[] = [];
 
   pendiente: any[] = [];
   enProgreso: any[] = [];
@@ -121,6 +119,31 @@ export class UserModProyectsComponent {
 
   tareaMod: any;
 
+  isModalBorrarUserOpen = false;
+  isModalBorrarUserActualOpen = false;
+  isModalBorrarTareaOpen = false;
+  isModalNuevoUserOpen = false;
+  isModalConfirmarBorrarTareaOpen = false;
+  isModalCerrar = false;
+  isModalNuevoTareaOpen = false;
+  isModalModTareaOpen = false;
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private userService: UserServiceService,
+    private proyectService: ProyectService,
+    private tareaService: TareaService,
+    private jwtService: JwtService
+  ) { }
+
+  ngOnInit(): void {
+    this.getAllUsers();
+    this.getProyect();
+    this.ultimaFechaModificacion = this.getFechaActual();
+    this.checkAuthStatus();
+  }
+
   drop(event: CdkDragDrop<any[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -129,15 +152,11 @@ export class UserModProyectsComponent {
       this.tareaMod = movedItem;
       transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
       this.tareaMod.estado = event.container.id;
-      console.log(`El objeto ${movedItem} ahora está en la columna ${event.container.id}`);
-      console.log(this.tareaMod);
-      console.log(this.tareaMod.estado);
       this.modificarTareaColumna();
     }
   }
 
   modificarTareaColumna(): void {
-    console.log(this.tarea);
     const token = localStorage.getItem('token');
     if (token) {
       const newTarea = {
@@ -151,8 +170,7 @@ export class UserModProyectsComponent {
         }
       }
       this.tareaService.modTarea(newTarea, token).subscribe({
-        next: () => {
-        },
+        next: () => {},
         error: (error: any) => {
           console.error('Error al guardar la tarea', error);
         },
@@ -165,15 +183,10 @@ export class UserModProyectsComponent {
     }
   }
 
-  accionClick(tarea: any) {
-    console.log("Le has hecho click")
-  }
-
   nuevatareaForm(estado: string) {
     this.resetearNuevaTarea();
     this.tareaNueva.estado = estado;
     this.tareaNueva.proyecto.id = this.proyecto.id;
-    console.log(this.tareaNueva)
     this.openNuevaTarea();
   }
 
@@ -187,6 +200,60 @@ export class UserModProyectsComponent {
       proyecto: {
         id: ''
       }
+    }
+  }
+
+  resetearModTarea() {
+    this.tareaModificada = {
+      id: '',
+      nombre: '',
+      descripcion: '',
+      fechaVencimiento: '',
+      estado: '',
+      proyecto: {
+        id: ''
+      }
+    }
+  }
+
+  modtareaForm(tarea: any) {
+    this.tareaModificada.id = tarea.id;
+    this.tareaModificada.estado = tarea.estado;
+    this.tareaModificada.proyecto.id = this.proyecto.id;
+    this.tareaModificada.nombre = tarea.nombre;
+    this.tareaModificada.descripcion = tarea.descripcion;
+    this.tareaModificada.fechaVencimiento = tarea.fechaVencimiento;
+    this.openModTarea();
+  }
+
+  modificarTarea(): void {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const modTarea = {
+        id: this.tareaModificada.id,
+        nombre: this.tareaModificada.nombre,
+        descripcion: this.tareaModificada.descripcion,
+        fechaVencimiento: this.tareaModificada.fechaVencimiento,
+        estado: this.tareaModificada.estado,
+        proyecto: {
+          id: this.proyecto.id
+        }
+      }
+      this.tareaService.modTarea(modTarea, token).subscribe({
+        next: () => {
+          this.closeModTarea();
+          this.getProyect();
+          this.resetearModTarea();
+        },
+        error: (error: any) => {
+          console.error('Error al guardar la tarea', error);
+        },
+        complete: () => {
+          console.log('Petición para modificar la tarea completada');
+        }
+      });
+    } else {
+      console.error('Algo ocurrió con el token');
     }
   }
 
@@ -219,88 +286,6 @@ export class UserModProyectsComponent {
     }
   }
 
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private userService: UserServiceService,
-    private proyectService: ProyectService,
-    private tareaService: TareaService
-  ) { }
-
-  ngOnInit(): void {
-    this.getAllUsers();
-    this.getProyect();
-    console.log(this.proyecto);
-    this.ultimaFechaModificacion = this.getFechaActual();
-    console.log(this.ultimaFechaModificacion);  // Imprime la fecha de creación en el formato correcto
-  }
-
-  estadosC() {
-    this.completado = this.proyecto.tareas.filter(tarea => tarea.estado === 'COMPLETADA');
-    this.enProgreso = this.proyecto.tareas.filter(tarea => tarea.estado === 'EN_PROGRESO');
-    this.pendiente = this.proyecto.tareas.filter(tarea => tarea.estado === 'PENDIENTE');
-
-    // Ahora puedes usar estos arrays según tus necesidades
-    console.log('Tareas Completadas:', this.completado);
-    console.log('Tareas en Progreso:', this.enProgreso);
-    console.log('Tareas Pendientes:', this.pendiente);
-
-  }
-
-  getAllUsers() {
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.userService.getAllUsers(token).subscribe({
-        next: (data: any[]) => {
-          this.usuarios = data;
-        },
-        error: (error) => {
-          console.error('Error al obtener la lista de usuarios:', error);
-        },
-        complete: () => {
-          console.log('Petición para obtener la lista de usuarios completada');
-          console.log(this.usuarios);
-        }
-      });
-    } else {
-      console.error('No se encontró el token de autenticación.');
-    }
-  }
-
-  getProyect(): void {
-    // Obtener el ID del usuario de la URL
-    const noteID = Number(this.route.snapshot.paramMap.get('id'));
-    console.log(noteID);
-    const token = localStorage.getItem('token');
-    if (token) {
-      // Utilizar el servicio de usuario para obtener los datos del usuario por su ID
-      this.proyectService.getProyecto(noteID, token).subscribe({
-        next: (data: any) => {
-          this.proyecto.id = data.id;
-          this.proyecto.titulo = data.nombre;
-          this.proyecto.descripcion = data.descripcion;
-          this.proyecto.fechaCreacion = data.fechaCreacion;
-          this.proyecto.integrantes = data.usuarios;
-          this.proyecto.tareas = data.tareas;
-          this.estadosC();
-          console.log(data);
-          console.log(this.proyecto.integrantes);
-          console.log(this.proyecto.tareas);
-        },
-        error: (error: any) => {
-          console.error('Error al cargar la nota', error);
-        },
-        complete: () => {
-          console.log('Petición para obtener el proyecto completada');
-        }
-      });
-    } else {
-      console.error('Algo ocurrió con el token');
-    }
-  }
-
-
   modificarProyecto(): void {
     const token = localStorage.getItem('token');
     if (token) {
@@ -311,7 +296,6 @@ export class UserModProyectsComponent {
         ultimaFechaModificacion: this.proyecto.fechaCreacion,
         usuarios: this.proyecto.integrantes.map((integrante: any) => ({ id: integrante.id }))
       }
-      console.log(newProyecto);
       this.proyectService.modProyecto(this.proyecto.id, newProyecto, token).subscribe({
         next: () => {
           this.openModalCerrar();
@@ -338,10 +322,8 @@ export class UserModProyectsComponent {
         ultimaFechaModificacion: this.proyecto.fechaCreacion,
         usuarios: this.proyecto.integrantes.map((integrante: any) => ({ id: integrante.id }))
       }
-      console.log(newProyecto);
       this.proyectService.modProyecto(this.proyecto.id, newProyecto, token).subscribe({
-        next: () => {
-        },
+        next: () => {},
         error: (error: any) => {
           console.error('Error al guardar el proyecto', error);
         },
@@ -358,18 +340,14 @@ export class UserModProyectsComponent {
     this.router.navigate(['/proyectos']);
   }
 
-  isModalBorrarUserOpen = false;
-  isModalBorrarTareaOpen = false;
-  isModalNuevoUserOpen = false;
-  isModalConfirmarBorrarTareaOpen = false;
-  isModalCerrar = false;
-  isModalNuevoTareaOpen = false;
-
   openModalCerrar() {
     this.isModalCerrar = true;
   }
   openBorrarUser() {
     this.isModalBorrarUserOpen = true;
+  }
+  openBorrarUserActual() {
+    this.isModalBorrarUserActualOpen = true;
   }
   openNuevoUser() {
     this.isModalNuevoUserOpen = true;
@@ -383,12 +361,18 @@ export class UserModProyectsComponent {
   openNuevaTarea() {
     this.isModalNuevoTareaOpen = true;
   }
+  openModTarea() {
+    this.isModalModTareaOpen = true;
+  }
 
   closeModalCerrar() {
     this.isModalCerrar = false;
   }
   closeBorrarUser() {
     this.isModalBorrarUserOpen = false;
+  }
+  closeBorrarUserActual() {
+    this.isModalBorrarUserActualOpen = false;
   }
   closeNuevoUser() {
     this.isModalNuevoUserOpen = false;
@@ -401,6 +385,9 @@ export class UserModProyectsComponent {
   }
   closeNuevaTarea() {
     this.isModalNuevoTareaOpen = false;
+  }
+  closeModTarea() {
+    this.isModalModTareaOpen = false;
   }
 
   mostrarIdUsuario(email: string): void {
@@ -433,46 +420,75 @@ export class UserModProyectsComponent {
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, '0');
     const day = String(today.getDate()).padStart(2, '0');
-
     return `${year}-${month}-${day}`;
   }
 
-  modificarTarea(tarea: any): void {
-    this.tarea = tarea;
-    this.openBorrarTarea();
-    console.log(this.tarea);
+  estadosC() {
+    this.completado = this.proyecto.tareas.filter(tarea => tarea.estado === 'COMPLETADA');
+    this.enProgreso = this.proyecto.tareas.filter(tarea => tarea.estado === 'EN_PROGRESO');
+    this.pendiente = this.proyecto.tareas.filter(tarea => tarea.estado === 'PENDIENTE');
+    console.log('Tareas Completadas:', this.completado);
+    console.log('Tareas en Progreso:', this.enProgreso);
+    console.log('Tareas Pendientes:', this.pendiente);
   }
 
-  borrarTareaConfirmado(): void {
-    console.log(this.usuarioBorradoID);
-    if (this.usuarioBorradoID) {
-      this.proyecto.integrantes = this.proyecto.integrantes.filter(
-        integrante => integrante.id !== this.usuarioBorradoID
-      );
+  getAllUsers() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.userService.getAllUsers(token).subscribe({
+        next: (data: any[]) => {
+          this.usuarios = data;
+        },
+        error: (error) => {
+          console.error('Error al obtener la lista de usuarios:', error);
+        },
+        complete: () => {
+          console.log('Petición para obtener la lista de usuarios completada');
+          console.log(this.usuarios);
+        }
+      });
+    } else {
+      console.error('No se encontró el token de autenticación.');
     }
   }
 
-  confirmarborrarTarea() {
-    this.openConfirmarBorrarTarea();
+  getProyect(): void {
+    const noteID = Number(this.route.snapshot.paramMap.get('id'));
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.proyectService.getProyecto(noteID, token).subscribe({
+        next: (data: any) => {
+          this.proyecto.id = data.id;
+          this.proyecto.titulo = data.nombre;
+          this.proyecto.descripcion = data.descripcion;
+          this.proyecto.fechaCreacion = data.fechaCreacion;
+          this.proyecto.integrantes = data.usuarios;
+          this.proyecto.tareas = data.tareas;
+          this.estadosC();
+        },
+        error: (error: any) => {
+          console.error('Error al cargar la nota', error);
+        },
+        complete: () => {
+          console.log('Petición para obtener el proyecto completada');
+        }
+      });
+    } else {
+      console.error('Algo ocurrió con el token');
+    }
   }
 
   agregarUsuario(): void {
-    console.log(this.usuarioN.email);
     if (this.usuarioN.email) {
       const usuarioExistente = this.proyecto.integrantes.find(u => u.email === this.usuarioN.email);
       if (usuarioExistente) {
-        console.log('El usuario ya existe en la lista de integrantes del proyecto.');
         this.mostrarNotificacion('El usuario ya existe en la lista de integrantes del proyecto.');
       } else {
-        console.log(this.usuarioN);
-        console.log('Usuario no encontrado, se añadirá a la lista de integrantes del proyecto.');
-        // Crear un nuevo usuario para agregarlo a la lista
         const nuevoUsuario = {
-          id: this.usuarioN.id, // Podrías generar un ID único aquí
-          nombre: this.usuarioN.nombre, // Agrega el nombre si tienes esta información disponible
+          id: this.usuarioN.id,
+          nombre: this.usuarioN.nombre,
           email: this.usuarioN.email
         };
-        // Agregar el nuevo usuario a la lista de integrantes del proyecto
         this.proyecto.integrantes.push(nuevoUsuario);
         this.closeNuevoUser();
       }
@@ -482,12 +498,22 @@ export class UserModProyectsComponent {
   }
 
   borrarUsuarioConfirmado(): void {
-    console.log(this.usuarioBorradoID);
+    if (this.usuarioBorradoID && this.usuarioBorradoEmail !== this.emailUsuario) {
+      this.proyecto.integrantes = this.proyecto.integrantes.filter(
+        integrante => integrante.id !== this.usuarioBorradoID
+      );
+    } else {
+      this.openBorrarUserActual();
+    }
+  }
+
+  borrarUsuarioActualConfirmado(): void {
     if (this.usuarioBorradoID) {
       this.proyecto.integrantes = this.proyecto.integrantes.filter(
         integrante => integrante.id !== this.usuarioBorradoID
       );
-    }
+      this.modificarProyecto();
+    } 
   }
 
   confirmarborrarUsuario(id: number, nombre: any, email: any) {
@@ -500,7 +526,6 @@ export class UserModProyectsComponent {
   mostrarNotificacion(message: string): void {
     this.notificationMessage = message;
     this.showNotification = true;
-
     setTimeout(() => {
       this.showNotification = false;
     }, 3000);
@@ -518,8 +543,10 @@ export class UserModProyectsComponent {
   eliminarTarea(): void {
     const token = localStorage.getItem('token');
     if (token) {
-      this.tareaService.deleteTarea(this.tarea.id, token).subscribe({
+      this.tareaService.deleteTarea(this.tareaModificada.id, token).subscribe({
         next: () => {
+          this.closeModTarea();
+          this.closeBorrarTarea();
           this.openConfirmarBorrarTarea();
           this.getProyect();
         },
@@ -535,6 +562,26 @@ export class UserModProyectsComponent {
     }
   }
 
+  confirmarBorrarTarea() {
+    this.openBorrarTarea();
+  }
 
+  confirmDelete() {
+    this.eliminarTarea();
+    this.closeBorrarTarea();
+  }
+
+  checkAuthStatus() {
+    // Verificar si hay un token guardado en el almacenamiento local
+    this.token = this.jwtService.getToken();
+    if (this.token != null) {
+      try {
+        // Decodificar el token para obtener el correo electrónico del usuario
+        const decodedToken: any = jwtDecode(this.token);
+        this.emailUsuario = decodedToken?.sub; // "sub" es el campo donde se almacena el correo electrónico en el token
+      } catch (error) {
+        console.error('Error al decodificar el token:', error);
+      }
+    }
+  }
 }
-

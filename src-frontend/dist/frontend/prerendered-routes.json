@@ -8,11 +8,13 @@
     "/adminDash/notas",
     "/adminDash/proyectos",
     "/adminDash/usuarios",
+    "/crearNota",
+    "/crearProyecto",
     "/home",
     "/login",
     "/notas",
     "/perfil",
     "/proyectos",
-    "/userDash"
+    "/userHome"
   ]
 }
