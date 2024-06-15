@@ -5,82 +5,53 @@ table {
 }
 
 .adminDash {
-display: grid;
-grid-template-columns: 250px auto; /* Sidebar ocupa 250px y el contenido el espacio restante */
-margin: 0;
-padding:0;
+  display: grid;
+  grid-template-columns: 250px auto; /* Sidebar ocupa 250px y el contenido el espacio restante */
+  margin: 0;
+  padding: 0;
+  transition: grid-template-columns 0.3s ease;
 }
 
-.contenido {
-justify-content: center; /* Centrar horizontalmente */
+.adminDash .main-content {
+  overflow: auto;
 }
 
 .centered-table {
-margin: 0 auto; /* Centra la tabla horizontalmente */
+  margin: 0 auto; /* Centra la tabla horizontalmente */
 }
 
 .featured-icon {
-position: relative;
-width: 40px;
-height: 40px;
-background-color: rgba(244, 235, 255, 1);
-border-radius: 20px;
-display: inline-block; /* Hace que la imagen y el div se muestren en línea */
-vertical-align: middle; /* Alinea verticalmente con el texto */
+  position: relative;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(244, 235, 255, 1);
+  border-radius: 20px;
+  display: inline-block; /* Hace que la imagen y el div se muestren en línea */
+  vertical-align: middle; /* Alinea verticalmente con el texto */
 }
 
 th, td {
-vertical-align: middle;
-text-align: center;
+  vertical-align: middle;
+  text-align: center;
 }
 
-tr:hover{
-background-color: #F9FAFB;
+tr:hover {
+  background-color: #F9FAFB;
 }
 
 .image {
-position: absolute;
-width: 28px;
-height: 28px;
-top: 6px;
-left: 6px;
-object-fit: cover;
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  top: 6px;
+  left: 6px;
+  object-fit: cover;
 }
-.container {
-justify-content: center; /* Centra horizontalmente */
-}
-
-/* Set a style for all buttons */
 
 button:hover {
   opacity: 1;
 }
 
-/* Float cancel and delete buttons and add an equal width */
-.cancelbtn,
-.deletebtn {
-  float: left;
-  width: 50%;
-}
-
-/* Add a color to the cancel button */
-.cancelbtn {
-  background-color: #ccc;
-  color: black;
-}
-
-/* Add a color to the delete button */
-.deletebtn {
-  background-color: #f44336;
-}
-
-/* Add padding and center-align text to the container */
-.container {
-  padding: 16px;
-  text-align: center;
-}
-
-/* Modal styling */
 .modal {
   display: none; 
   position: fixed;
@@ -217,7 +188,7 @@ button:hover {
   transform: translateX(3px); /* Desplaza el SVG 10px hacia la derecha */
 }
 
-.btnCerrar{
+.btnCerrar {
   border-radius: 4px;
   height: 44px;
   font-size: 13px;
@@ -244,4 +215,19 @@ button:hover {
 .btnCerrar:hover {  
   background-color: #102770;
   color: #fff; /* Para mantener el contraste del texto */
+}
+
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.espaciado {
+  margin-bottom: 200px;
 }

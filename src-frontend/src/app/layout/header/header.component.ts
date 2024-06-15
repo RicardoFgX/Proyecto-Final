@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { JwtService } from '../../services/jwt-service.service';
@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit{
   expectedRole = 'ADMINISTRADOR'; // Define el rol esperado
 
 
-  constructor(private jwtService: JwtService) { }
+  constructor(private jwtService: JwtService, private renderer: Renderer2, private el: ElementRef) { }
 
   ngOnInit(): void {
     this.checkAuthStatus();
@@ -54,5 +54,13 @@ export class HeaderComponent implements OnInit{
     this.isAuthenticated = false;
     this.userEmail = null;
     window.location.href = '/home';
+  }
+
+  closeMenu() {
+    const navbar = this.el.nativeElement.querySelector('#navbarSupportedContent');
+    if (navbar.classList.contains('show')) {
+      const button = this.el.nativeElement.querySelector('.navbar-toggler');
+      button.click();
+    }
   }
 }

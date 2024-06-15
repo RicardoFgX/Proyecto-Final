@@ -82,25 +82,25 @@ p {
   animation-delay: -5s;
   animation-duration: 20s;
 }
+
 @keyframes move-forever {
   0% {
-   transform: translate3d(-90px,0,0);
+    transform: translate3d(-90px, 0, 0);
   }
-  100% { 
-    transform: translate3d(85px,0,0);
+  100% {
+    transform: translate3d(85px, 0, 0);
   }
 }
 
-/*Pantallas pequeñas*/
+/* Responsive Styles */
 @media (max-width: 768px) {
-  .waves {
-    height:40px;
-    min-height:40px;
+  .inner-header h1 {
+    font-size: 2rem;
   }
-  .content {
-    height:30vh;
-  }
-  h1 {
-    font-size:24px;
+}
+
+@media (max-width: 480px) {
+  .inner-header h1 {
+    font-size: 1.5rem;
   }
 }

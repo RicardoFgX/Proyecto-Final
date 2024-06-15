@@ -1,10 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-admin-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, MatIconModule, CommonModule],
   templateUrl: './admin-sidebar.component.html',
   styleUrl: './admin-sidebar.component.css'
 })
@@ -38,5 +40,19 @@ export class AdminSidebarComponent implements OnInit{
         break;
     }
   }
+
+  isCollapsed = false;
+
+  toggleSidebar() {
+    this.isCollapsed = !this.isCollapsed;
+    const mainContent = document.querySelector('.adminDash') as HTMLElement;
+    if (mainContent) {
+      if (this.isCollapsed) {
+        mainContent.classList.add('collapsed');
+      } else {
+        mainContent.classList.remove('collapsed');
+      }
+    }
+  } 
 
 }

@@ -8,12 +8,13 @@ import { AuthService } from '../../services/auth.service';
 import { jwtDecode } from 'jwt-decode';
 import { CommonModule } from '@angular/common';
 import { ProyectService } from '../../services/proyect.service';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @Component({
   selector: 'app-user-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, MatExpansionModule, CommonModule],
+  imports: [RouterLink, RouterLinkActive, MatExpansionModule, CommonModule, MatIconModule],
   templateUrl: './user-sidebar.component.html',
   styleUrl: './user-sidebar.component.css'
 })
@@ -37,6 +38,12 @@ export class UserSidebarComponent {
 
   notes: any[] = [];
   proyectos: any[] = [];
+
+  isCollapsed = false;
+
+  toggleSidebar() {
+    this.isCollapsed = !this.isCollapsed;
+  }
 
   constructor(private router: Router, private noteService: NoteService, 
     private jwtService: JwtService, private userService: UserServiceService, 

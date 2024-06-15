@@ -1,32 +1,27 @@
+table {
+  margin-left: 5px;
+  margin-right: 5px;
+  width: 95%;
+}
 
 .adminDash {
   display: grid;
   grid-template-columns: 250px auto; /* Sidebar ocupa 250px y el contenido el espacio restante */
   margin: 0;
-  padding:0;
+  padding: 0;
+  transition: grid-template-columns 0.3s ease;
 }
 
-.contenido {
-  justify-content: center; /* Centrar horizontalmente */
+.adminDash .main-content {
+  overflow: auto;
 }
 
-.header-bg {
-  background-image: url('https://st4.depositphotos.com/13324256/20097/i/450/depositphotos_200978284-stock-photo-blank-bright-blue-abstract-background.jpg');
-  background-size: cover;
-  background-position: center;
-  height: 90vh;
+.main-content section {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  background: linear-gradient(to bottom, #1e3c72, #2a5298);
   color: #fff;
+  padding: 20px;
 }
 
-.content {
-  padding: 50px;
-}
-
-h1 {
-  font-size: 3rem;
-  font-weight: bold;
-}
-
-p {
-  font-size: 1.2rem;
-}

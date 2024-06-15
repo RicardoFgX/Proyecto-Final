@@ -3,39 +3,32 @@
     <div class="row">
       <div class="col-12">
         <nav class="navbar navbar-expand-md navbar-light">
-          <a class="nav-link" routerLink="/home" routerLinkActive="active">
+          <a class="navbar-brand" routerLink="/home" routerLinkActive="active">
             <img src="../../../assets/Logo.png" alt="Logo de Ejemplo">
           </a>
-
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto py-4 py-md-0">
-              <li *ngIf="isAuthenticated" class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+              <li *ngIf="isAuthenticated" class="nav-item pl-4 pl-md-0 ml-0 ml-md-4" (click)="closeMenu()">
                 <a class="nav-link logged" routerLink="/home" routerLinkActive="active">Inicio</a>
               </li>
-              <!-- Si el usuario está autenticado -->
-              <li *ngIf="admin" class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+              <li *ngIf="admin" class="nav-item pl-4 pl-md-0 ml-0 ml-md-4" (click)="closeMenu()">
                 <a class="nav-link logged" routerLink="/adminDash" routerLinkActive="active">Panel Administrador</a>
               </li>
-              <!--
-              <li *ngIf="isAuthenticated" class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                <a class="nav-link logged" (click)="logout()">Cerrar Sesión</a>
-              </li>
-              -->
-              <!-- Si el usuario no está autenticado -->
-              <li *ngIf="!isAuthenticated" class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+              <li *ngIf="!isAuthenticated" class="nav-item pl-4 pl-md-0 ml-0 ml-md-4" (click)="closeMenu()">
                 <a class="nav-link" routerLink="/login" routerLinkActive="active">Iniciar Sesión</a>
               </li>
               <li *ngIf="isAuthenticated" class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                <a [matMenuTriggerFor]="menu" class="nav-link logged" >
-                  {{ userEmail }}
-                </a>
+                <a [matMenuTriggerFor]="menu" class="nav-link logged">{{ userEmail }}</a>
                 <mat-menu #menu="matMenu" class="pepe">
-                  <button mat-menu-item routerLink="/perfil" routerLinkActive="active">Ver Perfil</button>
-                  <button mat-menu-item routerLink="/notas" routerLinkActive="active">Mis Notas</button>
-                  <button mat-menu-item routerLink="/proyectos" routerLinkActive="active">Mis Proyectos</button>
+                  <button mat-menu-item routerLink="/perfil" routerLinkActive="active" (click)="closeMenu()">Ver Perfil</button>
+                  <button mat-menu-item routerLink="/notas" routerLinkActive="active" (click)="closeMenu()">Mis Notas</button>
+                  <button mat-menu-item routerLink="/proyectos" routerLinkActive="active" (click)="closeMenu()">Mis Proyectos</button>
                   <button mat-menu-item (click)="logout()">Cerrar sesión</button>
                 </mat-menu>
-            </li>
+              </li>
             </ul>
           </div>
         </nav>

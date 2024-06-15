@@ -6,11 +6,12 @@ import { UserSidebarComponent } from '../../components/user-sidebar/user-sidebar
 import { UserServiceService } from '../../services/user-service.service';
 import { JwtService } from '../../services/jwt-service.service';
 import { jwtDecode } from 'jwt-decode';
+import { AdminSidebarComponent } from '../../components/admin-sidebar/admin-sidebar.component';
 
 @Component({
   selector: 'app-user-notes',
   standalone: true,
-  imports: [CommonModule, UserSidebarComponent, RouterLink, RouterLinkActive],
+  imports: [CommonModule, UserSidebarComponent, RouterLink, RouterLinkActive, AdminSidebarComponent],
   templateUrl: './user-notes.component.html',
   styleUrl: './user-notes.component.css'
 })
@@ -171,5 +172,13 @@ export class UserNotesComponent {
   confirmAction() {
     console.log('Elemento borrado');
     this.closeModal();
+  }
+
+  truncateText(text: string, maxLength: number): string {
+    if (text.length > maxLength) {
+      return text.slice(0, maxLength) + '...';
+    } else {
+      return text;
+    }
   }
 }

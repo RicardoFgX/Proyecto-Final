@@ -1,54 +1,54 @@
-<div class="adminDash">
-  <app-admin-sidebar></app-admin-sidebar>
-  <div>
-    <section>
-      <div class="align-items-center">
-        <div class="justify-content-center">
-          <div class="d-flex justify-content-end mb-3" style="margin: 30px;">
-            <button class="btn btn-success" [routerLink]="['/adminDash/crearUsuario']" routerLinkActive="active">Crear
-              Usuario</button>
-          </div>
-          <div class="table-responsive bg-white" data-mdb-perfect-scrollbar="true"
-            style="position: relative; height: 70vh;">
-            <table class="table .centered-table">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>ID</th>
-                  <th>Nombre</th>
-                  <th>Apellido</th>
-                  <th>Email</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let usuario of users">
-                  <td>
-                    <div class="featured-icon">
-                      <img class="image" src="../../../assets/user.png" />
-                    </div>
-                  </td>
-                  <td>
-                    {{ usuario.id }}
-                  </td>
-                  <td>
-                    {{ usuario.nombre }}
-                  </td>
-                  <td>{{ usuario.apellidos }}</td>
-                  <td>{{ usuario.email }}</td>
-                  <td>
-                    <button class="btn btn-primary" [routerLink]="['/adminDash/usuarios', usuario.id]"
-                      routerLinkActive="active">Modificar</button>
-                    <button mat-raised-button class="btn btn-danger"
-                      (click)="confirmarborrarUsuario(usuario.id, usuario.email)">Borrar</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+  <div class="adminDash d-flex">
+    <app-admin-sidebar></app-admin-sidebar>
+    <div class="main-content flex-grow-1">
+      <section>
+        <div class="align-items-center">
+          <div class="justify-content-center">
+            <div class="d-flex justify-content-end mb-3" style="margin: 30px;">
+              <button class="btn btn-success" [routerLink]="['/adminDash/crearUsuario']" routerLinkActive="active">Crear
+                Usuario</button>
+            </div>
+            <div class="table-responsive bg-white" data-mdb-perfect-scrollbar="true" style="position: relative; height: 70vh;">
+              <table class="table centered-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Email</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let usuario of users">
+                    <td>
+                      <div class="featured-icon">
+                        <img class="image" src="../../../assets/user.png" />
+                      </div>
+                    </td>
+                    <td>
+                      {{ usuario.id }}
+                    </td>
+                    <td>
+                      {{ usuario.nombre }}
+                    </td>
+                    <td>{{ usuario.apellidos }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>
+                      <button class="btn btn-primary" [routerLink]="['/adminDash/usuarios', usuario.id]"
+                        routerLinkActive="active">Modificar</button>
+                      <button mat-raised-button class="btn btn-danger"
+                        (click)="confirmarborrarUsuario(usuario.id, usuario.email)">Borrar</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   </div>
 
   <div id="id01" class="modal">
@@ -93,4 +93,3 @@
     </div>
   </div>
 
-</div>

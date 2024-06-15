@@ -1,6 +1,6 @@
-<div class="adminDash">
+<div class="adminDash d-flex">
   <app-admin-sidebar></app-admin-sidebar>
-  <div>
+  <div class="main-content flex-grow-1">
     <section>
       <div class="align-items-center">
         <div class="justify-content-center">
@@ -10,7 +10,7 @@
           </div>
           <div class="table-responsive bg-white" data-mdb-perfect-scrollbar="true"
             style="position: relative; height: 70vh;">
-            <table class="table .centered-table">
+            <table class="table centered-table">
               <thead>
                 <tr>
                   <th></th>
@@ -31,7 +31,7 @@
                   </td>
                   <td>{{ proyecto.id }}</td>
                   <td>{{ proyecto.nombre }}</td>
-                  <td>{{ proyecto.descripcion }}</td>
+                  <td>{{ truncateText(proyecto.descripcion, 30) }}</td>
                   <td>{{ proyecto.fechaCreacion }}</td>
                   <td>{{ proyecto.ultimaFechaModificacion }}</td>
                   <td>
@@ -48,32 +48,31 @@
       </div>
     </section>
   </div>
+</div>
 
-  <div id="myModal" class="modal" [ngClass]="{'show': isModalOpen}">
-    <div class="modal-content">
-      <span class="close" (click)="closeModal()">&times;</span>
-      <h1>Borrando Proyecto {{ proyectoBorradoID }} - {{ proyectoBorradoTitulo }}</h1>
-      <p>¿Estás seguro que quieres borrar?</p>
-      <div class="buttons">
-        <button class="btn confirm" (click)="confirmAction(); borrarProyecto(proyectoBorradoID)">Confirmar</button>
-        <button class="btn cancel" (click)="closeModal()">Cancelar</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
-    <div class="modal-content">
-      <span class="close" (click)="closeModalCerrar()">&times;</span>
-      <div class="check-animation">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-          <circle cx="26" cy="26" r="25" fill="none" />
-          <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
-            d="M14 27l5 5 14-14" class="check-svg" />
-        </svg>
-      </div>
-      <p>Se ha realizado la acción satisfactorimente</p>
-      <button class="btnCerrar" (click)="closeModalCerrar()">Cerrar</button>
+<div id="myModal" class="modal" [ngClass]="{'show': isModalOpen}">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal()">&times;</span>
+    <h1>Borrando Proyecto {{ proyectoBorradoID }} - {{ proyectoBorradoTitulo }}</h1>
+    <p>¿Estás seguro que quieres borrar?</p>
+    <div class="buttons">
+      <button class="btn confirm" (click)="confirmAction(); borrarProyecto(proyectoBorradoID)">Confirmar</button>
+      <button class="btn cancel" (click)="closeModal()">Cancelar</button>
     </div>
   </div>
 </div>
 
+<div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
+  <div class="modal-content">
+    <span class="close" (click)="closeModalCerrar()">&times;</span>
+    <div class="check-animation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="25" fill="none" />
+        <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
+          d="M14 27l5 5 14-14" class="check-svg" />
+      </svg>
+    </div>
+    <p>Se ha realizado la acción satisfactorimente</p>
+    <button class="btnCerrar" (click)="closeModalCerrar()">Cerrar</button>
+  </div>
+</div>

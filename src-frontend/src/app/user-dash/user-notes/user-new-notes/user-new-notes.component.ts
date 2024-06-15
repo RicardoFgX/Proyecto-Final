@@ -139,6 +139,7 @@ export class UserNewNotesComponent {
             id: this.usuario.id
           }
         }
+        console.log(newNote);
         this.noteService.createNota(newNote, token).subscribe({
           next: () => {
             this.openModalCerrar()

@@ -1,179 +1,218 @@
-
 .barra-lateral-admin {
-    position: relative;
-    width: 260px;
-    height: 100hv;
-    background-color: rgba(246, 248, 249, 1);
-  }
-  
-  .barra-lateral-admin .divider {
-    position: absolute;
-    width: 1px;
-    height: 100hv;
-    top: 0;
-    left: 100%;
-    background-color: rgba(132, 145, 154, 1);
-  }
-  
-  .barra-lateral-admin .project-sections {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-    position: absolute;
-    top: 16px;
-    left: 16px;
-  }
-  
-  .barra-lateral-admin .project {
-    display: flex;
-    width: 208px;
-    align-items: center;
-    gap: 8px;
-    position: relative;
-    flex: 0 0 auto;
-  }
-  
-  .barra-lateral-admin .at-symbol {
-    position: relative;
-    width: 32px;
-    height: 32px;
-  }
-  
-  .barra-lateral-admin .title-description {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    flex-grow: 1;
-    position: relative;
-    flex: 1;
-  }
-  
-  .barra-lateral-admin .text-wrapper {
-    position: relative;
-    align-self: stretch;
-    margin-top: -1px;
-    font-family: "Inter", Helvetica;
-    font-weight: 600;
-    color: rgba(37, 44, 50, 1);
-    font-size: 14px;
-    letter-spacing: -0.0840000033378601px;
-    line-height: 24px;
-    font-style: 14px;
-  }
-  
-  .barra-lateral-admin .div {
-    position: relative;
-    align-self: stretch;
-    font-family: "Inter-Regular", Helvetica;
-    font-weight: 400;
-    color: rgba(132, 145, 154, 1);
-    font-size: 11.5px;
-    letter-spacing: 0;
-    line-height: 16px;
-  }
-  
-  .barra-lateral-admin .sections {
-    display: flex;
-    flex-direction: column;
-    width: 208px;
-    align-items: flex-start;
-    position: relative;
-    flex: 0 0 auto;
-  }
-  
-  .barra-lateral-admin .sidenav-item{
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 4px 12px 4px 8px;
-    position: relative;
-    align-self: stretch;
-    width: 100%;
-    flex: 0 0 auto;
-    border-radius: 6px;
-    overflow: hidden;
-  }
-
-  .barra-lateral-admin a{
-    padding: 0px;
-    display: flex;
-    align-items: flex-start;
-    position: relative;
-    align-self: stretch;
-    width: 100%;
-    border-radius: 6px;
-    overflow: hidden;
-  }
-  
-  .barra-lateral-admin a:hover{
-    background-color: rgba(215, 237, 255, 1);
-  }
-  
-  .barra-lateral-admin .img {
-    position: relative;
-    width: 24px;
-    height: 24px;
-  }
-  
-  .barra-lateral-admin .title {
-    margin-top: -1px;
-    font-family: "Inter", Helvetica;
-    font-weight: 600;
-    color: rgba(14, 115, 246, 1);
-    font-size: 14px;
-    letter-spacing: -0.0840000033378601px;
-    line-height: 24px;
-    position: relative;
-    flex: 1;
-    font-style: normal;
-  }
-  
-  
-  .barra-lateral-admin .title-2 {
-    position: relative;
-    flex: 1;
-    margin-top: -1px;
-    font-family: "Inter", Helvetica;
-    font-weight: 600;
-    color: rgba(37, 44, 50, 1);
-    font-size: 14px;
-    letter-spacing: -0.0840000033378601px;
-    line-height: 24px;
-    font-style: normal;
-  }
-  
-  .barra-lateral-admin .sidenav-divider {
-    height: 24px;
-    position: relative;
-    align-self: stretch;
-    width: 100%;
-    border-radius: 6px;
-    overflow: hidden;
-  }
-  
-  .barra-lateral-admin .divider-2 {
-    position: relative;
-    width: 208px;
-    height: 1px;
-    top: 12px;
-    background-color: grey;
-  }
-  
-  .svg-blue {
-    fill: rgba(14, 115, 246, 1);
-  }
-
-  .sidenav-item.active {
-    background-color: #f0f0f0; /* Color de fondo activo */
-    color: #333; /* Color del texto activo */
+  position: relative;
+  width: 260px;
+  height: 100vh;
+  background-color: rgba(246, 248, 249, 1);
+  transition: transform 0.3s ease, width 0.3s ease;
 }
 
-.mat-accordion{
+.barra-lateral-admin.collapsed {
+  width: 0;
+  transform: translateX(-260px);
+}
+
+.barra-lateral-admin .divider {
+  position: absolute;
+  width: 1px;
+  height: 100vh;
+  top: 0;
+  left: 100%;
+  background-color: rgba(132, 145, 154, 1);
+}
+
+.barra-lateral-admin .toggle-button .cerrado{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  position: absolute;
+  top: 10px;
+  right: -40px;
+  width: 40px;
+  z-index: 2;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, right 0.3s ease;
+}
+.barra-lateral-admin .toggle-button .abierto {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  position: absolute;
+  top: 10px;
+  right: -40px;
+  width: 40px;
+  z-index: 2;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, right 0.3s ease;
+}
+
+.barra-lateral-admin.collapsed .toggle-button {
+  right: -40px;
+  transform: translateX(260px);
+}
+
+.barra-lateral-admin .project-sections {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  position: absolute;
+  top: 10px;
+  left: 16px;
+  transition: opacity 0.3s ease;
+}
+
+.barra-lateral-admin .project {
+  display: flex;
+  width: 208px;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.barra-lateral-admin .at-symbol {
+  position: relative;
+  width: 32px;
+  height: 32px;
+}
+
+.barra-lateral-admin .title-description {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-grow: 1;
+  position: relative;
+  flex: 1;
+}
+
+.barra-lateral-admin .text-wrapper {
+  position: relative;
+  align-self: stretch;
+  margin-top: -1px;
+  font-family: "Inter", Helvetica;
+  font-weight: 600;
+  color: rgba(37, 44, 50, 1);
+  font-size: 14px;
+  letter-spacing: -0.0840000033378601px;
+  line-height: 24px;
+}
+
+.barra-lateral-admin .div {
+  position: relative;
+  align-self: stretch;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: rgba(132, 145, 154, 1);
+  font-size: 11.5px;
+  line-height: 16px;
+}
+
+.barra-lateral-admin .sections {
+  display: flex;
+  flex-direction: column;
+  width: 208px;
+  align-items: flex-start;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.barra-lateral-admin .sidenav-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 4px 12px 4px 8px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.barra-lateral-admin a {
+  padding: 0px;
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.barra-lateral-admin a:hover {
+  background-color: rgba(215, 237, 255, 1);
+}
+
+.barra-lateral-admin .img {
+  position: relative;
+  width: 24px;
+  height: 24px;
+}
+
+.barra-lateral-admin .title {
+  margin-top: -1px;
+  font-family: "Inter", Helvetica;
+  font-weight: 600;
+  color: rgba(14, 115, 246, 1);
+  font-size: 14px;
+  letter-spacing: -0.0840000033378601px;
+  line-height: 24px;
+  position: relative;
+  flex: 1;
+}
+
+.barra-lateral-admin .title-2 {
+  position: relative;
+  flex: 1;
+  margin-top: -1px;
+  font-family: "Inter", Helvetica;
+  font-weight: 600;
+  color: rgba(37, 44, 50, 1);
+  font-size: 14px;
+  letter-spacing: -0.0840000033378601px;
+  line-height: 24px;
+}
+
+.barra-lateral-admin .sidenav-divider {
+  height: 24px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.barra-lateral-admin .divider-2 {
+  position: relative;
+  width: 208px;
+  height: 1px;
+  top: 12px;
+  background-color: grey;
+}
+
+.svg-blue {
+  fill: rgba(14, 115, 246, 1);
+}
+
+.sidenav-item.active {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.mat-accordion {
   width: 220px;
 }
 
-p:hover{
+p:hover {
   background-color: #F5F5F5;
 }
 
@@ -183,6 +222,6 @@ p {
   margin: 0px;
   height: 35px;
   display: flex;
-  align-items: center; 
+  align-items: center;
   cursor: pointer;
 }
