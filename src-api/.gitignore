@@ -1,6 +1,13 @@
 HELP.md
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/test/**/target/
+/target/classes
+/target/general-sources
+/target/general-test-sources
+/target/maven-archiver
+/target/maven-status
+/target/surefire-reports
+/target/test-clases
 
 ### STS ###
 .metadata
@@ -11,6 +18,7 @@ HELP.md
 .settings
 .springBeans
 .sts4-cache
+
 
 ### IntelliJ IDEA ###
 .idea
