@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UserServiceService } from '../../services/user-service.service';
 import { NoteService } from '../../services/note.service';
@@ -8,33 +8,33 @@ import { NoteService } from '../../services/note.service';
 @Component({
   selector: 'app-admin-dash-new-note',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, ReactiveFormsModule],
   templateUrl: './admin-dash-new-note.component.html',
   styleUrl: './admin-dash-new-note.component.css'
 })
-export class AdminDashNewNoteComponent {
-  nota = {
-    id: '',
-    titulo: '',
-    contenido: '',
-    usuario: {
-      id: ''
-    }
-  };
+export class AdminDashNewNoteComponent implements OnInit {
+  notaForm: FormGroup;
+  usuarios: any[] = [];
+  blacklistedWords = ['jolines', 'joder'];
 
   usuario = {
     email: '',
     id: '',
   };
 
-  usuarios: any[] = [];
-
   constructor(
+    private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserServiceService,
     private noteService: NoteService
-  ) { }
+  ) {
+    this.notaForm = this.fb.group({
+      titulo: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]],
+      contenido: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]],
+      email: ['', [Validators.required]]
+    });
+  }
 
   ngOnInit(): void {
     this.getAllUsers();
@@ -61,38 +61,39 @@ export class AdminDashNewNoteComponent {
   }
 
   crearNota(): void {
-    const token = localStorage.getItem('token');
-    this.buscarIdUsuario();
-    if (token) {
-        const newNote = {
-          id: this.nota.id,
-          titulo: this.nota.titulo,
-          contenido: this.nota.contenido,
-          usuario: {
-            id: this.usuario.id
-          }
+    this.buscarIdUsuario()
+    if (this.notaForm.valid) {
+      const token = localStorage.getItem('token');
+      const newNote = {
+        id: this.route.snapshot.paramMap.get('id'),
+        titulo: this.notaForm.value.titulo,
+        contenido: this.notaForm.value.contenido,
+        usuario: {
+          id: this.usuario.id
         }
+      };
+      if (token) {
         this.noteService.createNota(newNote, token).subscribe({
           next: () => {
-            this.openModalCerrar()
+            this.openModalCerrar();
           },
           error: (error: any) => {
-            console.error('Error al guardar al usuario', error);
+            console.error('Error al guardar la nota', error);
           },
           complete: () => {
-            console.log('Petición para modificar el usuario completada'); 
+            console.log('Petición para crear la nota completada');
           }
         });
       } else {
-      console.error('Algo ocurrió con el token');
+        console.error('Algo ocurrió con el token');
+      }
     }
   }
-  
+
   irAAdminDashNotas() {
     this.router.navigate(['/adminDash/notas']);
   }
 
-  isModalOpen = false;
   isModalCerrar = false;
 
   openModalCerrar() {
@@ -103,6 +104,16 @@ export class AdminDashNewNoteComponent {
     this.isModalCerrar = false;
   }
 
+  blacklistValidator(blacklistedWords: string[]) {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (!control.value) {
+        return null;
+      }
+      const hasBlacklistedWord = blacklistedWords.some(word => control.value.includes(word));
+      return hasBlacklistedWord ? { blacklisted: true } : null;
+    };
+  }
+
   mostrarIdUsuario(email: string): void {
     const usuarioSeleccionado = this.usuarios.find(usuario => usuario.email === email);
     if (usuarioSeleccionado) {
@@ -111,8 +122,9 @@ export class AdminDashNewNoteComponent {
   }
 
   buscarIdUsuario(): void {
-    if (this.usuario.email) {
-      const usuario = this.usuarios.find(u => u.email === this.usuario.email);
+  console.log(this.notaForm.value.email)
+    if (this.notaForm.value.email) {
+      const usuario = this.usuarios.find(u => u.email === this.notaForm.value.email);
       if (usuario) {
         console.log('ID del usuario:', usuario.id);
         this.usuario.id = usuario.id

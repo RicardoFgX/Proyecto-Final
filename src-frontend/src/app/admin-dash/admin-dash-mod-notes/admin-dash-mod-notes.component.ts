@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UserServiceService } from '../../services/user-service.service';
 import { NoteService } from '../../services/note.service';
@@ -8,33 +8,33 @@ import { NoteService } from '../../services/note.service';
 @Component({
   selector: 'app-admin-dash-mod-notes',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, ReactiveFormsModule],
   templateUrl: './admin-dash-mod-notes.component.html',
   styleUrl: './admin-dash-mod-notes.component.css'
 })
-export class AdminDashModNotesComponent {
-  nota = {
-    id: '',
-    titulo: '',
-    contenido: '',
-    usuario: {
-      id: ''
-    }
-  };
+export class AdminDashModNotesComponent implements OnInit {
+  notaForm: FormGroup;
+  usuarios: any[] = [];
+  blacklistedWords = ['jolines', 'joder'];
 
   usuario = {
     email: '',
     id: '',
   };
 
-  usuarios: any[] = [];
-
   constructor(
+    private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserServiceService,
     private noteService: NoteService
-  ) { }
+  ) {
+    this.notaForm = this.fb.group({
+      titulo: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]],
+      contenido: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]],
+      email: ['', [Validators.required]]
+    });
+  }
 
   ngOnInit(): void {
     this.getAllUsers();
@@ -62,20 +62,16 @@ export class AdminDashModNotesComponent {
   }
 
   getNote(): void {
-    // Obtener el ID del usuario de la URL
     const noteID = Number(this.route.snapshot.paramMap.get('id'));
-    console.log(noteID);
     const token = localStorage.getItem('token');
     if (token) {
-      // Utilizar el servicio de usuario para obtener los datos del usuario por su ID
       this.noteService.getNota(noteID, token).subscribe({
         next: (data: any) => {
-          this.nota.id = data.id;
-          this.nota.titulo = data.titulo;
-          this.nota.contenido = data.contenido;
-          this.usuario.email = data.usuario.email;
-          console.log(data);
-          console.log(this.usuario.email);
+          this.notaForm.patchValue({
+            titulo: data.titulo,
+            contenido: data.contenido,
+            email: data.usuario.email
+          });
         },
         error: (error: any) => {
           console.error('Error al cargar la nota', error);
@@ -90,38 +86,40 @@ export class AdminDashModNotesComponent {
   }
 
   modificarNota(): void {
-    const token = localStorage.getItem('token');
     this.buscarIdUsuario();
-    if (token) {
-        const newNote = {
-          id: this.nota.id,
-          titulo: this.nota.titulo,
-          contenido: this.nota.contenido,
-          usuario: {
-            id: this.usuario.id
-          }
+    if (this.notaForm.valid) {
+      const token = localStorage.getItem('token');
+      const newNote = {
+        id: this.route.snapshot.paramMap.get('id'),
+        titulo: this.notaForm.value.titulo,
+        contenido: this.notaForm.value.contenido,
+        usuario: {
+          id: this.usuario.id
         }
+      };
+      console.log(newNote)
+      if (token) {
         this.noteService.modNota(newNote, token).subscribe({
           next: () => {
             this.openModalCerrar();
           },
           error: (error: any) => {
-            console.error('Error al guardar al usuario', error);
+            console.error('Error al guardar la nota', error);
           },
           complete: () => {
-            console.log('Petición para modificar el usuario completada'); 
+            console.log('Petición para modificar la nota completada');
           }
         });
       } else {
-      console.error('Algo ocurrió con el token');
+        console.error('Algo ocurrió con el token');
+      }
     }
   }
-  
+
   irAAdminDashNotas() {
     this.router.navigate(['/adminDash/notas']);
   }
 
-  isModalOpen = false;
   isModalCerrar = false;
 
   openModalCerrar() {
@@ -132,6 +130,16 @@ export class AdminDashModNotesComponent {
     this.isModalCerrar = false;
   }
 
+  blacklistValidator(blacklistedWords: string[]) {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (!control.value) {
+        return null;
+      }
+      const hasBlacklistedWord = blacklistedWords.some(word => control.value.includes(word));
+      return hasBlacklistedWord ? { blacklisted: true } : null;
+    };
+  }
+
   mostrarIdUsuario(email: string): void {
     const usuarioSeleccionado = this.usuarios.find(usuario => usuario.email === email);
     if (usuarioSeleccionado) {
@@ -140,8 +148,9 @@ export class AdminDashModNotesComponent {
   }
 
   buscarIdUsuario(): void {
-    if (this.usuario.email) {
-      const usuario = this.usuarios.find(u => u.email === this.usuario.email);
+  console.log(this.notaForm.value.email)
+    if (this.notaForm.value.email) {
+      const usuario = this.usuarios.find(u => u.email === this.notaForm.value.email);
       if (usuario) {
         console.log('ID del usuario:', usuario.id);
         this.usuario.id = usuario.id

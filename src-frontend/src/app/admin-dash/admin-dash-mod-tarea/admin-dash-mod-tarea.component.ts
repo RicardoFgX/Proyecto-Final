@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -11,54 +12,48 @@ import { Location } from '@angular/common';
 @Component({
   selector: 'app-admin-dash-mod-tarea',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, MatCardModule, MatInputModule, MatIconModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, MatCardModule, MatInputModule, MatIconModule, RouterLink, RouterLinkActive],
   templateUrl: './admin-dash-mod-tarea.component.html',
   styleUrl: './admin-dash-mod-tarea.component.css'
 })
-export class AdminDashModTareaComponent {
-
-  tarea = {
-    id: '',
-    nombre: '',
-    descripcion: '',
-    fechaVencimiento: '',
-    estado: '',
-    proyecto: {
-      id: ''
-    }
-  }
+export class AdminDashModTareaComponent implements OnInit {
+  tareaForm: FormGroup;
+  blacklistedWords = ['jolines', 'joder'];
 
   estados = ['COMPLETADA', 'EN_PROGRESO', 'PENDIENTE'];
 
   constructor(
+    private fb: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router,
     private tareaService: TareaService,
     private location: Location
-  ) { }
+  ) {
+    this.tareaForm = this.fb.group({
+      id: [''],
+      nombre: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]],
+      descripcion: ['', [this.blacklistValidator(this.blacklistedWords)]],
+      fechaVencimiento: ['', Validators.required],
+      estado: ['']
+    });
+  }
 
   ngOnInit(): void {
     this.getTarea();
-    this.tarea.proyecto.id = window.localStorage.getItem('idProyecto') || '';
   }
 
   getTarea(): void {
-    // Obtener el ID del usuario de la URL
     const tareaID = Number(this.route.snapshot.paramMap.get('id'));
-    console.log(tareaID);
     const token = localStorage.getItem('token');
     if (token) {
-      // Utilizar el servicio de usuario para obtener los datos del usuario por su ID
       this.tareaService.getTarea(tareaID, token).subscribe({
         next: (data: any) => {
-          this.tarea.id = data.id;
-          this.tarea.nombre = data.nombre;
-          this.tarea.descripcion = data.descripcion;
-          this.tarea.fechaVencimiento = data.fechaVencimiento;
-          this.tarea.estado = data.estado;
-          this.tarea.proyecto.id = window.localStorage["idProyecto"];
-          console.log(data);
-          console.log(this.tarea);
+          this.tareaForm.patchValue({
+            id: data.id,
+            nombre: data.nombre,
+            descripcion: data.descripcion,
+            fechaVencimiento: data.fechaVencimiento,
+            estado: data.estado
+          });
         },
         error: (error: any) => {
           console.error('Error al cargar la tarea', error);
@@ -77,19 +72,23 @@ export class AdminDashModTareaComponent {
   }
 
   modificarTarea(): void {
-    console.log(this.tarea);
+    if (this.tareaForm.invalid) {
+      this.tareaForm.markAllAsTouched();
+      return;
+    }
     const token = localStorage.getItem('token');
     if (token) {
+      const formValue = this.tareaForm.value;
       const newTarea = {
-        id: this.tarea.id,
-        nombre: this.tarea.nombre,
-        descripcion: this.tarea.descripcion,
-        fechaVencimiento: this.tarea.fechaVencimiento,
-        estado: this.tarea.estado,
+        id: formValue.id,
+        nombre: formValue.nombre,
+        descripcion: formValue.descripcion,
+        fechaVencimiento: formValue.fechaVencimiento,
+        estado: formValue.estado,
         proyecto: {
-          id: this.tarea.proyecto.id
+          id: window.localStorage.getItem('idProyecto') || ''
         }
-      }
+      };
       this.tareaService.modTarea(newTarea, token).subscribe({
         next: () => {
           this.openModalCerrar();
@@ -106,7 +105,6 @@ export class AdminDashModTareaComponent {
     }
   }
 
-  isModalOpen = false;
   isModalCerrar = false;
 
   openModalCerrar() {
@@ -117,4 +115,13 @@ export class AdminDashModTareaComponent {
     this.isModalCerrar = false;
   }
 
+  blacklistValidator(blacklistedWords: string[]) {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (!control.value) {
+        return null;
+      }
+      const hasBlacklistedWord = blacklistedWords.some(word => control.value.includes(word));
+      return hasBlacklistedWord ? { blacklisted: true } : null;
+    };
+  }
 }

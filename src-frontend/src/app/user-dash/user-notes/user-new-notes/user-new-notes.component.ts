@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NoteService } from '../../../services/note.service';
 import { UserServiceService } from '../../../services/user-service.service';
@@ -10,19 +10,16 @@ import { JwtService } from '../../../services/jwt-service.service';
 @Component({
   selector: 'app-user-new-notes',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, ReactiveFormsModule],
   templateUrl: './user-new-notes.component.html',
-  styleUrl: './user-new-notes.component.css'
+  styleUrls: ['./user-new-notes.component.css']
 })
-export class UserNewNotesComponent {
-  nota = {
-    id: '',
-    titulo: '',
-    contenido: '',
-    usuario: {
-      id: ''
-    }
-  };
+export class UserNewNotesComponent implements OnInit {
+  notaForm: FormGroup;
+
+  blacklistedWords = [
+    'maricón', 'puto', 'joder', 'mierda', 'cabrón', 'cabron', 'bastardo'
+  ];
 
   usuario = {
     email: '',
@@ -30,7 +27,6 @@ export class UserNewNotesComponent {
   };
 
   emailInicial: string = '';
-
 
   emailRequest = {
     email: ''
@@ -44,19 +40,47 @@ export class UserNewNotesComponent {
     contrasena: '',
   };
 
+  usuarios: any[] = [];
+
   userEmail: string | null = null;
   token: string | null = null;
 
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private userService: UserServiceService,
+    private noteService: NoteService,
+    private jwtService: JwtService
+  ) {
+    this.notaForm = this.fb.group({
+      titulo: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]],
+      contenido: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]]
+    });
+  }
+
+  ngOnInit(): void {
+    this.getAllUsers();
+    this.checkAuthStatus();
+    this.getUser();
+  }
+
+  blacklistValidator(blacklist: string[]) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) {
+        return null;
+      }
+      const hasBlacklistedWord = blacklist.some(word => control.value.toLowerCase().includes(word.toLowerCase()));
+      return hasBlacklistedWord ? { 'blacklisted': true } : null;
+    };
+  }
+
   checkAuthStatus() {
-    // Verificar si hay un token guardado en el almacenamiento local
     this.token = this.jwtService.getToken();
     if (this.token != null) {
       try {
-        // Decodificar el token para obtener el correo electrónico del usuario
         const decodedToken: any = jwtDecode(this.token);
-        console.log(decodedToken?.sub);
-        this.emailRequest.email = decodedToken?.sub; // "sub" es el campo donde se almacena el correo electrónico en el token
-        console.log(this.emailRequest)
+        this.emailRequest.email = decodedToken?.sub;
       } catch (error) {
         console.error('Error al decodificar el token:', error);
       }
@@ -64,11 +88,8 @@ export class UserNewNotesComponent {
   }
 
   getUser(): void {
-    // Obtener el ID del usuario de la URL
     const token = localStorage.getItem('token');
     if (token) {
-      // Utilizar el servicio de usuario para obtener los datos del usuario por su ID
-      console.log(this.emailRequest)
       this.userService.getUserEmail(this.emailRequest, token).subscribe({
         next: (data: any) => {
           this.user.id = data.id;
@@ -77,7 +98,6 @@ export class UserNewNotesComponent {
           this.user.apellidos = data.apellidos;
           this.user.email = data.email;
           this.emailInicial = data.email;
-          console.log(data);
         },
         error: (error) => {
           console.error('Error al cargar al usuario', error);
@@ -89,22 +109,6 @@ export class UserNewNotesComponent {
     } else {
       console.error('Algo ocurrió con el token');
     }
-  }
-
-  usuarios: any[] = [];
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private userService: UserServiceService,
-    private noteService: NoteService,
-    private jwtService: JwtService
-  ) { }
-
-  ngOnInit(): void {
-    this.getAllUsers();
-    this.checkAuthStatus();
-    this.getUser();
   }
 
   getAllUsers() {
@@ -119,7 +123,6 @@ export class UserNewNotesComponent {
         },
         complete: () => {
           console.log('Petición para obtener la lista de usuarios completada');
-          console.log(this.usuarios);
         }
       });
     } else {
@@ -130,35 +133,33 @@ export class UserNewNotesComponent {
   crearNota(): void {
     const token = localStorage.getItem('token');
     this.buscarIdUsuario();
-    if (token) {
-        const newNote = {
-          id: this.nota.id,
-          titulo: this.nota.titulo,
-          contenido: this.nota.contenido,
-          usuario: {
-            id: this.usuario.id
-          }
+    if (this.notaForm.valid && token) {
+      const newNote = {
+        titulo: this.notaForm.value.titulo,
+        contenido: this.notaForm.value.contenido,
+        usuario: {
+          id: this.usuario.id
         }
-        console.log(newNote);
-        this.noteService.createNota(newNote, token).subscribe({
-          next: () => {
-            this.openModalCerrar()
-          },
-          error: (error: any) => {
-            console.error('Error al guardar al usuario', error);
-          },
-          complete: () => {
-            console.log('Petición para modificar el usuario completada'); 
-          }
-        });
-      } else {
-      console.error('Algo ocurrió con el token');
+      }
+      this.noteService.createNota(newNote, token).subscribe({
+        next: () => {
+          this.openModalCerrar();
+        },
+        error: (error: any) => {
+          console.error('Error al guardar al usuario', error);
+        },
+        complete: () => {
+          console.log('Petición para modificar el usuario completada'); 
+        }
+      });
+    } else {
+      console.error('Algo ocurrió con el token o el formulario no es válido');
     }
   }
-  
+
   irAAdminDashNotas() {
     this.router.navigate(['/notas']);
-    }
+  }
 
   isModalOpen = false;
   isModalCerrar = false;
@@ -182,8 +183,7 @@ export class UserNewNotesComponent {
     if (this.usuario.email) {
       const usuario = this.usuarios.find(u => u.email === this.usuario.email);
       if (usuario) {
-        console.log('ID del usuario:', usuario.id);
-        this.usuario.id = usuario.id
+        this.usuario.id = usuario.id;
       } else {
         console.log('Usuario no encontrado');
       }

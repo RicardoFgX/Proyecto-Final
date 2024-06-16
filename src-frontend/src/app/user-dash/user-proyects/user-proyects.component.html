@@ -33,7 +33,7 @@
                   <td>{{ proyecto.ultimaFechaModificacion }}</td>
                   <td>
                     <button class="btn btn-primary" (click)="modificarProyecto(proyecto.id)"
-                      [routerLink]="['/proyectos', proyecto.id]" routerLinkActive="active">Modificar</button>
+                      [routerLink]="['/proyectos', proyecto.id]" routerLinkActive="active">Ver</button>
                     <button mat-raised-button class="btn btn-danger"
                       (click)="confirmarborrarProyecto(proyecto.id, proyecto.nombre)">Borrar</button>
                   </td>

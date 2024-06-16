@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NoteService } from '../../../services/note.service';
 import { UserServiceService } from '../../../services/user-service.service';
@@ -8,19 +8,16 @@ import { UserServiceService } from '../../../services/user-service.service';
 @Component({
   selector: 'app-user-mod-notes',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule],
   templateUrl: './user-mod-notes.component.html',
-  styleUrl: './user-mod-notes.component.css'
+  styleUrls: ['./user-mod-notes.component.css']
 })
-export class UserModNotesComponent {
-  nota = {
-    id: '',
-    titulo: '',
-    contenido: '',
-    usuario: {
-      id: ''
-    }
-  };
+export class UserModNotesComponent implements OnInit {
+  notaForm: FormGroup;
+
+  blacklistedWords = [
+    'maricón', 'puto', 'joder', 'mierda', 'cabrón', 'cabron', 'bastardo'
+  ];
 
   usuario = {
     email: '',
@@ -30,15 +27,31 @@ export class UserModNotesComponent {
   usuarios: any[] = [];
 
   constructor(
+    private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserServiceService,
     private noteService: NoteService
-  ) { }
+  ) {
+    this.notaForm = this.fb.group({
+      titulo: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]],
+      contenido: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]]
+    });
+  }
 
   ngOnInit(): void {
     this.getAllUsers();
     this.getNote();
+  }
+
+  blacklistValidator(blacklist: string[]) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) {
+        return null;
+      }
+      const hasBlacklistedWord = blacklist.some(word => control.value.toLowerCase().includes(word.toLowerCase()));
+      return hasBlacklistedWord ? { 'blacklisted': true } : null;
+    };
   }
 
   getAllUsers() {
@@ -62,20 +75,17 @@ export class UserModNotesComponent {
   }
 
   getNote(): void {
-    // Obtener el ID del usuario de la URL
     const noteID = Number(this.route.snapshot.paramMap.get('id'));
-    console.log(noteID);
     const token = localStorage.getItem('token');
     if (token) {
-      // Utilizar el servicio de usuario para obtener los datos del usuario por su ID
       this.noteService.getNota(noteID, token).subscribe({
         next: (data: any) => {
-          this.nota.id = data.id;
-          this.nota.titulo = data.titulo;
-          this.nota.contenido = data.contenido;
+          this.notaForm.patchValue({
+            id: data.id,
+            titulo: data.titulo,
+            contenido: data.contenido,
+          });
           this.usuario.email = data.usuario.email;
-          console.log(data);
-          console.log(this.usuario.email);
         },
         error: (error: any) => {
           console.error('Error al cargar la nota', error);
@@ -92,28 +102,28 @@ export class UserModNotesComponent {
   modificarNota(): void {
     const token = localStorage.getItem('token');
     this.buscarIdUsuario();
-    if (token) {
-        const newNote = {
-          id: this.nota.id,
-          titulo: this.nota.titulo,
-          contenido: this.nota.contenido,
-          usuario: {
-            id: this.usuario.id
-          }
+    if (this.notaForm.valid && token) {
+      const newNote = {
+        id: this.route.snapshot.paramMap.get('id'),
+        titulo: this.notaForm.value.titulo,
+        contenido: this.notaForm.value.contenido,
+        usuario: {
+          id: this.usuario.id
         }
-        this.noteService.modNota(newNote, token).subscribe({
-          next: () => {
-            this.openModalCerrar();
-          },
-          error: (error: any) => {
-            console.error('Error al guardar al usuario', error);
-          },
-          complete: () => {
-            console.log('Petición para modificar el usuario completada'); 
-          }
-        });
-      } else {
-      console.error('Algo ocurrió con el token');
+      }
+      this.noteService.modNota(newNote, token).subscribe({
+        next: () => {
+          this.openModalCerrar();
+        },
+        error: (error: any) => {
+          console.error('Error al guardar la nota', error);
+        },
+        complete: () => {
+          console.log('Petición para modificar la nota completada'); 
+        }
+      });
+    } else {
+      console.error('Algo ocurrió con el token o el formulario no es válido');
     }
   }
   
@@ -121,36 +131,11 @@ export class UserModNotesComponent {
     this.router.navigate(['/notas']);
   }
 
-  ocultarElemento(id: string) {
-    const elemento = document.getElementById(id);
-    if (elemento) {
-      console.log("Id de ejemplo", id);
-      elemento.style.display = 'none';
-    } else {
-      console.error('Elemento no encontrado con ID:', id);
-    }
-  }
-
-  confirmarModNota(){
-    const elemento = document.getElementById('id01');
-    if (elemento) {
-      elemento.style.display = 'block';
-    }
-  }
-
-  mostrarIdUsuario(email: string): void {
-    const usuarioSeleccionado = this.usuarios.find(usuario => usuario.email === email);
-    if (usuarioSeleccionado) {
-      console.log('ID del usuario seleccionado:', usuarioSeleccionado.id);
-    }
-  }
-
   buscarIdUsuario(): void {
     if (this.usuario.email) {
       const usuario = this.usuarios.find(u => u.email === this.usuario.email);
       if (usuario) {
-        console.log('ID del usuario:', usuario.id);
-        this.usuario.id = usuario.id
+        this.usuario.id = usuario.id;
       } else {
         console.log('Usuario no encontrado');
       }
@@ -168,6 +153,4 @@ export class UserModNotesComponent {
   closeModalCerrar() {
     this.isModalCerrar = false;
   }
-
-  
 }

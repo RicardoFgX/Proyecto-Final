@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,32 +12,34 @@ import { Location } from '@angular/common';
 @Component({
   selector: 'app-admin-dash-new-tarea',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, MatCardModule, MatInputModule, MatIconModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, FormsModule, RouterLink, MatCardModule, MatInputModule, MatIconModule, RouterLink, RouterLinkActive, ReactiveFormsModule],
   templateUrl: './admin-dash-new-tarea.component.html',
   styleUrl: './admin-dash-new-tarea.component.css'
 })
 export class AdminDashNewTareaComponent {
-  tarea = {
-    nombre: '',
-    descripcion: '',
-    fechaVencimiento: '',
-    estado: '',
-    proyecto: {
-      id: ''
-    }
-  }
-
+  tareaForm: FormGroup;
   estados = ['COMPLETADA', 'EN_PROGRESO', 'PENDIENTE'];
+  blacklistedWords = ['jolines', 'joder'];
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
+    private fb: FormBuilder,
     private tareaService: TareaService,
     private location: Location
-  ) { }
+  ) {
+    this.tareaForm = this.fb.group({
+      nombre: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]],
+      descripcion: ['', this.blacklistValidator(this.blacklistedWords)],
+      fechaVencimiento: ['', Validators.required],
+      estado: ['', Validators.required],
+      proyecto: this.fb.group({
+        id: [window.localStorage.getItem('idProyecto')]
+      })
+    });
+  }
 
   ngOnInit(): void {
-    this.tarea.proyecto.id = window.localStorage["idProyecto"];
+    const proyectoId = window.localStorage.getItem('idProyecto');
+    this.tareaForm.patchValue({ proyecto: { id: proyectoId } });
   }
 
   irAtras(): void {
@@ -44,35 +47,36 @@ export class AdminDashNewTareaComponent {
   }
 
   crearTarea(): void {
-    console.log(this.tarea);
-    const token = localStorage.getItem('token');
-    if (token) {
+    if (this.tareaForm.valid) {
+      const token = localStorage.getItem('token');
       const newTarea = {
-        nombre: this.tarea.nombre,
-        descripcion: this.tarea.descripcion,
-        fechaVencimiento: this.tarea.fechaVencimiento,
-        estado: this.tarea.estado,
+        nombre: this.tareaForm.value.nombre,
+        descripcion: this.tareaForm.value.descripcion,
+        fechaVencimiento: this.tareaForm.value.fechaVencimiento,
+        estado: this.tareaForm.value.estado,
         proyecto: {
-          id: this.tarea.proyecto.id
+          id: this.tareaForm.value.proyecto.id
         }
       }
-      this.tareaService.createTarea(newTarea, token).subscribe({
-        next: () => {
-          this.openModalCerrar();
-        },
-        error: (error: any) => {
-          console.error('Error al crear la tarea', error);
-        },
-        complete: () => {
-          console.log('Petición para crear la tarea completada');
-        }
-      });
-    } else {
-      console.error('Algo ocurrió con el token');
+      console.log(newTarea)
+      if (token) {
+        this.tareaService.createTarea(newTarea, token).subscribe({
+          next: () => {
+            this.openModalCerrar();
+          },
+          error: (error: any) => {
+            console.error('Error al crear la tarea', error);
+          },
+          complete: () => {
+            console.log('Petición para crear la tarea completada');
+          }
+        });
+      } else {
+        console.error('Algo ocurrió con el token');
+      }
     }
   }
 
-  isModalOpen = false;
   isModalCerrar = false;
 
   openModalCerrar() {
@@ -81,5 +85,15 @@ export class AdminDashNewTareaComponent {
 
   closeModalCerrar() {
     this.isModalCerrar = false;
+  }
+
+  blacklistValidator(blacklistedWords: string[]) {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (!control.value) {
+        return null;
+      }
+      const hasBlacklistedWord = blacklistedWords.some(word => control.value.includes(word));
+      return hasBlacklistedWord ? { blacklisted: true } : null;
+    };
   }
 }

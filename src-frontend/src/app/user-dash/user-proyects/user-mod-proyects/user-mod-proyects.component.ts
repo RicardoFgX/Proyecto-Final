@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -38,11 +38,20 @@ import { JwtService } from '../../../services/jwt-service.service';
     CdkDropListGroup,
     CdkDropList,
     CdkDrag,
+    ReactiveFormsModule
   ],
   templateUrl: './user-mod-proyects.component.html',
   styleUrls: ['./user-mod-proyects.component.css']
 })
 export class UserModProyectsComponent implements OnInit {
+  proyectoForm: FormGroup;
+  tareaNuevaForm: FormGroup;
+  tareaModForm: FormGroup;
+
+  blacklistedWords = [
+    'maricón', 'puto', 'joder', 'mierda', 'cabrón', 'cabron', 'bastardo'
+  ];
+
   proyecto = {
     id: '',
     titulo: '',
@@ -129,19 +138,48 @@ export class UserModProyectsComponent implements OnInit {
   isModalModTareaOpen = false;
 
   constructor(
+    private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserServiceService,
     private proyectService: ProyectService,
     private tareaService: TareaService,
     private jwtService: JwtService
-  ) { }
+  ) {
+    this.proyectoForm = this.fb.group({
+      titulo: ['', [Validators.required, this.blacklistValidator.bind(this)]],
+      descripcion: ['', [Validators.required, this.blacklistValidator.bind(this)]],
+      fechaCreacion: [{ value: '', disabled: true }]
+    });
+
+    this.tareaNuevaForm = this.fb.group({
+      nombre: ['', [Validators.required, this.blacklistValidator.bind(this)]],
+      descripcion: ['', this.blacklistValidator.bind(this)],
+      fechaVencimiento: ['']
+    });
+
+    this.tareaModForm = this.fb.group({
+      nombre: ['', [Validators.required, this.blacklistValidator.bind(this)]],
+      descripcion: ['', this.blacklistValidator.bind(this)],
+      fechaVencimiento: ['']
+    });
+  }
 
   ngOnInit(): void {
     this.getAllUsers();
     this.getProyect();
     this.ultimaFechaModificacion = this.getFechaActual();
     this.checkAuthStatus();
+  }
+
+  blacklistValidator(control: any) {
+    const value = control.value;
+    for (let word of this.blacklistedWords) {
+      if (value?.toLowerCase().includes(word.toLowerCase())) {
+        return { blacklisted: true };
+      }
+    }
+    return null;
   }
 
   drop(event: CdkDragDrop<any[]>) {
@@ -223,7 +261,14 @@ export class UserModProyectsComponent implements OnInit {
     this.tareaModificada.nombre = tarea.nombre;
     this.tareaModificada.descripcion = tarea.descripcion;
     this.tareaModificada.fechaVencimiento = tarea.fechaVencimiento;
-    this.openModTarea();
+
+    this.tareaModForm.patchValue({
+      nombre: tarea.nombre,
+      descripcion: tarea.descripcion,
+      fechaVencimiento: tarea.fechaVencimiento
+    });
+    console.log(this.tareaModForm)
+    this.isModalModTareaOpen = true;
   }
 
   modificarTarea(): void {
@@ -231,14 +276,15 @@ export class UserModProyectsComponent implements OnInit {
     if (token) {
       const modTarea = {
         id: this.tareaModificada.id,
-        nombre: this.tareaModificada.nombre,
-        descripcion: this.tareaModificada.descripcion,
-        fechaVencimiento: this.tareaModificada.fechaVencimiento,
+        nombre: this.tareaModForm.value.nombre,
+        descripcion: this.tareaModForm.value.descripcion,
+        fechaVencimiento: this.tareaModForm.value.fechaVencimiento,
         estado: this.tareaModificada.estado,
         proyecto: {
           id: this.proyecto.id
         }
       }
+      console.log(modTarea);
       this.tareaService.modTarea(modTarea, token).subscribe({
         next: () => {
           this.closeModTarea();
@@ -261,9 +307,9 @@ export class UserModProyectsComponent implements OnInit {
     const token = localStorage.getItem('token');
     if (token) {
       const newTarea = {
-        nombre: this.tareaNueva.nombre,
-        descripcion: this.tareaNueva.descripcion,
-        fechaVencimiento: this.tareaNueva.fechaVencimiento,
+        nombre: this.tareaNuevaForm.value.nombre,
+        descripcion: this.tareaNuevaForm.value.descripcion,
+        fechaVencimiento: this.tareaNuevaForm.value.fechaVencimiento,
         estado: this.tareaNueva.estado,
         proyecto: {
           id: this.proyecto.id
@@ -290,10 +336,10 @@ export class UserModProyectsComponent implements OnInit {
     const token = localStorage.getItem('token');
     if (token) {
       const newProyecto = {
-        nombre: this.proyecto.titulo,
-        descripcion: this.proyecto.descripcion,
+        nombre: this.proyectoForm.value.titulo,
+        descripcion: this.proyectoForm.value.descripcion,
         fechaCreacion: this.proyecto.fechaCreacion,
-        ultimaFechaModificacion: this.proyecto.fechaCreacion,
+        ultimaFechaModificacion: this.ultimaFechaModificacion,
         usuarios: this.proyecto.integrantes.map((integrante: any) => ({ id: integrante.id }))
       }
       this.proyectService.modProyecto(this.proyecto.id, newProyecto, token).subscribe({
@@ -316,10 +362,10 @@ export class UserModProyectsComponent implements OnInit {
     const token = localStorage.getItem('token');
     if (token) {
       const newProyecto = {
-        nombre: this.proyecto.titulo,
-        descripcion: this.proyecto.descripcion,
+        nombre: this.proyectoForm.value.titulo,
+        descripcion: this.proyectoForm.value.descripcion,
         fechaCreacion: this.proyecto.fechaCreacion,
-        ultimaFechaModificacion: this.proyecto.fechaCreacion,
+        ultimaFechaModificacion: this.ultimaFechaModificacion,
         usuarios: this.proyecto.integrantes.map((integrante: any) => ({ id: integrante.id }))
       }
       this.proyectService.modProyecto(this.proyecto.id, newProyecto, token).subscribe({
@@ -465,9 +511,14 @@ export class UserModProyectsComponent implements OnInit {
           this.proyecto.integrantes = data.usuarios;
           this.proyecto.tareas = data.tareas;
           this.estadosC();
+          this.proyectoForm.patchValue({
+            titulo: this.proyecto.titulo,
+            descripcion: this.proyecto.descripcion,
+            fechaCreacion: this.proyecto.fechaCreacion
+          });
         },
         error: (error: any) => {
-          console.error('Error al cargar la nota', error);
+          console.error('Error al cargar el proyecto', error);
         },
         complete: () => {
           console.log('Petición para obtener el proyecto completada');

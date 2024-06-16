@@ -1,45 +1,58 @@
 <div class="container mt-5 espaciado">
-    <div class="back">
-        <button type="button" class="btn btn-primary" (click)="irAtras()">Volver</button>
-    </div>
-    <h2>Crear Tarea</h2>
-    <form>
-      <div class="form-group mb-3">
-        <label for="nombre">Título:</label>
-        <input type="text" class="form-control" id="nombre" placeholder="Ingrese el título de la tarea" [(ngModel)]="tarea.nombre" name="nombre">
-      </div>
-      <div class="form-group mb-3">
-        <label for="descripcion">Descripción:</label>
-        <textarea id="descripcion" class="form-control" placeholder="Ingrese la descripción" [(ngModel)]="tarea.descripcion" name="descripcion" rows="5"></textarea>
-    </div>
-      <div class="form-group mb-3">
-        <label for="fechaVencimiento">Fecha de Vencimiento:</label>
-        <input type="date" class="form-control" id="fechaVencimiento" placeholder="Ingrese la fecha de vencimiento" [(ngModel)]="tarea.fechaVencimiento" name="fechaVencimiento">
-      </div>
-      <div class="form-group mb-3">
-        <label for="estado">Estado:</label>
-        <select id="estado" class="form-select" [(ngModel)]="tarea.estado" name="estado">
-          <option value="">Seleccione el estado</option>
-          <option *ngFor="let estado of estados" [ngValue]="estado">{{ estado }}</option>
-        </select>
-      </div>
-      <div class="d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary"  (click)="crearTarea()">Modificar</button>
-      </div>
-    </form>
+  <div class="back">
+    <button type="button" class="btn btn-primary" (click)="irAtras()">Volver</button>
   </div>
-  
-  <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
-    <div class="modal-content">
-      <span class="close" (click)="closeModalCerrar(); irAtras()">&times;</span>
-      <div class="check-animation">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-          <circle cx="26" cy="26" r="25" fill="none" />
-          <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
-            d="M14 27l5 5 14-14" class="check-svg" />
-        </svg>
+  <h2>Crear Tarea</h2>
+  <form [formGroup]="tareaForm" (ngSubmit)="crearTarea()">
+    <div class="form-group mb-3">
+      <label for="nombre">Título:</label>
+      <input type="text" class="form-control" id="nombre" placeholder="Ingrese el título de la tarea" formControlName="nombre">
+      <div *ngIf="tareaForm.get('nombre')?.touched && tareaForm.get('nombre')?.invalid" class="text-danger">
+        <div *ngIf="tareaForm.get('nombre')?.errors?.['required']">El título es requerido.</div>
+        <div *ngIf="tareaForm.get('nombre')?.errors?.['blacklisted']">El título contiene palabras prohibidas.</div>
       </div>
-      <p>Se ha realizado la acción satisfactorimente</p>
-      <button class="btnCerrar" (click)="closeModalCerrar(); irAtras()">Cerrar</button>
     </div>
+    <div class="form-group mb-3">
+      <label for="descripcion">Descripción:</label>
+      <textarea id="descripcion" class="form-control" placeholder="Ingrese la descripción" formControlName="descripcion" rows="5"></textarea>
+      <div *ngIf="tareaForm.get('descripcion')?.touched && tareaForm.get('descripcion')?.invalid" class="text-danger">
+        <div *ngIf="tareaForm.get('descripcion')?.errors?.['blacklisted']">La descripción contiene palabras prohibidas.</div>
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <label for="fechaVencimiento">Fecha de Vencimiento:</label>
+      <input type="date" class="form-control" id="fechaVencimiento" placeholder="Ingrese la fecha de vencimiento" formControlName="fechaVencimiento">
+      <div *ngIf="tareaForm.get('fechaVencimiento')?.touched && tareaForm.get('fechaVencimiento')?.invalid" class="text-danger">
+        <div *ngIf="tareaForm.get('fechaVencimiento')?.errors?.['required']">La fecha de vencimiento es requerida.</div>
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <label for="estado">Estado:</label>
+      <select id="estado" class="form-select" formControlName="estado">
+        <option value="">Seleccione el estado</option>
+        <option *ngFor="let estado of estados" [ngValue]="estado">{{ estado }}</option>
+      </select>
+      <div *ngIf="tareaForm.get('estado')?.touched && tareaForm.get('estado')?.invalid" class="text-danger">
+        <div *ngIf="tareaForm.get('estado')?.errors?.['required']">El estado es requerido.</div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-primary" [disabled]="tareaForm.invalid">Modificar</button>
+    </div>
+  </form>
+</div>
+
+<div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
+  <div class="modal-content">
+    <span class="close" (click)="closeModalCerrar(); irAtras()">&times;</span>
+    <div class="check-animation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="25" fill="none" />
+        <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
+          d="M14 27l5 5 14-14" class="check-svg" />
+      </svg>
+    </div>
+    <p>Se ha realizado la acción satisfactoriamente</p>
+    <button class="btnCerrar" (click)="closeModalCerrar(); irAtras()">Cerrar</button>
   </div>
+</div>

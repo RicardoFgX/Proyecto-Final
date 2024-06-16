@@ -1,113 +1,117 @@
 <div class="container mt-5 espaciado">
     <div class="back">
-        <button type="button" class="btn btn-primary" (click)="irAAdminDashProyectos()">Volver</button>
+      <button type="button" class="btn btn-primary" (click)="irAAdminDashProyectos()">Volver</button>
     </div>
     <div *ngIf="showNotification" class="notification">
-        <img src="../../../assets/warning.png" class="warning">
-        <span>{{ notificationMessage }}</span>
+      <img src="../../../assets/warning.png" class="warning">
+      <span>{{ notificationMessage }}</span>
     </div>
-
+  
     <h2>Crear Proyecto</h2>
-    <form>
-        <div class="form-group mb-3">
-            <label for="titulo">
-                <h4>Título</h4>
-            </label>
-            <input type="text" id="titulo" class="form-control" [(ngModel)]="proyecto.titulo" name="titulo" required>
+    <form [formGroup]="proyectoForm" (ngSubmit)="modificarProyecto()">
+      <div class="form-group mb-3">
+        <label for="titulo">
+          <h4>Título</h4>
+        </label>
+        <input type="text" id="titulo" class="form-control" formControlName="titulo" placeholder="Ingrese el título" required>
+        <div *ngIf="proyectoForm.get('titulo')?.touched && proyectoForm.get('titulo')?.invalid" class="text-danger">
+          <div *ngIf="proyectoForm.get('titulo')?.errors?.['required']">El título es requerido.</div>
+          <div *ngIf="proyectoForm.get('titulo')?.errors?.['blacklisted']">El título contiene palabras no permitidas.</div>
         </div>
-        <div class="form-group mb-3">
-            <label for="descripcion">
-                <h4>Descripción</h4>
-            </label>
-            <textarea id="descripcion" class="form-control" [(ngModel)]="proyecto.descripcion" name="descripcion"
-                rows="5" required></textarea>
+      </div>
+      <div class="form-group mb-3">
+        <label for="descripcion">
+          <h4>Descripción</h4>
+        </label>
+        <textarea id="descripcion" class="form-control" formControlName="descripcion" placeholder="Ingrese la descripción" rows="5" required></textarea>
+        <div *ngIf="proyectoForm.get('descripcion')?.touched && proyectoForm.get('descripcion')?.invalid" class="text-danger">
+          <div *ngIf="proyectoForm.get('descripcion')?.errors?.['required']">La descripción es requerida.</div>
+          <div *ngIf="proyectoForm.get('descripcion')?.errors?.['blacklisted']">La descripción contiene palabras no permitidas.</div>
         </div>
-        <div class="form-group mb-3">
-            <label for="fechaCreacion">
-                <h4>Fecha Creación</h4>
-            </label>
-            <input type="text" id="fechaCreacion" class="form-control" [(ngModel)]="proyecto.fechaCreacion"
-                name="fechaCreacion" readonly>
+      </div>
+      <div class="form-group mb-3">
+        <label for="fechaCreacion">
+          <h4>Fecha Creación</h4>
+        </label>
+        <input type="text" id="fechaCreacion" class="form-control" formControlName="fechaCreacion" readonly>
+      </div>
+      <div class="form-group mb-3">
+        <label for="integrantes">
+          <h4>Integrantes</h4>
+        </label>
+        <div *ngFor="let integrante of proyecto.integrantes" class="mb-3 tarjeta">
+          <mat-card class="example-card" (click)="confirmarborrarUsuario(integrante.id, integrante.nombre, integrante.email)">
+            <mat-card-header>
+              <mat-card-title-group>
+                <mat-card-title>{{integrante.nombre}}</mat-card-title>
+                <mat-card-subtitle>{{integrante.email}}</mat-card-subtitle>
+                <img mat-card-sm-image src="../../../assets/user.png">
+              </mat-card-title-group>
+            </mat-card-header>
+          </mat-card>
         </div>
-        <div class="form-group mb-3">
-            <label for="integrantes">
-                <h4>Integrantes</h4>
-            </label>
-            <div *ngFor="let integrante of proyecto.integrantes" class="mb-3 tarjeta">
-                <mat-card class="example-card"
-                    (click)="confirmarborrarUsuario(integrante.id, integrante.nombre, integrante.email)">
-                    <mat-card-header>
-                        <mat-card-title-group>
-                            <mat-card-title>{{integrante.nombre}}</mat-card-title>
-                            <mat-card-subtitle>{{integrante.email}}</mat-card-subtitle>
-                            <img mat-card-sm-image src="../../../assets/user.png">
-                        </mat-card-title-group>
-                    </mat-card-header>
-                </mat-card>
-            </div>
-            <div class="mb-3 tarjeta agregar">
-                <mat-card class="example-card add-card agregar" (click)="agregarIntegrante()">
-                    <mat-card-content>
-                        <mat-icon>add</mat-icon>
-                    </mat-card-content>
-                </mat-card>
-            </div>
+        <div class="mb-3 tarjeta agregar">
+          <mat-card class="example-card add-card agregar" (click)="agregarIntegrante()">
+            <mat-card-content>
+              <mat-icon>add</mat-icon>
+            </mat-card-content>
+          </mat-card>
         </div>
-        <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary me-2" (click)="modificarProyecto()">Crear Proyecto</button>
-        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary me-2" [disabled]="proyectoForm.invalid">Crear Proyecto</button>
+      </div>
     </form>
-</div>
-
-<div id="myModal" class="modal" [ngClass]="{'show': isModalBorrarUserOpen}">
+  </div>
+  
+  <div id="myModal" class="modal" [ngClass]="{'show': isModalBorrarUserOpen}">
     <div class="modal-content">
-        <span class="close" (click)="closeBorrarUser()">&times;</span>
-        <h2>Esta a punto de borrar a un usuario de este proyecto</h2>
-        <p>¿Estas seguro?</p>
-        <div class="buttons">
-            <button class="btn confirm" (click)="closeBorrarUser(); borrarUsuarioConfirmado()">Confirmar</button>
-            <button class="btn cancel" (click)="closeBorrarUser()">Cancelar</button>
-        </div>
+      <span class="close" (click)="closeBorrarUser()">&times;</span>
+      <h2>Esta a punto de borrar a un usuario de este proyecto</h2>
+      <p>¿Estas seguro?</p>
+      <div class="buttons">
+        <button class="btn confirm" (click)="closeBorrarUser(); borrarUsuarioConfirmado()">Confirmar</button>
+        <button class="btn cancel" (click)="closeBorrarUser()">Cancelar</button>
+      </div>
     </div>
-</div>
-
-<div id="myModal2" class="modal" [ngClass]="{'show': isModalNuevoUserOpen}">
+  </div>
+  
+  <div id="myModal2" class="modal" [ngClass]="{'show': isModalNuevoUserOpen}">
     <div class="modal-content">
-        <span class="close" (click)="closeNuevoUser()">&times;</span>
-        <h1>Nuevo Usuario</h1>
-        <select id="autor" class="form-select" [(ngModel)]="usuarioN" name="autor">
-            <option *ngFor="let usuario of usuarios" [ngValue]="usuario">{{ usuario.email }}</option>
-        </select>
-        <button class="btnCerrar" (click)="agregarUsuario()" style="margin-top: 20px; margin-bottom: 20px;">Añadir</button>
+      <span class="close" (click)="closeNuevoUser()">&times;</span>
+      <h1>Nuevo Usuario</h1>
+      <select id="autor" class="form-select" [(ngModel)]="usuarioN" name="autor">
+        <option *ngFor="let usuario of usuarios" [ngValue]="usuario">{{ usuario.email }}</option>
+      </select>
+      <button class="btnCerrar" (click)="agregarUsuario()" style="margin-top: 20px; margin-bottom: 20px;">Añadir</button>
     </div>
-</div>
-
-<div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
+  </div>
+  
+  <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
     <div class="modal-content">
-        <span class="close" (click)="closeModalCerrar(); irAAdminDashProyectos()">&times;</span>
-        <div class="check-animation">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                <circle cx="26" cy="26" r="25" fill="none" />
-                <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
-                    d="M14 27l5 5 14-14" class="check-svg" />
-            </svg>
-        </div>
-        <p>Se ha realizado la acción satisfactorimente</p>
-        <button class="btnCerrar" (click)="closeModalCerrar(); irAAdminDashProyectos()">Cerrar</button>
+      <span class="close" (click)="closeModalCerrar(); irAAdminDashProyectos()">&times;</span>
+      <div class="check-animation">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+          <circle cx="26" cy="26" r="25" fill="none" />
+          <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M14 27l5 5 14-14" class="check-svg" />
+        </svg>
+      </div>
+      <p>Se ha realizado la acción satisfactoriamente</p>
+      <button class="btnCerrar" (click)="closeModalCerrar(); irAAdminDashProyectos()">Cerrar</button>
     </div>
-</div>
-
-<div id="myModal5" class="modal" [ngClass]="{'show': isModalConfirmarBorrarTareaOpen}">
+  </div>
+  
+  <div id="myModal5" class="modal" [ngClass]="{'show': isModalConfirmarBorrarTareaOpen}">
     <div class="modal-content">
-        <span class="close" (click)="closeModalCerrar(); irAAdminDashProyectos()">&times;</span>
-        <div class="check-animation">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                <circle cx="26" cy="26" r="25" fill="none" />
-                <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
-                    d="M14 27l5 5 14-14" class="check-svg" />
-            </svg>
-        </div>
-        <p>Se ha realizado la acción satisfactorimente</p>
-        <button class="btnCerrar" (click)="closeConfirmarBorrarTarea();">Cerrar</button>
+      <span class="close" (click)="closeModalCerrar(); irAAdminDashProyectos()">&times;</span>
+      <div class="check-animation">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+          <circle cx="26" cy="26" r="25" fill="none" />
+          <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M14 27l5 5 14-14" class="check-svg" />
+        </svg>
+      </div>
+      <p>Se ha realizado la acción satisfactoriamente</p>
+      <button class="btnCerrar" (click)="closeConfirmarBorrarTarea();">Cerrar</button>
     </div>
-</div>
+  </div>
+  

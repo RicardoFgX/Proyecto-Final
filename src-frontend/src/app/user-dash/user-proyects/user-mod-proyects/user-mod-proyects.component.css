@@ -418,18 +418,18 @@ hr {
   cursor: pointer;
 }
 
-#nuevaTareaForm .form-group {
+#tareaForm .form-group {
   margin-bottom: 15px;
 }
 
-#nuevaTareaForm .form-group label {
+#tareaForm .form-group label {
   display: block;
   margin-bottom: 5px;
 }
 
-#nuevaTareaForm .form-group input,
-#nuevaTareaForm .form-group select,
-#nuevaTareaForm .form-group textarea {
+#tareaForm .form-group input,
+#tareaForm .form-group select,
+#tareaForm .form-group textarea {
   width: 100%;
   padding: 10px;
   margin-top: 5px;

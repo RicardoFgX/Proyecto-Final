@@ -16,26 +16,37 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <form>
+        <form [formGroup]="proyectoForm" (ngSubmit)="modificarProyecto()">
           <div class="form-group mb-3">
             <label for="titulo">
               <h4>Título</h4>
             </label>
-            <input type="text" id="titulo" class="form-control" [(ngModel)]="proyecto.titulo" name="titulo" required>
+            <input type="text" id="titulo" class="form-control" formControlName="titulo" placeholder="Ingrese el título"
+              required>
+            <div *ngIf="proyectoForm.get('titulo')?.touched && proyectoForm.get('titulo')?.invalid" class="text-danger">
+              <div *ngIf="proyectoForm.get('titulo')?.errors?.['required']">El título es requerido.</div>
+              <div *ngIf="proyectoForm.get('titulo')?.errors?.['blacklisted']">El título contiene palabras no
+                permitidas.</div>
+            </div>
           </div>
           <div class="form-group mb-3">
             <label for="descripcion">
               <h4>Descripción</h4>
             </label>
-            <textarea id="descripcion" class="form-control" [(ngModel)]="proyecto.descripcion" name="descripcion"
-              rows="5" required></textarea>
+            <textarea id="descripcion" class="form-control" formControlName="descripcion"
+              placeholder="Ingrese la descripción" rows="5" required></textarea>
+            <div *ngIf="proyectoForm.get('descripcion')?.touched && proyectoForm.get('descripcion')?.invalid"
+              class="text-danger">
+              <div *ngIf="proyectoForm.get('descripcion')?.errors?.['required']">La descripción es requerida.</div>
+              <div *ngIf="proyectoForm.get('descripcion')?.errors?.['blacklisted']">La descripción contiene palabras no
+                permitidas.</div>
+            </div>
           </div>
           <div class="form-group mb-3">
             <label for="fechaCreacion">
               <h4>Fecha Creación</h4>
             </label>
-            <input type="text" id="fechaCreacion" class="form-control" [(ngModel)]="proyecto.fechaCreacion"
-              name="fechaCreacion" readonly>
+            <input type="text" id="fechaCreacion" class="form-control" formControlName="fechaCreacion" readonly>
           </div>
           <div class="form-group mb-3">
             <label for="integrantes">
@@ -62,7 +73,8 @@
             </div>
           </div>
           <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary me-2" (click)="modificarProyecto()">Guardar Cambios</button>
+            <button type="submit" class="btn btn-primary me-2" [disabled]="proyectoForm.invalid">Modificar
+              Proyecto</button>
           </div>
         </form>
       </mat-expansion-panel>
@@ -141,11 +153,12 @@
   <!-- Modal Borrar Usuario Actual -->
   <div id="myModal" class="modal" [ngClass]="{'show': isModalBorrarUserActualOpen}">
     <div class="modal-content">
-      <span class="close" (click)="closeBorrarUser()">&times;</span>
+      <span class="close" (click)="closeBorrarUserActual()">&times;</span>
       <h2>Está a punto de salirte de este proyecto</h2>
       <p>¿Estás seguro?</p>
       <div class="buttons">
-        <button class="btn confirm" (click)="closeBorrarUserActual(); borrarUsuarioActualConfirmado()">Confirmar</button>
+        <button class="btn confirm"
+          (click)="closeBorrarUserActual(); borrarUsuarioActualConfirmado()">Confirmar</button>
         <button class="btn cancel" (click)="closeBorrarUserActual(); openBorrarUser()">Cancelar</button>
       </div>
     </div>
@@ -215,51 +228,83 @@
     <div class="modal-content nueva-tarea-modal-content">
       <span class="close nueva-tarea-close" (click)="closeNuevaTarea()">&times;</span>
       <h1>Nueva Tarea</h1>
-      <form id="nuevaTareaForm">
+      <form [formGroup]="tareaNuevaForm" (ngSubmit)="crearTarea()" id="tareaForm">
         <div class="form-group">
           <label for="nuevaTareaNombre">Nombre</label>
-          <input type="text" id="nuevaTareaNombre" [(ngModel)]="tareaNueva.nombre" name="nombre" required>
+          <input type="text" id="nuevaTareaNombre" formControlName="nombre" required>
+          <div *ngIf="tareaNuevaForm.get('nombre')?.touched && tareaNuevaForm.get('nombre')?.invalid"
+            class="text-danger">
+            <div *ngIf="tareaNuevaForm.get('nombre')?.errors?.['required']">El nombre es requerido.</div>
+            <div *ngIf="tareaNuevaForm.get('nombre')?.errors?.['blacklisted']">El nombre contiene palabras prohibidas.
+            </div>
+          </div>
         </div>
         <div class="form-group">
           <label for="nuevaTareaDescripcion">Descripción</label>
-          <textarea id="nuevaTareaDescripcion" [(ngModel)]="tareaNueva.descripcion" name="descripcion"></textarea>
+          <textarea id="nuevaTareaDescripcion" formControlName="descripcion" name="descripcion"></textarea>
+          <div *ngIf="tareaNuevaForm.get('descripcion')?.touched && tareaNuevaForm.get('descripcion')?.invalid"
+            class="text-danger">
+            <div *ngIf="tareaNuevaForm.get('descripcion')?.errors?.['blacklisted']">La descripción contiene palabras
+              prohibidas.</div>
+          </div>
         </div>
         <div class="form-group">
           <label for="nuevaTareaFechaVencimiento">Fecha de Vencimiento</label>
-          <input type="date" id="nuevaTareaFechaVencimiento" [(ngModel)]="tareaNueva.fechaVencimiento"
-            name="fechaVencimiento">
+          <input type="date" id="nuevaTareaFechaVencimiento" formControlName="fechaVencimiento" required>
+          <div
+            *ngIf="tareaNuevaForm.get('fechaVencimiento')?.touched && tareaNuevaForm.get('fechaVencimiento')?.invalid"
+            class="text-danger">
+            <div *ngIf="tareaNuevaForm.get('fechaVencimiento')?.errors?.['required']">La fecha de vencimiento es
+              requerida.</div>
+          </div>
         </div>
-        <button type="submit" class="btnCerrar nueva-tarea-btn" style="margin-top: 20px; margin-bottom: 20px;"
-          (click)="crearTarea()">Añadir</button>
+        <button type="submit" class="btn btn-primary" style="margin-top: 20px; margin-bottom: 20px;"
+          [disabled]="tareaNuevaForm.invalid">Añadir</button>
       </form>
     </div>
   </div>
 
-  <!-- Modal Modificar Tarea -->
   <div id="myModalTareaMod" class="modal" [ngClass]="{'show': isModalModTareaOpen}">
     <div class="modal-content nueva-tarea-modal-content">
       <span class="close nueva-tarea-close" (click)="closeModTarea()">&times;</span>
       <h1>Modificar Tarea</h1>
-      <form id="nuevaTareaForm">
+      <form [formGroup]="tareaModForm" (ngSubmit)="modificarTarea()" id="tareaForm">
         <div class="form-group">
           <label for="modTareaNombre">Nombre</label>
-          <input type="text" id="modTareaNombre" [(ngModel)]="tareaModificada.nombre" name="nombre" required>
+          <input type="text" id="modTareaNombre" formControlName="nombre" required>
+          <div *ngIf="tareaModForm.get('nombre')?.touched && tareaModForm.get('nombre')?.invalid" class="text-danger">
+            <div *ngIf="tareaModForm.get('nombre')?.errors?.['required']">El nombre es requerido.</div>
+            <div *ngIf="tareaModForm.get('nombre')?.errors?.['blacklisted']">El nombre contiene palabras prohibidas.
+            </div>
+          </div>
         </div>
         <div class="form-group">
           <label for="modTareaDescripcion">Descripción</label>
-          <textarea id="modTareaDescripcion" [(ngModel)]="tareaModificada.descripcion" name="descripcion"></textarea>
+          <textarea id="modTareaDescripcion" formControlName="descripcion"></textarea>
+          <div *ngIf="tareaModForm.get('descripcion')?.touched && tareaModForm.get('descripcion')?.invalid"
+            class="text-danger">
+            <div *ngIf="tareaModForm.get('descripcion')?.errors?.['blacklisted']">La descripción contiene palabras
+              prohibidas.</div>
+          </div>
         </div>
         <div class="form-group">
           <label for="modTareaFechaVencimiento">Fecha de Vencimiento</label>
-          <input type="date" id="modTareaFechaVencimiento" [(ngModel)]="tareaModificada.fechaVencimiento"
-            name="fechaVencimiento">
+          <input type="date" id="modTareaFechaVencimiento" formControlName="fechaVencimiento" required>
+          <div *ngIf="tareaModForm.get('fechaVencimiento')?.touched && tareaModForm.get('fechaVencimiento')?.invalid"
+            class="text-danger">
+            <div *ngIf="tareaModForm.get('fechaVencimiento')?.errors?.['required']">La fecha de vencimiento es
+              requerida.</div>
+          </div>
         </div>
         <div class="buttons">
-          <button type="submit" class="btn confirm" style="margin: 20px;" (click)="modificarTarea()">Modificar</button>
-          <button type="submit" class="btn cancel" style="margin: 20px;"
+          <button type="submit" class="btn confirm" style="margin: 20px;"
+            [disabled]="tareaModForm.invalid">Modificar</button>
+          <button type="button" class="btn cancel" style="margin: 20px;"
             (click)="confirmarBorrarTarea(); closeModTarea()">Borrar</button>
         </div>
       </form>
     </div>
   </div>
+  
+
 </div>

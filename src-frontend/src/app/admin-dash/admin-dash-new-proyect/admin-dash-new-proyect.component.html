@@ -8,26 +8,34 @@
     </div>
 
     <h2>Crear Proyecto</h2>
-    <form>
+    <form [formGroup]="proyectoForm" (ngSubmit)="crearProyecto()">
         <div class="form-group mb-3">
             <label for="titulo">
                 <h4>Título</h4>
             </label>
-            <input type="text" id="titulo" class="form-control" [(ngModel)]="proyecto.titulo" name="titulo" required>
+            <input type="text" id="titulo" class="form-control" formControlName="titulo" required>
+            <div *ngIf="proyectoForm.get('titulo')?.touched && proyectoForm.get('titulo')?.invalid" class="text-danger">
+                <div *ngIf="proyectoForm.get('titulo')?.errors?.['required']">El título es requerido.</div>
+                <div *ngIf="proyectoForm.get('titulo')?.errors?.['blacklisted']">El título contiene palabras prohibidas.
+                </div>
+            </div>
         </div>
         <div class="form-group mb-3">
             <label for="descripcion">
                 <h4>Descripción</h4>
             </label>
-            <textarea id="descripcion" class="form-control" [(ngModel)]="proyecto.descripcion" name="descripcion"
-                rows="5" required></textarea>
+            <textarea id="descripcion" class="form-control" formControlName="descripcion" rows="5" required></textarea>
+            <div *ngIf="proyectoForm.get('descripcion')?.touched && proyectoForm.get('descripcion')?.invalid"
+                class="text-danger">
+                <div *ngIf="proyectoForm.get('descripcion')?.errors?.['blacklisted']">La descripción contiene palabras
+                    prohibidas.</div>
+            </div>
         </div>
         <div class="form-group mb-3">
             <label for="fechaCreacion">
                 <h4>Fecha Creación</h4>
             </label>
-            <input type="text" id="fechaCreacion" class="form-control" [(ngModel)]="proyecto.fechaCreacion"
-                name="fechaCreacion" readonly>
+            <input type="text" id="fechaCreacion" class="form-control" formControlName="fechaCreacion" readonly>
         </div>
         <div class="form-group mb-3">
             <label for="integrantes">
@@ -53,33 +61,8 @@
                 </mat-card>
             </div>
         </div>
-        <div class="form-group mb-3">
-            <label for="tareas">
-                <h4>Tareas</h4>
-            </label>
-            <div *ngFor="let tarea of proyecto.tareas" class="mb-3 tarjeta">
-                <mat-card class="example-card" (click)="modificarTarea(tarea)">
-                    <mat-card-header>
-                        <mat-card-title-group>
-                            <mat-card-title>{{tarea.nombre}}</mat-card-title>
-                            <mat-card-subtitle>{{tarea.descripcion}}</mat-card-subtitle>
-                            <mat-card-subtitle>{{tarea.fechaVencimiento}}</mat-card-subtitle>
-                            <mat-card-subtitle>{{tarea.estado}}</mat-card-subtitle>
-                            <img mat-card-sm-image src="../../../assets/tarea.png">
-                        </mat-card-title-group>
-                    </mat-card-header>
-                </mat-card>
-            </div>
-            <div class="mb-3 tarjeta agregar">
-                <mat-card class="example-card add-card agregar" (click)="agregarTarea()">
-                    <mat-card-content>
-                        <mat-icon>add</mat-icon>
-                    </mat-card-content>
-                </mat-card>
-            </div>
-        </div>
         <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary me-2" (click)="modificarProyecto()">Crear Proyecto</button>
+            <button type="submit" class="btn btn-primary me-2" [disabled]="proyectoForm.invalid">Crear Proyecto</button>
         </div>
     </form>
 </div>
@@ -87,8 +70,8 @@
 <div id="myModal" class="modal" [ngClass]="{'show': isModalBorrarUserOpen}">
     <div class="modal-content">
         <span class="close" (click)="closeBorrarUser()">&times;</span>
-        <h2>Esta a punto de borrar a un usuario de este proyecto</h2>
-        <p>¿Estas seguro?</p>
+        <h2>Está a punto de borrar a un usuario de este proyecto</h2>
+        <p>¿Está seguro?</p>
         <div class="buttons">
             <button class="btn confirm" (click)="closeBorrarUser(); borrarUsuarioConfirmado()">Confirmar</button>
             <button class="btn cancel" (click)="closeBorrarUser()">Cancelar</button>
@@ -103,7 +86,8 @@
         <select id="autor" class="form-select" [(ngModel)]="usuarioN" name="autor">
             <option *ngFor="let usuario of usuarios" [ngValue]="usuario">{{ usuario.email }}</option>
         </select>
-        <button class="btnCerrar" (click)="agregarUsuario()" style="margin-top: 20px; margin-bottom: 20px;">Añadir</button>
+        <button class="btnCerrar" (click)="agregarUsuario()"
+            style="margin-top: 20px; margin-bottom: 20px;">Añadir</button>
     </div>
 </div>
 
@@ -117,20 +101,8 @@
                     d="M14 27l5 5 14-14" class="check-svg" />
             </svg>
         </div>
-        <p>Se ha realizado la acción satisfactorimente</p>
+        <p>Se ha realizado la acción satisfactoriamente</p>
         <button class="btnCerrar" (click)="closeModalCerrar(); irAAdminDashProyectos()">Cerrar</button>
-    </div>
-</div>
-
-<div id="myModal" class="modal" [ngClass]="{'show': isModalBorrarTareaOpen}">
-    <div class="modal-content">
-        <span class="close" (click)="closeBorrarTarea()">&times;</span>
-        <h1>¿Qué acción quieres realizar?</h1>
-        <div class="buttons">
-            <button class="btn confirm" (click)="closeBorrarTarea(); modTarea(tarea.id)"
-                routerLinkActive="active">Modificar</button>
-            <button class="btn cancel" (click)="closeBorrarTarea(); eliminarTarea()">Borrar</button>
-        </div>
     </div>
 </div>
 
@@ -144,7 +116,7 @@
                     d="M14 27l5 5 14-14" class="check-svg" />
             </svg>
         </div>
-        <p>Se ha realizado la acción satisfactorimente</p>
+        <p>Se ha realizado la acción satisfactoriamente</p>
         <button class="btnCerrar" (click)="closeConfirmarBorrarTarea();">Cerrar</button>
     </div>
 </div>

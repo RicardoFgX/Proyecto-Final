@@ -1,19 +1,21 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserServiceService } from '../../services/user-service.service';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { ProyectService } from '../../services/proyect.service';
+import { TareaService } from '../../services/tarea.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { TareaService } from '../../services/tarea.service';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 
 @Component({
   selector: 'app-admin-dash-mod-proyects',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, MatCardModule, MatInputModule, MatIconModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, FormsModule, RouterLink, MatCardModule, MatInputModule, MatIconModule, RouterLink, RouterLinkActive, ReactiveFormsModule],
   templateUrl: './admin-dash-mod-proyects.component.html',
   styleUrl: './admin-dash-mod-proyects.component.css'
 })
@@ -64,13 +66,29 @@ export class AdminDashModProyectsComponent {
 
   estados = ['COMPLETADA', 'EN_PROGRESO', 'PENDIENTE'];
 
+  proyectoForm: FormGroup;
+
+  blacklistedWords = ['jolines', 'joder'];
+
+
   constructor(
+    private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserServiceService,
     private proyectService: ProyectService,
     private tareaService: TareaService
-  ) { }
+  ) {
+    this.proyectoForm = this.fb.group({
+      id: [''],
+      titulo: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]],
+      descripcion: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]],
+      fechaCreacion: [''],
+      integrantes: this.fb.array([]),
+      tareas: this.fb.array([]),
+      nuevoUsuario: ['']
+    });
+  }
 
   ngOnInit(): void {
     this.getAllUsers();
@@ -109,10 +127,12 @@ export class AdminDashModProyectsComponent {
       // Utilizar el servicio de usuario para obtener los datos del usuario por su ID
       this.proyectService.getProyecto(noteID, token).subscribe({
         next: (data: any) => {
-          this.proyecto.id = data.id;
-          this.proyecto.titulo = data.nombre;
-          this.proyecto.descripcion = data.descripcion;
-          this.proyecto.fechaCreacion = data.fechaCreacion;
+          this.proyectoForm.patchValue({
+            id: data.id,
+            titulo: data.nombre,
+            descripcion: data.descripcion,
+            fechaCreacion: data.fechaCreacion,
+          });
           this.proyecto.integrantes = data.usuarios;
           this.proyecto.tareas = data.tareas;
           console.log(data);
@@ -136,14 +156,14 @@ export class AdminDashModProyectsComponent {
     const token = localStorage.getItem('token');
     if (token) {
         const newProyecto = {
-          nombre: this.proyecto.titulo,
-          descripcion: this.proyecto.descripcion,
-          fechaCreacion: this.proyecto.fechaCreacion,
-          ultimaFechaModificacion: this.proyecto.fechaCreacion,
+          nombre: this.proyectoForm.value.titulo,
+          descripcion: this.proyectoForm.value.descripcion,
+          fechaCreacion: this.proyectoForm.value.fechaCreacion,
+          ultimaFechaModificacion: this.ultimaFechaModificacion,
           usuarios: this.proyecto.integrantes.map((integrante: any) => ({ id: integrante.id }))
         }
         console.log(newProyecto);
-        this.proyectService.modProyecto(this.proyecto.id, newProyecto, token).subscribe({
+        this.proyectService.modProyecto(this.proyectoForm.value.id, newProyecto, token).subscribe({
           next: () => {
             this.openModalCerrar();
           },
@@ -163,14 +183,14 @@ export class AdminDashModProyectsComponent {
     const token = localStorage.getItem('token');
     if (token) {
         const newProyecto = {
-          nombre: this.proyecto.titulo,
-          descripcion: this.proyecto.descripcion,
-          fechaCreacion: this.proyecto.fechaCreacion,
-          ultimaFechaModificacion: this.proyecto.fechaCreacion,
+          nombre: this.proyectoForm.value.titulo,
+          descripcion: this.proyectoForm.value.descripcion,
+          fechaCreacion: this.proyectoForm.value.fechaCreacion,
+          ultimaFechaModificacion: this.ultimaFechaModificacion,
           usuarios: this.proyecto.integrantes.map((integrante: any) => ({ id: integrante.id }))
         }
         console.log(newProyecto);
-        this.proyectService.modProyecto(this.proyecto.id, newProyecto, token).subscribe({
+        this.proyectService.modProyecto(this.proyectoForm.value.id, newProyecto, token).subscribe({
           next: () => {
           },
           error: (error: any) => {
@@ -357,5 +377,15 @@ export class AdminDashModProyectsComponent {
       } else {
       console.error('Algo ocurrió con el token');
     }
+  }
+
+  blacklistValidator(blacklistedWords: string[]) {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (!control.value) {
+        return null;
+      }
+      const hasBlacklistedWord = blacklistedWords.some(word => control.value.includes(word));
+      return hasBlacklistedWord ? { blacklisted: true } : null;
+    };
   }
 }

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,11 +15,17 @@ import { JwtService } from '../../../services/jwt-service.service';
 @Component({
   selector: 'app-user-new-proyects',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, MatCardModule, MatInputModule, MatIconModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, FormsModule, RouterLink, MatCardModule, MatInputModule, MatIconModule, RouterLink, RouterLinkActive, ReactiveFormsModule, FormsModule],
   templateUrl: './user-new-proyects.component.html',
-  styleUrl: './user-new-proyects.component.css'
+  styleUrls: ['./user-new-proyects.component.css']
 })
 export class UserNewProyectsComponent {
+  proyectoForm: FormGroup;
+
+  blacklistedWords = [
+    'maricón', 'puto', 'joder', 'mierda', 'cabrón', 'cabron', 'bastardo'
+  ];
+
   proyecto = {
     id: '',
     titulo: '',
@@ -71,52 +78,56 @@ export class UserNewProyectsComponent {
 
   estados = ['COMPLETADA', 'EN_PROGRESO', 'PENDIENTE'];
 
+  userEmail: string | null = null;
+  token: string | null = null;
+
+  emailRequest = {
+    email: ''
+  };
+
   constructor(
+    private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserServiceService,
     private proyectService: ProyectService,
     private tareaService: TareaService,
     private jwtService: JwtService
-  ) { }
+  ) {
+    this.proyectoForm = this.fb.group({
+      titulo: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]],
+      descripcion: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]],
+      fechaCreacion: ['', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
     this.proyecto.integrantes.push(this.usuarioActual);
     this.checkAuthStatus();
     this.getUser();
     this.getAllUsers();
-    console.log(this.proyecto);
     this.ultimaFechaModificacion = this.getFechaActual();
-    this.proyecto.fechaCreacion = this.getFechaActual();
-    console.log(this.ultimaFechaModificacion);  // Imprime la fecha de creación en el formato correcto
+    this.proyectoForm.patchValue({
+      fechaCreacion: this.getFechaActual()
+    });
   }
 
-
-  emailRequest = {
-    email: ''
-  };
-
-  user = {
-    id: '',
-    nombre: '',
-    apellidos: '',
-    email: '',
-    contrasena: '',
-  };
-
-  userEmail: string | null = null;
-  token: string | null = null;
+  blacklistValidator(blacklist: string[]) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) {
+        return null;
+      }
+      const hasBlacklistedWord = blacklist.some(word => control.value.toLowerCase().includes(word.toLowerCase()));
+      return hasBlacklistedWord ? { 'blacklisted': true } : null;
+    };
+  }
 
   checkAuthStatus() {
-    // Verificar si hay un token guardado en el almacenamiento local
     this.token = this.jwtService.getToken();
     if (this.token != null) {
       try {
-        // Decodificar el token para obtener el correo electrónico del usuario
         const decodedToken: any = jwtDecode(this.token);
-        console.log(decodedToken?.sub);
-        this.emailRequest.email = decodedToken?.sub; // "sub" es el campo donde se almacena el correo electrónico en el token
-        console.log(this.emailRequest)
+        this.emailRequest.email = decodedToken?.sub;
       } catch (error) {
         console.error('Error al decodificar el token:', error);
       }
@@ -124,17 +135,13 @@ export class UserNewProyectsComponent {
   }
 
   getUser(): void {
-    // Obtener el ID del usuario de la URL
     const token = localStorage.getItem('token');
     if (token) {
-      // Utilizar el servicio de usuario para obtener los datos del usuario por su ID
-      console.log(this.emailRequest)
       this.userService.getUserEmail(this.emailRequest, token).subscribe({
         next: (data: any) => {
           this.usuarioActual.id = data.id;
           this.usuarioActual.nombre = data.nombre;
           this.usuarioActual.email = data.email;
-          console.log(this.usuarioActual);
         },
         error: (error) => {
           console.error('Error al cargar al usuario', error);
@@ -160,7 +167,6 @@ export class UserNewProyectsComponent {
         },
         complete: () => {
           console.log('Petición para obtener la lista de usuarios completada');
-          console.log(this.usuarios);
         }
       });
     } else {
@@ -170,15 +176,14 @@ export class UserNewProyectsComponent {
 
   modificarProyecto(): void {
     const token = localStorage.getItem('token');
-    if (token) {
+    if (token && this.proyectoForm.valid) {
       const newProyecto = {
-        nombre: this.proyecto.titulo,
-        descripcion: this.proyecto.descripcion,
-        fechaCreacion: this.proyecto.fechaCreacion,
-        ultimaFechaModificacion: this.proyecto.fechaCreacion,
+        nombre: this.proyectoForm.value.titulo,
+        descripcion: this.proyectoForm.value.descripcion,
+        fechaCreacion: this.proyectoForm.value.fechaCreacion,
+        ultimaFechaModificacion: this.proyectoForm.value.fechaCreacion,
         usuarios: this.proyecto.integrantes.map((integrante: any) => ({ id: integrante.id }))
       }
-      console.log(newProyecto);
       this.proyectService.createProyecto(newProyecto, token).subscribe({
         next: () => {
           this.openModalCerrar();
@@ -191,33 +196,7 @@ export class UserNewProyectsComponent {
         }
       });
     } else {
-      console.error('Algo ocurrió con el token');
-    }
-  }
-
-  modificarProyecto2(): void {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const newProyecto = {
-        nombre: this.proyecto.titulo,
-        descripcion: this.proyecto.descripcion,
-        fechaCreacion: this.proyecto.fechaCreacion,
-        ultimaFechaModificacion: this.proyecto.fechaCreacion,
-        usuarios: this.proyecto.integrantes.map((integrante: any) => ({ id: integrante.id }))
-      }
-      console.log(newProyecto);
-      this.proyectService.createProyecto(newProyecto, token).subscribe({
-        next: () => {
-        },
-        error: (error: any) => {
-          console.error('Error al guardar el proyecto', error);
-        },
-        complete: () => {
-          console.log('Petición para modificar el proyecto completada');
-        }
-      });
-    } else {
-      console.error('Algo ocurrió con el token');
+      console.error('Algo ocurrió con el token o el formulario no es válido');
     }
   }
 
@@ -266,7 +245,6 @@ export class UserNewProyectsComponent {
   ocultarElemento(id: string) {
     const elemento = document.getElementById(id);
     if (elemento) {
-      console.log("Id de ejemplo", id);
       elemento.style.display = 'none';
     } else {
       console.error('Elemento no encontrado con ID:', id);
@@ -291,7 +269,6 @@ export class UserNewProyectsComponent {
     if (this.usuario.email) {
       const usuario = this.usuarios.find(u => u.email === this.usuario.email);
       if (usuario) {
-        console.log('ID del usuario:', usuario.id);
         this.usuario.id = usuario.id
       } else {
         console.log('Usuario no encontrado');
@@ -314,42 +291,29 @@ export class UserNewProyectsComponent {
     return `${year}-${month}-${day}`;
   }
 
-
   agregarUsuario(): void {
-    console.log(this.usuarioN.email);
     if (this.usuarioN.email) {
       const usuarioExistente = this.proyecto.integrantes.find(u => u.email === this.usuarioN.email);
       if (usuarioExistente) {
-        console.log('El usuario ya existe en la lista de integrantes del proyecto.');
         this.mostrarNotificacion('El usuario ya existe en la lista de integrantes del proyecto.');
       } else {
-        console.log(this.usuarioN);
-        console.log('Usuario no encontrado, se añadirá a la lista de integrantes del proyecto.');
-        // Crear un nuevo usuario para agregarlo a la lista
         const nuevoUsuario = {
-          id: this.usuarioN.id, // Podrías generar un ID único aquí
-          nombre: this.usuarioN.nombre, // Agrega el nombre si tienes esta información disponible
+          id: this.usuarioN.id,
+          nombre: this.usuarioN.nombre,
           email: this.usuarioN.email
         };
-        // Agregar el nuevo usuario a la lista de integrantes del proyecto
         this.closeNuevoUser();
         this.proyecto.integrantes.push(nuevoUsuario);
       }
     } else {
-      console.log('No se ha seleccionado ningún correo electrónico');
       this.closeNuevoUser();
     }
   }
 
-
-
   borrarUsuarioConfirmado(): void {
-    console.log(this.usuarioBorradoID);
     const usuarioActual = this.usuarioBorradoID === this.usuarioActual.id;
-    console.log(usuarioActual);
     if (usuarioActual) {
-      console.log('Eres tu');
-        this.mostrarNotificacion('No puede borrar a este usuario del proyecto');
+      this.mostrarNotificacion('No puede borrar a este usuario del proyecto');
     } else {
       if (this.usuarioBorradoID) {
         this.proyecto.integrantes = this.proyecto.integrantes.filter(
@@ -357,7 +321,6 @@ export class UserNewProyectsComponent {
         );
       }
     }
-
   }
 
   confirmarborrarUsuario(id: number, nombre: any, email: any) {
@@ -371,14 +334,12 @@ export class UserNewProyectsComponent {
     this.notificationMessage = message;
     this.showNotification = true;
 
-    // Oculta la notificación después de 3 segundos
     setTimeout(() => {
       this.showNotification = false;
     }, 3000);
   }
 
   modTarea(id: any) {
-    // Navegar a la ruta relativa 'tarea/tarea.id' desde la ruta actual
     this.router.navigate(['tareas', id], { relativeTo: this.route });
   }
 
@@ -387,5 +348,28 @@ export class UserNewProyectsComponent {
     this.router.navigate(['tareas'], { relativeTo: this.route });
   }
 
+  modificarProyecto2(): void {
+    const token = localStorage.getItem('token');
+    if (token && this.proyectoForm.valid) {
+      const newProyecto = {
+        nombre: this.proyectoForm.value.titulo,
+        descripcion: this.proyectoForm.value.descripcion,
+        fechaCreacion: this.proyectoForm.value.fechaCreacion,
+        ultimaFechaModificacion: this.proyectoForm.value.fechaCreacion,
+        usuarios: this.proyecto.integrantes.map((integrante: any) => ({ id: integrante.id }))
+      }
+      this.proyectService.createProyecto(newProyecto, token).subscribe({
+        next: () => {
+        },
+        error: (error: any) => {
+          console.error('Error al guardar el proyecto', error);
+        },
+        complete: () => {
+          console.log('Petición para modificar el proyecto completada');
+        }
+      });
+    } else {
+      console.error('Algo ocurrió con el token o el formulario no es válido');
+    }
+  }
 }
-

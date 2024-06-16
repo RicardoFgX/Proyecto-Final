@@ -1,35 +1,41 @@
 <div class="container mt-5 espaciado">
   <div class="back">
-      <button type="button" class="btn btn-primary" (click)="irAAdminDashNotas()">Volver</button>
+    <button type="button" class="btn btn-primary" (click)="irAAdminDashNotas()">Volver</button>
   </div>
   <h2>Crear Nota</h2>
-  <form>
-      <div class="form-group mb-3">
-          <label for="titulo">Título</label>
-          <input type="text" id="titulo" class="form-control" [(ngModel)]="nota.titulo" name="titulo" required>
+  <form [formGroup]="notaForm" (ngSubmit)="crearNota()">
+    <div class="form-group mb-3">
+      <label for="titulo">Título</label>
+      <input type="text" id="titulo" class="form-control" formControlName="titulo" placeholder="Ingrese el título" required>
+      <div *ngIf="notaForm.get('titulo')?.touched && notaForm.get('titulo')?.invalid" class="text-danger">
+        <div *ngIf="notaForm.get('titulo')?.errors?.['required']">El título es requerido.</div>
+        <div *ngIf="notaForm.get('titulo')?.errors?.['blacklisted']">El título contiene palabras no permitidas.</div>
       </div>
-      <div class="form-group mb-3">
-          <label for="contenido">Contenido</label>
-          <textarea id="contenido" class="form-control" [(ngModel)]="nota.contenido" name="contenido" rows="5"
-              required></textarea>
+    </div>
+    <div class="form-group mb-3">
+      <label for="contenido">Contenido</label>
+      <textarea id="contenido" class="form-control" formControlName="contenido" placeholder="Ingrese el contenido" rows="5" required></textarea>
+      <div *ngIf="notaForm.get('contenido')?.touched && notaForm.get('contenido')?.invalid" class="text-danger">
+        <div *ngIf="notaForm.get('contenido')?.errors?.['required']">El contenido es requerido.</div>
+        <div *ngIf="notaForm.get('contenido')?.errors?.['blacklisted']">El contenido contiene palabras no permitidas.</div>
       </div>
-      <div class="d-flex justify-content-end">
-          <button type="submit" class="btn btn-primary me-2" (click)="crearNota()">Nueva Nota</button>
-      </div>
+    </div>
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-primary me-2" [disabled]="notaForm.invalid">Nueva Nota</button>
+    </div>
   </form>
 </div>
 
 <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
-<div class="modal-content">
-  <span class="close" (click)="closeModalCerrar(); irAAdminDashNotas()">&times;</span>
-  <div class="check-animation">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-      <circle cx="26" cy="26" r="25" fill="none" />
-      <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
-        d="M14 27l5 5 14-14" class="check-svg" />
-    </svg>
+  <div class="modal-content">
+    <span class="close" (click)="closeModalCerrar(); irAAdminDashNotas()">&times;</span>
+    <div class="check-animation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="25" fill="none" />
+        <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M14 27l5 5 14-14" class="check-svg" />
+      </svg>
+    </div>
+    <p>Se ha realizado la acción satisfactoriamente</p>
+    <button class="btnCerrar" (click)="closeModalCerrar(); irAAdminDashNotas()">Cerrar</button>
   </div>
-  <p>Se ha realizado la acción satisfactoriamente</p>
-  <button class="btnCerrar" (click)="closeModalCerrar(); irAAdminDashNotas()">Cerrar</button>
-</div>
 </div>

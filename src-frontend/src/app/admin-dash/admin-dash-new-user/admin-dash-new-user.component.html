@@ -3,29 +3,49 @@
     <button type="button" class="btn btn-primary" (click)="irAAdminDashUsuarios()">Volver</button>
   </div>
   <h2>Crear Usuario</h2>
-  <form>
+  <form [formGroup]="userForm" (ngSubmit)="crearUsuario()">
     <div class="form-group">
       <label for="nombre">Nombre:</label>
-      <input type="text" class="form-control" id="nombre" placeholder="Ingrese el nombre" [(ngModel)]="user.nombre"
-        name="nombre">
+      <input type="text" class="form-control" id="nombre" placeholder="Ingrese el nombre" formControlName="nombre">
+      <div *ngIf="userForm.get('nombre')?.touched && userForm.get('nombre')?.invalid" class="text-danger">
+        <div *ngIf="userForm.get('nombre')?.errors?.['required']">El nombre es requerido.</div>
+        <div *ngIf="userForm.get('nombre')?.errors?.['pattern']">El nombre no puede contener números ni caracteres especiales.</div>
+      </div>
     </div>
     <div class="form-group">
       <label for="apellidos">Apellidos:</label>
-      <input type="text" class="form-control" id="apellidos" placeholder="Ingrese los apellidos"
-        [(ngModel)]="user.apellidos" name="apellidos">
+      <input type="text" class="form-control" id="apellidos" placeholder="Ingrese los apellidos" formControlName="apellidos">
+      <div *ngIf="userForm.get('apellidos')?.touched && userForm.get('apellidos')?.invalid" class="text-danger">
+        <div *ngIf="userForm.get('apellidos')?.errors?.['pattern']">Los apellidos no pueden contener números ni caracteres especiales.</div>
+      </div>
     </div>
     <div class="form-group">
       <label for="correo">Correo electrónico:</label>
-      <input type="email" class="form-control" id="correo" placeholder="Ingrese el correo electrónico"
-        [(ngModel)]="user.email" name="email">
+      <input type="email" class="form-control" id="correo" placeholder="Ingrese el correo electrónico" formControlName="email">
+      <div *ngIf="userForm.get('email')?.touched && userForm.get('email')?.invalid" class="text-danger">
+        <div *ngIf="userForm.get('email')?.errors?.['required']">El correo electrónico es requerido.</div>
+        <div *ngIf="userForm.get('email')?.errors?.['email']">El correo electrónico no es válido.</div>
+      </div>
     </div>
     <div class="form-group">
       <label for="contrasena">Contraseña:</label>
-      <input type="text" class="form-control" id="contrasena" placeholder="Ingrese la contraseña"
-        [(ngModel)]="user.contrasena" name="contrasena">
+      <input type="password" class="form-control" id="contrasena" placeholder="Ingrese la contraseña" formControlName="contrasena">
+      <div *ngIf="userForm.get('contrasena')?.touched && userForm.get('contrasena')?.invalid" class="text-danger">
+        <div *ngIf="userForm.get('contrasena')?.errors?.['required']">La contraseña es requerida.</div>
+        <div *ngIf="userForm.get('contrasena')?.errors?.['minlength']">La contraseña debe tener al menos 5 caracteres.</div>
+        <div *ngIf="userForm.get('contrasena')?.errors?.['pattern']">La contraseña debe contener al menos un número.</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="confirmarContrasena">Confirmar Contraseña:</label>
+      <input type="password" class="form-control" id="confirmarContrasena" placeholder="Confirme la contraseña" formControlName="confirmarContrasena">
+      <div *ngIf="userForm.get('confirmarContrasena')?.touched && userForm.get('confirmarContrasena')?.invalid" class="text-danger">
+        <div *ngIf="userForm.get('confirmarContrasena')?.errors?.['required']">La confirmación de la contraseña es requerida.</div>
+        <div *ngIf="userForm.hasError('mismatch')">Las contraseñas no coinciden.</div>
+      </div>
     </div>
     <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-primary me-2" (click)="modificarUsuario()">Crear Usuario</button>
+      <button type="submit" class="btn btn-primary me-2" [disabled]="userForm.invalid">Crear Usuario</button>
     </div>
   </form>
 </div>
@@ -44,4 +64,3 @@
     <button class="btnCerrar" (click)="closeModalCerrar(); irAAdminDashUsuarios()">Cerrar</button>
   </div>
 </div>
-
