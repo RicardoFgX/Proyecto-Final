@@ -37,17 +37,22 @@ export class UserNotesComponent {
     contrasena: '',
   };
 
-  constructor(private noteService: NoteService, private userService: UserServiceService, private jwtService: JwtService) { }
+  constructor(
+    private noteService: NoteService, 
+    private userService: UserServiceService, 
+    private jwtService: JwtService
+  ) { }
 
+  // Método que se ejecuta al inicializar el componente
   ngOnInit(): void {
     this.checkAuthStatus();
     this.getUser();
   }
 
+  // Método para obtener todas las notas del usuario
   getAllNotesUser() {
     const token = localStorage.getItem('token');
     if (token) {
-      console.log("El usuario es este " + this.user.id);
       this.noteService.getAllNotesUser(Number(this.user.id), token).subscribe({
         next: (data: any[]) => {
           this.notes = data;
@@ -62,8 +67,7 @@ export class UserNotesComponent {
           }
         },
         complete: () => {
-          console.log('Petición para obtener la lista de anotaciones completada');
-          console.log(this.notes);
+          // Lógica adicional al completar la petición
         }
       });
     } else {
@@ -71,12 +75,10 @@ export class UserNotesComponent {
     }
   }
 
+  // Método para obtener los datos del usuario autenticado
   getUser(): void {
-    // Obtener el ID del usuario de la URL
     const token = localStorage.getItem('token');
     if (token) {
-      // Utilizar el servicio de usuario para obtener los datos del usuario por su ID
-      console.log(this.emailRequest)
       this.userService.getUserEmail(this.emailRequest, token).subscribe({
         next: (data: any) => {
           this.user.id = data.id;
@@ -84,14 +86,13 @@ export class UserNotesComponent {
           this.user.apellidos = data.apellidos;
           this.user.email = data.email;
           this.emailInicial = data.email;
-          console.log(data);
           this.getAllNotesUser();
         },
         error: (error) => {
           console.error('Error al cargar al usuario', error);
         },
         complete: () => {
-          console.log('Petición para obtener el usuario completada');
+          // Lógica adicional al completar la petición
         }
       });
     } else {
@@ -99,81 +100,79 @@ export class UserNotesComponent {
     }
   }
 
+  // Método para verificar el estado de autenticación del usuario
   checkAuthStatus() {
-    // Verificar si hay un token guardado en el almacenamiento local
     this.token = this.jwtService.getToken();
     if (this.token != null) {
       try {
-        // Decodificar el token para obtener el correo electrónico del usuario
         const decodedToken: any = jwtDecode(this.token);
-        console.log(decodedToken?.sub);
         this.emailRequest.email = decodedToken?.sub; // "sub" es el campo donde se almacena el correo electrónico en el token
-        console.log(this.emailRequest)
       } catch (error) {
         console.error('Error al decodificar el token:', error);
       }
     }
   }
 
-  confirmarborrarNota(id: number, titulo: any){
-      this.notaBorradoID = id;
-      this.notaBorradoTitulo = titulo;
-      this.openModal();
+  // Método para abrir el modal de confirmación de borrado
+  confirmarborrarNota(id: number, titulo: any) {
+    this.notaBorradoID = id;
+    this.notaBorradoTitulo = titulo;
+    this.openModal();
   }
 
+  // Método para borrar una nota
   borrarNota(id: number) {
     const token = localStorage.getItem('token');
     if (token) {
       this.noteService.borrarNota(id, token).subscribe({
         next: (response) => {
-          console.log('Anotación borrada exitosamente:', response);
-          // Actualizar la lista de usuarios después de borrar uno
+          // Actualizar la lista de notas después de borrar una
           this.getAllNotesUser();
         },
         error: (error) => {
           console.error('Error al borrar anotación:', error);
         },
         complete: () => {
-          console.log('La petición para borrar la anotación ha finalizado');
+          // Lógica adicional al completar la petición
         }
       });
     }
   }
 
-
+  // Método para modificar una nota (almacena el ID de la nota en el almacenamiento local)
   modificarNota(id: number) {
     window.localStorage["idNota"] = id;
   }
 
+  // Método para ocultar un elemento del DOM por su ID
   ocultarElemento(id: string) {
     const elemento = document.getElementById(id);
     if (elemento) {
-      console.log("Id de ejemplo", id);
       elemento.style.display = 'none';
     } else {
       console.error('Elemento no encontrado con ID:', id);
     }
   }
 
-  otraFuncion() {
-    console.log("Segunda Función");
-  }
-
+  // Estado del modal de confirmación de borrado
   isModalOpen = false;
 
+  // Método para abrir el modal de confirmación de borrado
   openModal() {
     this.isModalOpen = true;
   }
 
+  // Método para cerrar el modal de confirmación de borrado
   closeModal() {
     this.isModalOpen = false;
   }
 
+  // Método para confirmar la acción de borrado
   confirmAction() {
-    console.log('Elemento borrado');
     this.closeModal();
   }
 
+  // Método para truncar el texto si excede una longitud máxima
   truncateText(text: string, maxLength: number): string {
     if (text.length > maxLength) {
       return text.slice(0, maxLength) + '...';

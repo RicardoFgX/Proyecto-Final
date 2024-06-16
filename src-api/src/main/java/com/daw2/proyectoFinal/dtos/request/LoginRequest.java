@@ -1,11 +1,19 @@
 package com.daw2.proyectoFinal.dtos.request;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 /**
  * DTO (Data Transfer Object) que representa una solicitud de inicio de sesión.
  * Se utiliza para transferir información entre capas de la aplicación.
  */
 public class LoginRequest {
+
+    @NotBlank(message = "El correo electrónico es obligatorio")
+    @Email(message = "El correo electrónico no es válido")
     private String email;
+
+    @NotBlank(message = "La contraseña es obligatoria")
     private String contrasena;
 
     /**
@@ -61,4 +69,3 @@ public class LoginRequest {
         this.contrasena = contrasena;
     }
 }
-

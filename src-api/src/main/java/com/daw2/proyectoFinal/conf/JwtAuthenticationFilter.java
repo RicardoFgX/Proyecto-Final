@@ -16,6 +16,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.daw2.proyectoFinal.services.JwtService;
 import com.daw2.proyectoFinal.services.UsuarioService;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -56,12 +58,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
+
+        response.setCharacterEncoding("UTF-8");
+
         if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, "Bearer ")) {
-            filterChain.doFilter(request, response);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Authorization header está vacío o no comienza con Bearer.");
             return;
         }
+
         jwt = authHeader.substring(7);
-        userEmail = jwtService.extractUserName(jwt);
+
+        if (StringUtils.isEmpty(jwt)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token está vacío.");
+            return;
+        }
+
+        try {
+            userEmail = jwtService.extractUserName(jwt);
+        } catch (ExpiredJwtException e) {
+            // Token caducado
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token ha caducado.");
+            return;
+        } catch (JwtException e) {
+            // Token incorrecto
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token no es válido.");
+            return;
+        }
+
         if (StringUtils.isNotEmpty(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = usuarioService.userDetailsService().loadUserByUsername(userEmail);
             if (jwtService.isTokenValid(jwt, userDetails)) {
@@ -73,6 +100,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.setContext(context);
             }
         }
+
         filterChain.doFilter(request, response);
     }
 }

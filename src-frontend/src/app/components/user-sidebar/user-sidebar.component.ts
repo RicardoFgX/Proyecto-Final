@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import {MatExpansionModule} from '@angular/material/expansion';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { NoteService } from '../../services/note.service';
 import { JwtService } from '../../services/jwt-service.service';
 import { UserServiceService } from '../../services/user-service.service';
@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
 import { ProyectService } from '../../services/proyect.service';
 import { MatIconModule } from '@angular/material/icon';
 
-
 @Component({
   selector: 'app-user-sidebar',
   standalone: true,
@@ -18,7 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './user-sidebar.component.html',
   styleUrl: './user-sidebar.component.css'
 })
-export class UserSidebarComponent {
+export class UserSidebarComponent implements OnInit {
   panelOpenState = false;
   emailInicial: string = '';
 
@@ -41,19 +40,28 @@ export class UserSidebarComponent {
 
   isCollapsed = false;
 
+  // Función para alternar la visibilidad de la barra lateral
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
   }
 
-  constructor(private router: Router, private noteService: NoteService, 
-    private jwtService: JwtService, private userService: UserServiceService, 
-    private authService: AuthService, private proyectService: ProyectService) { }
+  // Constructor con inyección de dependencias
+  constructor(
+    private router: Router,
+    private noteService: NoteService, 
+    private jwtService: JwtService, 
+    private userService: UserServiceService, 
+    private authService: AuthService, 
+    private proyectService: ProyectService
+  ) { }
 
+  // Función de inicialización
   ngOnInit(): void {
     this.checkAuthStatus();
     this.getUser();
   }
 
+  // Obtener todas las notas del usuario
   getAllNotesUser() {
     const token = localStorage.getItem('token');
     if (token) {
@@ -62,13 +70,7 @@ export class UserSidebarComponent {
           this.notes = data;
         },
         error: (error) => {
-          if (error.status === 200) {
-            console.error('No hay ninguna anotación para este usuario');
-            // Aquí puedes agregar lógica específica para el error 404, como mostrar un mensaje al usuario
-          } else {
-            console.error('Error al obtener la lista de anotaciones:', error);
-            // Puedes agregar lógica adicional para otros tipos de errores
-          }
+          console.error('Error al obtener las notas del usuario:', error);
         },
         complete: () => {
         }
@@ -77,14 +79,11 @@ export class UserSidebarComponent {
       console.error('No se encontró el token de autenticación.');
     }
   }
-  
 
+  // Obtener datos del usuario
   getUser(): void {
-    // Obtener el ID del usuario de la URL
     const token = localStorage.getItem('token');
     if (token) {
-      // Utilizar el servicio de usuario para obtener los datos del usuario por su ID
-      console.log(this.emailRequest)
       this.userService.getUserEmail(this.emailRequest, token).subscribe({
         next: (data: any) => {
           this.user.id = data.id;
@@ -96,7 +95,7 @@ export class UserSidebarComponent {
           this.getAllProyectoID();
         },
         error: (error) => {
-          console.error('Error al cargar al usuario', error);
+          console.error('Error al cargar al usuario:', error);
         },
         complete: () => {
         }
@@ -106,12 +105,11 @@ export class UserSidebarComponent {
     }
   }
 
+  // Verificar el estado de autenticación
   checkAuthStatus() {
-    // Verificar si hay un token guardado en el almacenamiento local
     this.token = this.jwtService.getToken();
     if (this.token != null) {
       try {
-        // Decodificar el token para obtener el correo electrónico del usuario
         const decodedToken: any = jwtDecode(this.token);
         this.emailRequest.email = decodedToken?.sub; // "sub" es el campo donde se almacena el correo electrónico en el token
       } catch (error) {
@@ -120,6 +118,7 @@ export class UserSidebarComponent {
     }
   }
 
+  // Obtener todos los proyectos del usuario
   getAllProyectoID() {
     const token = localStorage.getItem('token');
     if (token) {
@@ -128,11 +127,9 @@ export class UserSidebarComponent {
           this.proyectos = data;
         },
         error: (error) => {
-          console.error('Error al obtener la lista de proyectos:', error);
+          console.error('Este usuario no tiene ningun proyecto que cargar proyectos:', error);
         },
         complete: () => {
-          console.log('Petición para obtener la lista de proyectos completada');
-          console.log(this.proyectos);
         }
       });
     } else {

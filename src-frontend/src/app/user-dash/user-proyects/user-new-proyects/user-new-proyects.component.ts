@@ -19,13 +19,15 @@ import { JwtService } from '../../../services/jwt-service.service';
   templateUrl: './user-new-proyects.component.html',
   styleUrls: ['./user-new-proyects.component.css']
 })
-export class UserNewProyectsComponent {
+export class UserNewProyectsComponent implements OnInit {
   proyectoForm: FormGroup;
 
+  // Palabras prohibidas
   blacklistedWords = [
     'maricón', 'puto', 'joder', 'mierda', 'cabrón', 'cabron', 'bastardo'
   ];
 
+  // Objeto de proyecto
   proyecto = {
     id: '',
     titulo: '',
@@ -35,8 +37,10 @@ export class UserNewProyectsComponent {
     tareas: [] as any[]
   };
 
+  // Fecha de la última modificación
   ultimaFechaModificacion: string = '';
 
+  // Objeto de tarea
   tarea = {
     id: '',
     nombre: '',
@@ -48,39 +52,47 @@ export class UserNewProyectsComponent {
     }
   }
 
+  // Objeto de usuario actual
   usuario = {
     email: '',
     nombre: '',
     id: '',
   };
 
+  // Objeto para el nuevo usuario
   usuarioN = {
     email: '',
     nombre: '',
     id: '',
   };
 
+  // Variables para el usuario que se va a borrar
   usuarioBorradoID: any;
   usuarioBorradoEmail: any;
   usuarioBorradoNombre: any;
 
-
+  // Lista de usuarios
   usuarios: any[] = [];
 
+  // Información del usuario actual
   usuarioActual = {
     email: '',
     nombre: '',
     id: '',
   };
 
+  // Variables de notificación
   showNotification: boolean = false;
   notificationMessage: string = '';
 
+  // Lista de estados de tarea
   estados = ['COMPLETADA', 'EN_PROGRESO', 'PENDIENTE'];
 
+  // Variables de autenticación
   userEmail: string | null = null;
   token: string | null = null;
 
+  // Objeto para la solicitud de email
   emailRequest = {
     email: ''
   };
@@ -94,6 +106,7 @@ export class UserNewProyectsComponent {
     private tareaService: TareaService,
     private jwtService: JwtService
   ) {
+    // Inicializar el formulario del proyecto con validadores
     this.proyectoForm = this.fb.group({
       titulo: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]],
       descripcion: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]],
@@ -102,16 +115,20 @@ export class UserNewProyectsComponent {
   }
 
   ngOnInit(): void {
+    // Agregar el usuario actual a la lista de integrantes del proyecto
     this.proyecto.integrantes.push(this.usuarioActual);
+    // Verificar el estado de autenticación y cargar la información del usuario
     this.checkAuthStatus();
     this.getUser();
     this.getAllUsers();
+    // Establecer la fecha de creación y la última fecha de modificación del proyecto
     this.ultimaFechaModificacion = this.getFechaActual();
     this.proyectoForm.patchValue({
       fechaCreacion: this.getFechaActual()
     });
   }
 
+  // Validador para comprobar si el texto contiene palabras prohibidas
   blacklistValidator(blacklist: string[]) {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) {
@@ -122,6 +139,7 @@ export class UserNewProyectsComponent {
     };
   }
 
+  // Verificar si el usuario está autenticado
   checkAuthStatus() {
     this.token = this.jwtService.getToken();
     if (this.token != null) {
@@ -134,6 +152,7 @@ export class UserNewProyectsComponent {
     }
   }
 
+  // Obtener la información del usuario actual
   getUser(): void {
     const token = localStorage.getItem('token');
     if (token) {
@@ -147,7 +166,6 @@ export class UserNewProyectsComponent {
           console.error('Error al cargar al usuario', error);
         },
         complete: () => {
-          console.log('Petición para obtener el usuario completada');
         }
       });
     } else {
@@ -155,6 +173,7 @@ export class UserNewProyectsComponent {
     }
   }
 
+  // Obtener la lista de todos los usuarios
   getAllUsers() {
     const token = localStorage.getItem('token');
     if (token) {
@@ -166,7 +185,6 @@ export class UserNewProyectsComponent {
           console.error('Error al obtener la lista de usuarios:', error);
         },
         complete: () => {
-          console.log('Petición para obtener la lista de usuarios completada');
         }
       });
     } else {
@@ -174,6 +192,7 @@ export class UserNewProyectsComponent {
     }
   }
 
+  // Modificar el proyecto
   modificarProyecto(): void {
     const token = localStorage.getItem('token');
     if (token && this.proyectoForm.valid) {
@@ -192,7 +211,6 @@ export class UserNewProyectsComponent {
           console.error('Error al guardar el proyecto', error);
         },
         complete: () => {
-          console.log('Petición para modificar el proyecto completada');
         }
       });
     } else {
@@ -200,16 +218,19 @@ export class UserNewProyectsComponent {
     }
   }
 
+  // Navegar a la vista de proyectos
   irAAdminDashProyectos() {
     this.router.navigate(['/proyectos']);
   }
 
+  // Variables para controlar los estados de los modales
   isModalBorrarUserOpen = false;
   isModalBorrarTareaOpen = false;
   isModalNuevoUserOpen = false;
   isModalConfirmarBorrarTareaOpen = false;
   isModalCerrar = false;
 
+  // Métodos para abrir y cerrar los modales
   openModalCerrar() {
     this.isModalCerrar = true;
   }
@@ -242,6 +263,7 @@ export class UserNewProyectsComponent {
     this.isModalConfirmarBorrarTareaOpen = false;
   }
 
+  // Ocultar un elemento por ID
   ocultarElemento(id: string) {
     const elemento = document.getElementById(id);
     if (elemento) {
@@ -251,6 +273,7 @@ export class UserNewProyectsComponent {
     }
   }
 
+  // Mostrar el modal de confirmación de modificación de proyecto
   confirmarModProyecto() {
     const elemento = document.getElementById('id03');
     if (elemento) {
@@ -258,30 +281,22 @@ export class UserNewProyectsComponent {
     }
   }
 
-  mostrarIdUsuario(email: string): void {
-    const usuarioSeleccionado = this.usuarios.find(usuario => usuario.email === email);
-    if (usuarioSeleccionado) {
-      console.log('ID del usuario seleccionado:', usuarioSeleccionado.id);
-    }
-  }
-
+  // Buscar el ID del usuario por su email
   buscarIdUsuario(): void {
     if (this.usuario.email) {
       const usuario = this.usuarios.find(u => u.email === this.usuario.email);
       if (usuario) {
         this.usuario.id = usuario.id
-      } else {
-        console.log('Usuario no encontrado');
-      }
-    } else {
-      console.log('No se ha seleccionado ningún correo electrónico');
-    }
+      } 
+    } 
   }
 
+  // Abrir el modal para agregar un nuevo integrante
   agregarIntegrante(): void {
     this.openNuevoUser();
   }
 
+  // Obtener la fecha actual en formato 'YYYY-MM-DD'
   getFechaActual(): string {
     const today = new Date();
     const year = today.getFullYear();
@@ -291,6 +306,7 @@ export class UserNewProyectsComponent {
     return `${year}-${month}-${day}`;
   }
 
+  // Agregar un nuevo usuario al proyecto
   agregarUsuario(): void {
     if (this.usuarioN.email) {
       const usuarioExistente = this.proyecto.integrantes.find(u => u.email === this.usuarioN.email);
@@ -310,6 +326,7 @@ export class UserNewProyectsComponent {
     }
   }
 
+  // Confirmar el borrado de un usuario del proyecto
   borrarUsuarioConfirmado(): void {
     const usuarioActual = this.usuarioBorradoID === this.usuarioActual.id;
     if (usuarioActual) {
@@ -323,6 +340,7 @@ export class UserNewProyectsComponent {
     }
   }
 
+  // Preparar el modal para confirmar el borrado de un usuario
   confirmarborrarUsuario(id: number, nombre: any, email: any) {
     this.usuarioBorradoID = id;
     this.usuarioBorradoNombre = nombre;
@@ -330,6 +348,7 @@ export class UserNewProyectsComponent {
     this.openBorrarUser();
   }
 
+  // Mostrar una notificación con un mensaje específico
   mostrarNotificacion(message: string): void {
     this.notificationMessage = message;
     this.showNotification = true;
@@ -339,15 +358,18 @@ export class UserNewProyectsComponent {
     }, 3000);
   }
 
+  // Navegar a la vista de tareas para modificar una tarea específica
   modTarea(id: any) {
     this.router.navigate(['tareas', id], { relativeTo: this.route });
   }
 
+  // Agregar una nueva tarea y navegar a la vista de tareas
   agregarTarea() {
     this.modificarProyecto2();
     this.router.navigate(['tareas'], { relativeTo: this.route });
   }
 
+  // Modificar el proyecto (llamado al agregar una nueva tarea)
   modificarProyecto2(): void {
     const token = localStorage.getItem('token');
     if (token && this.proyectoForm.valid) {
@@ -365,7 +387,6 @@ export class UserNewProyectsComponent {
           console.error('Error al guardar el proyecto', error);
         },
         complete: () => {
-          console.log('Petición para modificar el proyecto completada');
         }
       });
     } else {

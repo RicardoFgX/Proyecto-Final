@@ -6,7 +6,7 @@ table {
 
 .adminDash {
   display: grid;
-  grid-template-columns: 250px auto; /* Sidebar ocupa 250px y el contenido el espacio restante */
+  grid-template-columns: 250px auto; 
   margin: 0;
   padding: 0;
   transition: grid-template-columns 0.3s ease;
@@ -17,7 +17,7 @@ table {
 }
 
 .centered-table {
-  margin: 0 auto; /* Centra la tabla horizontalmente */
+  margin: 0 auto; 
 }
 
 .featured-icon {
@@ -26,8 +26,8 @@ table {
   height: 40px;
   background-color: rgba(244, 235, 255, 1);
   border-radius: 20px;
-  display: inline-block; /* Hace que la imagen y el div se muestren en línea */
-  vertical-align: middle; /* Alinea verticalmente con el texto */
+  display: inline-block; 
+  vertical-align: middle;
 }
 
 th, td {
@@ -155,20 +155,20 @@ button:hover {
 }
 
 .check-animation svg {
-  width: 100px; /* Aumenta el tamaño del SVG */
-  height: 100px; /* Aumenta el tamaño del SVG */
+  width: 100px;
+  height: 100px;
 }
 
 .check-animation circle {
   stroke: white;
-  stroke-dasharray: 314; /* Ajustado para un círculo más grande */
-  stroke-dashoffset: 314; /* Ajustado para un círculo más grande */
+  stroke-dasharray: 314; 
+  stroke-dashoffset: 314;
   animation: dash 1s linear forwards;
 }
 
 .check-animation path {
-  stroke-dasharray: 50; /* Ajustado para el tamaño más grande */
-  stroke-dashoffset: 50; /* Ajustado para el tamaño más grande */
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
   animation: dash-check 0.5s 1s linear forwards;
 }
 
@@ -185,7 +185,7 @@ button:hover {
 }
 
 .check-svg {
-  transform: translateX(3px); /* Desplaza el SVG 10px hacia la derecha */
+  transform: translateX(3px);
 }
 
 .btnCerrar {
@@ -209,12 +209,12 @@ button:hover {
 .btnCerrar:active,
 .btnCerrar:focus {  
   background-color: #102770;
-  color: #fff; /* Para mantener el contraste del texto */
+  color: #fff;
 }
 
 .btnCerrar:hover {  
   background-color: #102770;
-  color: #fff; /* Para mantener el contraste del texto */
+  color: #fff;
 }
 
 hr {

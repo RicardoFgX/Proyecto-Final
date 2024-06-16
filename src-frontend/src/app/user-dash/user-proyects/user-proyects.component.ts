@@ -15,31 +15,33 @@ import { JwtService } from '../../services/jwt-service.service';
   styleUrl: './user-proyects.component.css'
 })
 export class UserProyectsComponent {
-  proyectos: any[] = [];
-  proyectoBorradoID: any;
-  proyectoBorradoTitulo: any;
+  proyectos: any[] = []; // Arreglo para almacenar los proyectos del usuario
+  proyectoBorradoID: any; // ID del proyecto a borrar
+  proyectoBorradoTitulo: any; // Título del proyecto a borrar
 
-  userID: any = 1;
+  userID: any = 1; // ID del usuario, inicializado en 1
 
   emailRequest = {
     email: ''
   };
 
-  token: string | null = null;
+  token: string | null = null; // Token de autenticación
 
-  constructor(private proyectService: ProyectService,
+  constructor(
+    private proyectService: ProyectService,
     private userService: UserServiceService,
     private jwtService: JwtService
   ) { }
 
   ngOnInit(): void {
+    // Al inicializar el componente, verificar el estado de autenticación y obtener el usuario
     this.checkAuthStatus();
     this.getUser();
   }
 
   getAllProyects() {
+    // Obtener todos los proyectos del usuario
     const token = localStorage.getItem('token');
-    console.log("TERCERO");
     if (token) {
       this.userService.getUserProyects(this.userID, token).subscribe({
         next: (data: any[]) => {
@@ -49,8 +51,6 @@ export class UserProyectsComponent {
           console.error('Error al obtener la lista de proyectos:', error);
         },
         complete: () => {
-          console.log('Petición para obtener la lista de proyectos completada');
-          console.log(this.proyectos);
         }
       });
     } else {
@@ -59,23 +59,18 @@ export class UserProyectsComponent {
   }
 
   getUser(): void {
-    // Obtener el ID del usuario de la URL
+    // Obtener el usuario utilizando el token
     const token = localStorage.getItem('token');
     if (token) {
-      // Utilizar el servicio de usuario para obtener los datos del usuario por su ID
-      console.log(this.emailRequest)
       this.userService.getUserEmail(this.emailRequest, token).subscribe({
         next: (data: any) => {
           this.userID = data.id;
-          console.log("Segundo")
-          console.log(this.userID);
           this.getAllProyects();
         },
         error: (error) => {
           console.error('Error al cargar al usuario', error);
         },
         complete: () => {
-          console.log('Petición para obtener el usuario completada');
         }
       });
     } else {
@@ -90,85 +85,82 @@ export class UserProyectsComponent {
       try {
         // Decodificar el token para obtener el correo electrónico del usuario
         const decodedToken: any = jwtDecode(this.token);
-        console.log(decodedToken?.sub);
         this.emailRequest.email = decodedToken?.sub; // "sub" es el campo donde se almacena el correo electrónico en el token
-        console.log("Primero");
-        console.log(this.emailRequest)
       } catch (error) {
         console.error('Error al decodificar el token:', error);
       }
     }
   }
 
-  confirmarborrarProyecto(id: number, titulo: any){
-      this.proyectoBorradoID = id;
-      this.proyectoBorradoTitulo = titulo;
-      this.openModal();
+  confirmarborrarProyecto(id: number, titulo: any) {
+    // Confirmar el borrado del proyecto
+    this.proyectoBorradoID = id;
+    this.proyectoBorradoTitulo = titulo;
+    this.openModal();
   }
 
   borrarProyecto(id: number) {
+    // Borrar un proyecto por su ID
     const token = localStorage.getItem('token');
     if (token) {
       this.proyectService.borrarProyecto(id, token).subscribe({
         next: (response) => {
-          console.log('Usuario borrado exitosamente:', response);
-          // Actualizar la lista de usuarios después de borrar uno
-          this.getAllProyects();
+          this.getAllProyects(); // Actualizar la lista de proyectos después de borrar uno
         },
         error: (error) => {
-          console.error('Error al borrar usuario:', error);
+          console.error('Error al borrar el proyecto:', error);
         },
         complete: () => {
-          console.log('La petición para borrar usuario ha finalizado');
         }
       });
     }
   }
 
   modificarProyecto(id: number) {
+    // Guardar el ID del proyecto a modificar en el almacenamiento local
     window.localStorage["idProyecto"] = id;
   }
 
   ocultarElemento(id: string) {
+    // Ocultar un elemento por su ID
     const elemento = document.getElementById(id);
     if (elemento) {
-      console.log("Id de ejemplo", id);
       elemento.style.display = 'none';
     } else {
       console.error('Elemento no encontrado con ID:', id);
     }
   }
 
-  otraFuncion() {
-    console.log("Segunda Función");
-  }
-
-  isModalOpen = false;
-  isModalCerrar = false;
+  isModalOpen = false; // Estado del modal de confirmación de borrado
+  isModalCerrar = false; // Estado del modal de cierre
 
   openModal() {
+    // Abrir el modal de confirmación de borrado
     this.isModalOpen = true;
   }
 
   closeModal() {
+    // Cerrar el modal de confirmación de borrado
     this.isModalOpen = false;
   }
 
   confirmAction() {
-    // Acción de confirmación (ej. eliminar un elemento)
-    console.log('Elemento borrado');
+    // Confirmar la acción y cerrar el modal
     this.closeModal();
   }
 
   openModalCerrar() {
+    // Abrir el modal de cierre
     this.isModalCerrar = true;
   }
 
   closeModalCerrar() {
+    // Cerrar el modal de cierre
     this.isModalCerrar = false;
   }
 
   truncateText(text: string, maxLength: number): string {
+    // Truncar el texto si supera la longitud máxima
     if (text.length > maxLength) {
       return text.slice(0, maxLength) + '...';
     } else {

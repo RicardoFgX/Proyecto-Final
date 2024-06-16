@@ -2,26 +2,36 @@
   <div class="contenedor">
     <div class="row">
       <div class="col-12">
+        <!-- Barra de navegación -->
         <nav class="navbar navbar-expand-md navbar-light">
+          <!-- Logo y enlace a la página de inicio -->
           <a class="navbar-brand" routerLink="/home" routerLinkActive="active">
             <img src="../../../assets/Logo.png" alt="Logo de Ejemplo">
           </a>
+          <!-- Botón de colapso para la navegación en pantallas pequeñas -->
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
+          <!-- Contenido de la barra de navegación -->
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto py-4 py-md-0">
+              <!-- Enlace a "Inicio" visible solo si el usuario está autenticado -->
               <li *ngIf="isAuthenticated" class="nav-item pl-4 pl-md-0 ml-0 ml-md-4" (click)="closeMenu()">
                 <a class="nav-link logged" routerLink="/home" routerLinkActive="active">Inicio</a>
               </li>
+              <!-- Enlace al "Panel Administrador" visible solo para administradores -->
               <li *ngIf="admin" class="nav-item pl-4 pl-md-0 ml-0 ml-md-4" (click)="closeMenu()">
                 <a class="nav-link logged" routerLink="/adminDash" routerLinkActive="active">Panel Administrador</a>
               </li>
+              <!-- Enlace a "Iniciar Sesión" visible solo si el usuario no está autenticado -->
               <li *ngIf="!isAuthenticated" class="nav-item pl-4 pl-md-0 ml-0 ml-md-4" (click)="closeMenu()">
                 <a class="nav-link" routerLink="/login" routerLinkActive="active">Iniciar Sesión</a>
               </li>
+              <!-- Menú desplegable con opciones de usuario visible solo si el usuario está autenticado -->
               <li *ngIf="isAuthenticated" class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                <!-- Enlace con el correo del usuario que despliega el menú -->
                 <a [matMenuTriggerFor]="menu" class="nav-link logged">{{ userEmail }}</a>
+                <!-- Menú desplegable con opciones de usuario -->
                 <mat-menu #menu="matMenu" class="pepe">
                   <button mat-menu-item routerLink="/perfil" routerLinkActive="active" (click)="closeMenu()">Ver Perfil</button>
                   <button mat-menu-item routerLink="/notas" routerLinkActive="active" (click)="closeMenu()">Mis Notas</button>

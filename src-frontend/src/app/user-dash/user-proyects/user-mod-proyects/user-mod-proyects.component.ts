@@ -172,6 +172,7 @@ export class UserModProyectsComponent implements OnInit {
     this.checkAuthStatus();
   }
 
+  // Validador de lista negra para los campos de formulario
   blacklistValidator(control: any) {
     const value = control.value;
     for (let word of this.blacklistedWords) {
@@ -182,6 +183,7 @@ export class UserModProyectsComponent implements OnInit {
     return null;
   }
 
+  // Manejar el evento de arrastrar y soltar para las tareas
   drop(event: CdkDragDrop<any[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -194,6 +196,7 @@ export class UserModProyectsComponent implements OnInit {
     }
   }
 
+  // Modificar tarea al cambiar de columna
   modificarTareaColumna(): void {
     const token = localStorage.getItem('token');
     if (token) {
@@ -213,7 +216,6 @@ export class UserModProyectsComponent implements OnInit {
           console.error('Error al guardar la tarea', error);
         },
         complete: () => {
-          console.log('Petición para modificar la tarea completada');
         }
       });
     } else {
@@ -221,6 +223,7 @@ export class UserModProyectsComponent implements OnInit {
     }
   }
 
+  // Abrir formulario para nueva tarea
   nuevatareaForm(estado: string) {
     this.resetearNuevaTarea();
     this.tareaNueva.estado = estado;
@@ -228,6 +231,7 @@ export class UserModProyectsComponent implements OnInit {
     this.openNuevaTarea();
   }
 
+  // Resetear datos de nueva tarea
   resetearNuevaTarea() {
     this.tareaNueva = {
       id: '',
@@ -241,6 +245,7 @@ export class UserModProyectsComponent implements OnInit {
     }
   }
 
+  // Resetear datos de tarea modificada
   resetearModTarea() {
     this.tareaModificada = {
       id: '',
@@ -254,6 +259,7 @@ export class UserModProyectsComponent implements OnInit {
     }
   }
 
+  // Abrir formulario para modificar tarea
   modtareaForm(tarea: any) {
     this.tareaModificada.id = tarea.id;
     this.tareaModificada.estado = tarea.estado;
@@ -267,10 +273,10 @@ export class UserModProyectsComponent implements OnInit {
       descripcion: tarea.descripcion,
       fechaVencimiento: tarea.fechaVencimiento
     });
-    console.log(this.tareaModForm)
     this.isModalModTareaOpen = true;
   }
 
+  // Modificar tarea existente
   modificarTarea(): void {
     const token = localStorage.getItem('token');
     if (token) {
@@ -284,7 +290,6 @@ export class UserModProyectsComponent implements OnInit {
           id: this.proyecto.id
         }
       }
-      console.log(modTarea);
       this.tareaService.modTarea(modTarea, token).subscribe({
         next: () => {
           this.closeModTarea();
@@ -295,7 +300,6 @@ export class UserModProyectsComponent implements OnInit {
           console.error('Error al guardar la tarea', error);
         },
         complete: () => {
-          console.log('Petición para modificar la tarea completada');
         }
       });
     } else {
@@ -303,6 +307,7 @@ export class UserModProyectsComponent implements OnInit {
     }
   }
 
+  // Crear nueva tarea
   crearTarea(): void {
     const token = localStorage.getItem('token');
     if (token) {
@@ -324,7 +329,6 @@ export class UserModProyectsComponent implements OnInit {
           console.error('Error al guardar la tarea', error);
         },
         complete: () => {
-          console.log('Petición para modificar la tarea completada');
         }
       });
     } else {
@@ -332,6 +336,7 @@ export class UserModProyectsComponent implements OnInit {
     }
   }
 
+  // Modificar proyecto existente
   modificarProyecto(): void {
     const token = localStorage.getItem('token');
     if (token) {
@@ -350,7 +355,6 @@ export class UserModProyectsComponent implements OnInit {
           console.error('Error al guardar el proyecto', error);
         },
         complete: () => {
-          console.log('Petición para modificar el proyecto completada');
         }
       });
     } else {
@@ -358,6 +362,7 @@ export class UserModProyectsComponent implements OnInit {
     }
   }
 
+  // Modificar proyecto sin abrir modal
   modificarProyecto2(): void {
     const token = localStorage.getItem('token');
     if (token) {
@@ -374,7 +379,6 @@ export class UserModProyectsComponent implements OnInit {
           console.error('Error al guardar el proyecto', error);
         },
         complete: () => {
-          console.log('Petición para modificar el proyecto completada');
         }
       });
     } else {
@@ -382,60 +386,78 @@ export class UserModProyectsComponent implements OnInit {
     }
   }
 
+  // Navegar a la página de proyectos
   irAAdminDashProyectos() {
     this.router.navigate(['/proyectos']);
   }
 
+  // Abrir modal de cierre
   openModalCerrar() {
     this.isModalCerrar = true;
   }
+  // Abrir modal para borrar usuario
   openBorrarUser() {
     this.isModalBorrarUserOpen = true;
   }
+  // Abrir modal para borrar usuario actual
   openBorrarUserActual() {
     this.isModalBorrarUserActualOpen = true;
   }
+  // Abrir modal para nuevo usuario
   openNuevoUser() {
     this.isModalNuevoUserOpen = true;
   }
+  // Abrir modal para borrar tarea
   openBorrarTarea() {
     this.isModalBorrarTareaOpen = true;
   }
+  // Abrir modal para confirmar borrar tarea
   openConfirmarBorrarTarea() {
     this.isModalConfirmarBorrarTareaOpen = true;
   }
+  // Abrir modal para nueva tarea
   openNuevaTarea() {
     this.isModalNuevoTareaOpen = true;
   }
+  // Abrir modal para modificar tarea
   openModTarea() {
     this.isModalModTareaOpen = true;
   }
 
+  // Cerrar modal de cierre
   closeModalCerrar() {
     this.isModalCerrar = false;
   }
+  // Cerrar modal para borrar usuario
   closeBorrarUser() {
     this.isModalBorrarUserOpen = false;
   }
+  // Cerrar modal para borrar usuario actual
   closeBorrarUserActual() {
     this.isModalBorrarUserActualOpen = false;
   }
+  // Cerrar modal para nuevo usuario
   closeNuevoUser() {
     this.isModalNuevoUserOpen = false;
   }
+  // Cerrar modal para borrar tarea
   closeBorrarTarea() {
     this.isModalBorrarTareaOpen = false;
   }
+  // Cerrar modal para confirmar borrar tarea
   closeConfirmarBorrarTarea() {
     this.isModalConfirmarBorrarTareaOpen = false;
   }
+  // Cerrar modal para nueva tarea
   closeNuevaTarea() {
     this.isModalNuevoTareaOpen = false;
   }
+  // Cerrar modal para modificar tarea
   closeModTarea() {
     this.isModalModTareaOpen = false;
   }
 
+  // Mostrar ID de usuario seleccionado
   mostrarIdUsuario(email: string): void {
     const usuarioSeleccionado = this.usuarios.find(usuario => usuario.email === email);
     if (usuarioSeleccionado) {
@@ -443,24 +465,22 @@ export class UserModProyectsComponent implements OnInit {
     }
   }
 
+  // Buscar ID de usuario basado en email
   buscarIdUsuario(): void {
     if (this.usuario.email) {
       const usuario = this.usuarios.find(u => u.email === this.usuario.email);
       if (usuario) {
-        console.log('ID del usuario:', usuario.id);
         this.usuario.id = usuario.id
-      } else {
-        console.log('Usuario no encontrado');
       }
-    } else {
-      console.log('No se ha seleccionado ningún correo electrónico');
-    }
+    } 
   }
 
+  // Agregar un nuevo integrante
   agregarIntegrante(): void {
     this.openNuevoUser();
   }
 
+  // Obtener fecha actual en formato YYYY-MM-DD
   getFechaActual(): string {
     const today = new Date();
     const year = today.getFullYear();
@@ -469,15 +489,14 @@ export class UserModProyectsComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
+  // Actualizar listas de tareas basadas en su estado
   estadosC() {
     this.completado = this.proyecto.tareas.filter(tarea => tarea.estado === 'COMPLETADA');
     this.enProgreso = this.proyecto.tareas.filter(tarea => tarea.estado === 'EN_PROGRESO');
     this.pendiente = this.proyecto.tareas.filter(tarea => tarea.estado === 'PENDIENTE');
-    console.log('Tareas Completadas:', this.completado);
-    console.log('Tareas en Progreso:', this.enProgreso);
-    console.log('Tareas Pendientes:', this.pendiente);
   }
 
+  // Obtener todos los usuarios
   getAllUsers() {
     const token = localStorage.getItem('token');
     if (token) {
@@ -489,8 +508,6 @@ export class UserModProyectsComponent implements OnInit {
           console.error('Error al obtener la lista de usuarios:', error);
         },
         complete: () => {
-          console.log('Petición para obtener la lista de usuarios completada');
-          console.log(this.usuarios);
         }
       });
     } else {
@@ -498,6 +515,7 @@ export class UserModProyectsComponent implements OnInit {
     }
   }
 
+  // Obtener detalles del proyecto
   getProyect(): void {
     const noteID = Number(this.route.snapshot.paramMap.get('id'));
     const token = localStorage.getItem('token');
@@ -521,7 +539,6 @@ export class UserModProyectsComponent implements OnInit {
           console.error('Error al cargar el proyecto', error);
         },
         complete: () => {
-          console.log('Petición para obtener el proyecto completada');
         }
       });
     } else {
@@ -529,6 +546,7 @@ export class UserModProyectsComponent implements OnInit {
     }
   }
 
+  // Agregar un nuevo usuario al proyecto
   agregarUsuario(): void {
     if (this.usuarioN.email) {
       const usuarioExistente = this.proyecto.integrantes.find(u => u.email === this.usuarioN.email);
@@ -543,11 +561,10 @@ export class UserModProyectsComponent implements OnInit {
         this.proyecto.integrantes.push(nuevoUsuario);
         this.closeNuevoUser();
       }
-    } else {
-      console.log('No se ha seleccionado ningún correo electrónico');
-    }
+    } 
   }
 
+  // Borrar un usuario del proyecto
   borrarUsuarioConfirmado(): void {
     if (this.usuarioBorradoID && this.usuarioBorradoEmail !== this.emailUsuario) {
       this.proyecto.integrantes = this.proyecto.integrantes.filter(
@@ -558,6 +575,7 @@ export class UserModProyectsComponent implements OnInit {
     }
   }
 
+  // Confirmar y borrar el usuario actual del proyecto
   borrarUsuarioActualConfirmado(): void {
     if (this.usuarioBorradoID) {
       this.proyecto.integrantes = this.proyecto.integrantes.filter(
@@ -567,6 +585,7 @@ export class UserModProyectsComponent implements OnInit {
     } 
   }
 
+  // Confirmar borrar usuario y abrir modal
   confirmarborrarUsuario(id: number, nombre: any, email: any) {
     this.usuarioBorradoID = id;
     this.usuarioBorradoNombre = nombre;
@@ -574,6 +593,7 @@ export class UserModProyectsComponent implements OnInit {
     this.openBorrarUser();
   }
 
+  // Mostrar notificación en la pantalla
   mostrarNotificacion(message: string): void {
     this.notificationMessage = message;
     this.showNotification = true;
@@ -582,15 +602,18 @@ export class UserModProyectsComponent implements OnInit {
     }, 3000);
   }
 
+  // Navegar a la página de tareas para modificar
   modTarea(id: any) {
     this.router.navigate(['tareas', id], { relativeTo: this.route });
   }
 
+  // Agregar una nueva tarea y navegar a la página de tareas
   agregarTarea() {
     this.modificarProyecto2();
     this.router.navigate(['tareas'], { relativeTo: this.route });
   }
 
+  // Eliminar una tarea del proyecto
   eliminarTarea(): void {
     const token = localStorage.getItem('token');
     if (token) {
@@ -605,7 +628,6 @@ export class UserModProyectsComponent implements OnInit {
           console.error('Error al guardar el proyecto', error);
         },
         complete: () => {
-          console.log('Petición para modificar el proyecto completada');
         }
       });
     } else {
@@ -613,15 +635,18 @@ export class UserModProyectsComponent implements OnInit {
     }
   }
 
+  // Confirmar borrar tarea
   confirmarBorrarTarea() {
     this.openBorrarTarea();
   }
 
+  // Confirmar eliminación de tarea
   confirmDelete() {
     this.eliminarTarea();
     this.closeBorrarTarea();
   }
 
+  // Verificar estado de autenticación
   checkAuthStatus() {
     // Verificar si hay un token guardado en el almacenamiento local
     this.token = this.jwtService.getToken();

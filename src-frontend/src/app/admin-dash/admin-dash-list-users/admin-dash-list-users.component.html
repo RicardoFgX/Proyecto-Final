@@ -1,95 +1,91 @@
-  <div class="adminDash d-flex">
-    <app-admin-sidebar></app-admin-sidebar>
-    <div class="main-content flex-grow-1">
-      <section>
-        <div class="align-items-center">
-          <div class="justify-content-center">
-            <div class="d-flex justify-content-end mb-3" style="margin: 30px;">
-              <button class="btn btn-success" [routerLink]="['/adminDash/crearUsuario']" routerLinkActive="active">Crear
-                Usuario</button>
-            </div>
-            <div class="table-responsive bg-white" data-mdb-perfect-scrollbar="true" style="position: relative; height: 70vh;">
-              <table class="table centered-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Email</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let usuario of users">
-                    <td>
-                      <div class="featured-icon">
-                        <img class="image" src="../../../assets/user.png" />
-                      </div>
-                    </td>
-                    <td>
-                      {{ usuario.id }}
-                    </td>
-                    <td>
-                      {{ usuario.nombre }}
-                    </td>
-                    <td>{{ usuario.apellidos }}</td>
-                    <td>{{ usuario.email }}</td>
-                    <td>
-                      <button class="btn btn-primary" [routerLink]="['/adminDash/usuarios', usuario.id]"
-                        routerLinkActive="active">Modificar</button>
-                      <button mat-raised-button class="btn btn-danger"
-                        (click)="confirmarborrarUsuario(usuario.id, usuario.email)">Borrar</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+<!-- Contenedor principal del panel de administración -->
+<div class="adminDash d-flex">
+  <!-- Componente de barra lateral de administrador -->
+  <app-admin-sidebar></app-admin-sidebar>
+  
+  <!-- Contenido principal -->
+  <div class="main-content flex-grow-1">
+    <section>
+      <div class="align-items-center">
+        <div class="justify-content-center">
+          <!-- Botón para crear un nuevo usuario -->
+          <div class="d-flex justify-content-end mb-3" style="margin: 30px;">
+            <button class="btn btn-success" [routerLink]="['/adminDash/crearUsuario']" routerLinkActive="active">Crear Usuario</button>
+          </div>
+          
+          <!-- Tabla responsiva que muestra los usuarios -->
+          <div class="table-responsive bg-white" data-mdb-perfect-scrollbar="true" style="position: relative; height: 70vh;">
+            <table class="table centered-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Email</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Iteración sobre los usuarios para mostrarlos en la tabla -->
+                <tr *ngFor="let usuario of users">
+                  <td>
+                    <div class="featured-icon">
+                      <img class="image" src="../../../assets/user.png" />
+                    </div>
+                  </td>
+                  <td>{{ usuario.id }}</td>
+                  <td>{{ usuario.nombre }}</td>
+                  <td>{{ usuario.apellidos }}</td>
+                  <td>{{ usuario.email }}</td>
+                  <td>
+                    <!-- Botón para modificar un usuario -->
+                    <button class="btn btn-primary" [routerLink]="['/adminDash/usuarios', usuario.id]" routerLinkActive="active">Modificar</button>
+                    <!-- Botón para borrar un usuario con confirmación -->
+                    <button mat-raised-button class="btn btn-danger" (click)="confirmarborrarUsuario(usuario.id, usuario.email)">Borrar</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Modal para confirmar el borrado de un usuario -->
+<div id="myModal" class="modal" [ngClass]="{'show': isModalOpen}">
+  <div class="modal-content">
+    <!-- Botón para cerrar el modal -->
+    <span class="close" (click)="closeModal()">&times;</span>
+    <!-- Mensaje de confirmación de borrado -->
+    <h1>Borrando Usuario {{ usuarioBorradoID }} - {{ usuarioBorradoEmail }}</h1>
+    <p>¿Estás seguro que quieres borrar?</p>
+    <div class="buttons">
+      <!-- Botón para confirmar la acción de borrado -->
+      <button class="btn confirm" (click)="confirmAction(); borrarUsuario(usuarioBorradoID)">Confirmar</button>
+      <!-- Botón para cancelar la acción de borrado -->
+      <button class="btn cancel" (click)="closeModal()">Cancelar</button>
     </div>
   </div>
+</div>
 
-  <div id="id01" class="modal">
-    <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
-    <form class="modal-content">
-      <div class="container">
-        <h1>Borrando Usuario {{ usuarioBorradoID }} - {{ usuarioBorradoEmail }}</h1>
-        <p>¿Estás seguro de que deseas borrar este usuario?</p>
-        <div class="clearfix">
-          <button type="button" onclick="document.getElementById('id01').style.display='none'"
-            class="cancelbtn">Cancelar</button>
-          <button type="button" (click)="ocultarElemento('id01'); borrarUsuario(usuarioBorradoID)"
-            class="deletebtn">Borrar</button>
-        </div>
-      </div>
-    </form>
-  </div>
-
-  <div id="myModal" class="modal" [ngClass]="{'show': isModalOpen}">
-    <div class="modal-content">
-      <span class="close" (click)="closeModal()">&times;</span>
-      <h1>Borrando Usuario {{ usuarioBorradoID }} - {{ usuarioBorradoEmail }}</h1>
-      <p>¿Estás seguro que quieres borrar?</p>
-      <div class="buttons">
-        <button class="btn confirm" (click)="confirmAction(); borrarUsuario(usuarioBorradoID)">Confirmar</button>
-        <button class="btn cancel" (click)="closeModal()">Cancelar</button>
-      </div>
+<!-- Modal para mostrar mensaje de acción satisfactoria -->
+<div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
+  <div class="modal-content">
+    <!-- Botón para cerrar el modal -->
+    <span class="close" (click)="closeModalCerrar()">&times;</span>
+    <!-- Animación de verificación -->
+    <div class="check-animation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="25" fill="none" />
+        <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M14 27l5 5 14-14" class="check-svg"/>
+      </svg>
     </div>
+    <!-- Mensaje de acción satisfactoria -->
+    <p>Se ha realizado la acción satisfactoriamente</p>
+    <!-- Botón para cerrar el modal -->
+    <button class="btnCerrar" (click)="closeModalCerrar()">Cerrar</button>
   </div>
-
-  <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
-    <div class="modal-content">
-      <span class="close" (click)="closeModalCerrar()">&times;</span>
-      <div class="check-animation">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-          <circle cx="26" cy="26" r="25" fill="none" />
-          <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M14 27l5 5 14-14" class="check-svg"/>
-        </svg>
-      </div>
-      <p>Se ha realizado la acción satisfactorimente</p>
-      <button class="btnCerrar" (click)="closeModalCerrar()">Cerrar</button>
-    </div>
-  </div>
-
+</div>

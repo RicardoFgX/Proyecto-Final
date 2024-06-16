@@ -1,46 +1,59 @@
 <div class="container mt-5 espaciado">
+  <!-- Título de la sección de perfil -->
   <h2>Perfil</h2>
+  <!-- Formulario para modificar los datos del usuario -->
   <form [formGroup]="userForm" (ngSubmit)="modificarUsuario()">
+    <!-- Campo para el nombre del usuario -->
     <div class="form-group">
       <label for="nombre">Nombre:</label>
       <input type="text" class="form-control" id="nombre" formControlName="nombre" placeholder="Ingrese el nombre">
+      <!-- Validación del campo nombre -->
       <div *ngIf="userForm?.get('nombre')?.touched && userForm?.get('nombre')?.invalid" class="text-danger">
         <div *ngIf="userForm?.get('nombre')?.errors?.['required']">El nombre es requerido.</div>
         <div *ngIf="userForm?.get('nombre')?.errors?.['pattern']">El nombre no puede contener números ni caracteres especiales</div>
       </div>
     </div>
+    <!-- Campo para los apellidos del usuario -->
     <div class="form-group">
       <label for="apellidos">Apellidos:</label>
       <input type="text" class="form-control" id="apellidos" formControlName="apellidos" placeholder="Ingrese los apellidos">
+      <!-- Validación del campo apellidos -->
       <div *ngIf="userForm?.get('apellidos')?.touched && userForm?.get('apellidos')?.invalid" class="text-danger">
         <div *ngIf="userForm?.get('apellidos')?.errors?.['pattern']">Los apellidos no pueden contener números ni caracteres especiales</div>
       </div>
     </div>
+    <!-- Campo para el correo electrónico del usuario (solo lectura) -->
     <div class="form-group">
       <label for="correo">Correo electrónico:</label>
       <input type="email" class="form-control" id="correo" formControlName="email" placeholder="Ingrese el correo electrónico" readonly>
     </div>
+    <!-- Campo para la contraseña del usuario -->
     <div class="form-group">
       <label for="contrasena">Contraseña: <b>(Modificar solo en caso de emergencia para cambiar la contraseña)</b></label>
       <input type="password" class="form-control" id="contrasena" formControlName="contrasena" placeholder="Ingrese la nueva contraseña">
+      <!-- Validación del campo contraseña -->
       <div *ngIf="userForm?.get('contrasena')?.touched && userForm?.get('contrasena')?.invalid" class="text-danger">
         <div *ngIf="userForm?.get('contrasena')?.errors?.['minlength']">La contraseña debe tener al menos 5 caracteres.</div>
         <div *ngIf="userForm?.get('contrasena')?.errors?.['pattern']">La contraseña debe tener al menos 4 letras y 1 número.</div>
       </div>
     </div>
+    <!-- Campo para confirmar la nueva contraseña -->
     <div class="form-group">
       <label for="confirmContrasena">Confirmar Contraseña:</label>
       <input type="password" class="form-control" id="confirmContrasena" formControlName="confirmContrasena" placeholder="Confirme la nueva contraseña">
+      <!-- Validación del campo confirmar contraseña -->
       <div *ngIf="userForm.errors?.['mismatch'] && userForm?.get('confirmContrasena')?.touched" class="text-danger">
         Las contraseñas no coinciden.
       </div>
     </div>
+    <!-- Botón para guardar los cambios -->
     <div class="d-flex justify-content-end">
       <button type="submit" class="btn btn-primary me-2" [disabled]="userForm.invalid">Guardar Cambios</button>
     </div>
   </form>
 </div>
 
+<!-- Modal de confirmación de acción -->
 <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
   <div class="modal-content">
     <span class="close" (click)="closeModalCerrar()">&times;</span>

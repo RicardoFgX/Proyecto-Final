@@ -1,12 +1,18 @@
 <div class="adminDash d-flex">
+  <!-- Incluye el componente de barra lateral del usuario -->
   <app-user-sidebar></app-user-sidebar>
+  
   <div class="main-content flex-grow-1">
     <section>
       <div class="align-items-center">
         <div class="justify-content-center">
+          
+          <!-- Botón para crear una nueva nota -->
           <div class="d-flex justify-content-end mb-3" style="margin: 30px;">
             <button class="btn btn-success" [routerLink]="['/crearNota']" routerLinkActive="active">Crear Nota</button>
           </div>
+          
+          <!-- Tabla responsiva para mostrar las notas -->
           <div class="table-responsive bg-white" data-mdb-perfect-scrollbar="true" style="position: relative; height: 70vh;">
             <table class="table centered-table">
               <thead>
@@ -19,35 +25,47 @@
                 </tr>
               </thead>
               <tbody>
+                <!-- Itera sobre las notas y muestra cada una en una fila de la tabla -->
                 <tr *ngFor="let note of notes">
                   <td>
                     <div class="featured-icon">
+                      <!-- Ícono de la nota -->
                       <img class="image" src="../../../assets/notas.png" />
                     </div>
+                  </td>
                   <td>{{ note.titulo }}</td>
+                  <!-- Muestra el contenido truncado de la nota -->
                   <td>{{ truncateText(note.contenido, 30) }}</td>
                   <td>{{ note.usuario.email }}</td>
                   <td>
+                    <!-- Botón para modificar la nota -->
                     <button class="btn btn-primary" [routerLink]="['/notas', note.id]" routerLinkActive="active">Modificar</button>
+                    <!-- Botón para borrar la nota -->
                     <button mat-raised-button class="btn btn-danger" (click)="confirmarborrarNota(note.id, note.titulo)">Borrar</button>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
+          
         </div>
       </div>
     </section>
   </div>
 </div>
 
+<!-- Modal de confirmación para borrar una nota -->
 <div id="myModal" class="modal" [ngClass]="{'show': isModalOpen}">
   <div class="modal-content">
+    <!-- Botón para cerrar el modal -->
     <span class="close" (click)="closeModal()">&times;</span>
+    <!-- Mensaje de confirmación con detalles de la nota a borrar -->
     <h1>Borrando Nota {{ notaBorradoID }} - {{ notaBorradoTitulo }}</h1>
     <p>¿Estás seguro que quieres borrar?</p>
     <div class="buttons">
+      <!-- Botón para confirmar el borrado -->
       <button class="btn confirm" (click)="confirmAction(); borrarNota(notaBorradoID)">Confirmar</button>
+      <!-- Botón para cancelar el borrado -->
       <button class="btn cancel" (click)="closeModal()">Cancelar</button>
     </div>
   </div>

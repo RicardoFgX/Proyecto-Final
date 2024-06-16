@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { JwtService } from '../services/jwt-service.service';
 import { jwtDecode } from 'jwt-decode';
@@ -9,99 +9,104 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  email: string = '';
-  password: string = '';
-  nombre: string = '';
+  loginForm: FormGroup;
+  registerForm: FormGroup;
   token: string = '';
+  loginError: boolean = false; // Variable para manejar el error de autenticación
+  registerError: boolean = false; // Variable para manejar el error de registro
 
-  constructor(private authService: AuthService, private jwtService: JwtService, private router: Router) { }
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private jwtService: JwtService,
+    private router: Router
+  ) {
+    // Inicialización del formulario de inicio de sesión
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]]
+    });
 
-  login() {
-    console.log(this.email);
-    console.log(this.password);
-
-    const credentials = {
-      email: this.email,
-      contrasena: this.password
-    };
-
-    this.authService.login(credentials).subscribe({
-      next: (resp) => {
-        // Pilla el token
-        console.log(resp);
-        console.log(resp.user.token);
-        this.token = resp.user.token;
-
-        // Lo guardo en local
-        this.jwtService.saveToken(resp.user.token);
-        window.localStorage["varemo"] = this.password;
-        this.redirectUserByRole();
-      },
-      error: (error) => {
-        console.error('Error de autenticación:', error);
-      },
-      complete: () => {
-        /*const tokenSuelto = jwtDecode(this.token);
-        console.log(tokenSuelto);*/
-        console.log('He terminado la petición')
-      }
+    // Inicialización del formulario de registro
+    this.registerForm = this.fb.group({
+      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(5), Validators.pattern(/^(?=.*\d)[A-Za-z\d]{5,}$/)]]
     });
   }
 
-  register() {
-    console.log(this.nombre);
-    console.log(this.email);
-    console.log(this.password);
+  // Método para manejar el inicio de sesión
+  onLogin(): void {
+    this.loginError = false; // Resetear el error antes de intentar el login
+    if (this.loginForm.valid) {
+      const credentials = {
+        email: this.loginForm.value.email,
+        contrasena: this.loginForm.value.password
+      };
 
-    const credentials = {
-      nombre: this.nombre,
-      email: this.email,
-      contrasena: this.password
-    };
+      // Llamar al servicio de autenticación para el login
+      this.authService.login(credentials).subscribe({
+        next: (resp) => {
+          this.token = resp.user.token;
 
-    this.authService.register(credentials).subscribe({
-      next: (resp) => {
-        // Pilla el token
-        console.log(resp);
-        console.log(resp.user.token);
-        this.token = resp.user.token;
-
-        // Lo guardo en local
-        this.jwtService.saveToken(resp.user.token);
-        this.redirectUserByRole();
-      },
-      error: (error) => {
-        console.error('Error de autenticación:', error);
-      },
-      complete: () => {
-        /*const tokenSuelto = jwtDecode(this.token);
-        console.log(tokenSuelto);*/
-        console.log('He terminado la petición')
-      }
-    });
+          // Guardar el token en el servicio de JWT
+          this.jwtService.saveToken(resp.user.token);
+          this.redirectUserByRole(); // Redirigir al usuario según su rol
+        },
+        error: (error) => {
+          this.loginError = true; // Establecer el error si las credenciales son incorrectas
+        },
+        complete: () => {
+        }
+      });
+    }
   }
 
+  // Método para manejar el registro de nuevos usuarios
+  onRegister(): void {
+    this.registerError = false; // Resetear el error antes de intentar el registro
+    if (this.registerForm.valid) {
+      const credentials = {
+        nombre: this.registerForm.value.nombre,
+        email: this.registerForm.value.email,
+        contrasena: this.registerForm.value.password
+      };
+
+      // Llamar al servicio de autenticación para el registro
+      this.authService.register(credentials).subscribe({
+        next: (resp) => {
+          this.token = resp.user.token;
+
+          // Guardar el token en el servicio de JWT
+          this.jwtService.saveToken(resp.user.token);
+          this.redirectUserByRole(); // Redirigir al usuario según su rol
+        },
+        error: (error) => {
+          this.registerError = true; // Establecer el error si el correo ya está registrado
+        },
+        complete: () => {
+        }
+      });
+    }
+  }
+
+  // Método para redirigir al usuario según su rol
   redirectUserByRole() {
-    // Verificar si hay un token guardado en el almacenamiento local
     const token = localStorage.getItem('token');
     if (token) {
       try {
-        // Decodificar el token
-        const decodedToken: any = jwtDecode(token);
-        // Verificar si el token contiene información de rol
+        const decodedToken: any = jwtDecode(token); // Decodificar el token
         if (decodedToken && decodedToken.role && decodedToken.role.length > 0) {
-          // Obtener el rol del usuario (asumimos que solo hay un rol en el token)
           const userRole = decodedToken.role[0].authority;
-          // Redirigir al usuario a la página correspondiente según su rol
           if (userRole === 'ADMINISTRADOR') {
-            window.location.href = '/adminDash';
+            window.location.href = '/adminDash'; // Redirigir a la vista de administrador
           } else {
-            window.location.href = '/userHome';
+            window.location.href = '/userHome'; // Redirigir a la vista de usuario
           }
         } else {
           console.error('El token no contiene información de rol.');
@@ -112,43 +117,3 @@ export class LoginComponent {
     }
   }
 }
-
-
-/*
-  pruebaToken(): void {
-    this.authService.loginToken();
-  }
-
-  loginToken(): void {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      console.error('No hay token almacenado.');
-      return;
-    }
-
-    const cabecera = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    });
-
-    this.http.get('/api/ejemplo/u8t3', { headers: cabecera })
-      .subscribe({
-        next: (resp) => {
-          console.log('Solicitud exitosa:', resp);
-        },
-        error: (error) => {
-          console.error('Error en la solicitud (Esto probablemente es porque voy a una pagina que no existe):', error);
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Something went wrong!",
-            footer: '<a href="#">Why do I have this issue?</a>'
-          });
-        },
-        complete: () => {
-          console.log('He terminado la peticion para logueo con token1')
-        }
-      });
-  }
-*/

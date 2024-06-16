@@ -1,31 +1,47 @@
+<!-- Contenedor principal para el formulario de modificación de tareas -->
 <div class="container mt-5 espaciado">
+  <!-- Botón para volver a la vista anterior -->
   <div class="back">
     <button type="button" class="btn btn-primary" (click)="irAtras()">Volver</button>
   </div>
+
+  <!-- Título de la sección -->
   <h2>Modificar Tarea</h2>
+
+  <!-- Formulario para modificar la tarea -->
   <form [formGroup]="tareaForm" (ngSubmit)="modificarTarea()">
+    <!-- Campo para el título de la tarea -->
     <div class="form-group mb-3">
       <label for="nombre">Título:</label>
       <input type="text" class="form-control" id="nombre" formControlName="nombre" placeholder="Ingrese el título de la tarea">
+      <!-- Mensajes de error para el campo del título -->
       <div *ngIf="tareaForm.get('nombre')?.touched && tareaForm.get('nombre')?.invalid" class="text-danger">
         <div *ngIf="tareaForm.get('nombre')?.errors?.['required']">El título es requerido.</div>
         <div *ngIf="tareaForm.get('nombre')?.errors?.['blacklisted']">El título contiene palabras prohibidas.</div>
       </div>
     </div>
+
+    <!-- Campo para la descripción de la tarea -->
     <div class="form-group mb-3">
       <label for="descripcion">Descripción:</label>
       <textarea id="descripcion" class="form-control" formControlName="descripcion" placeholder="Ingrese la descripción" rows="5"></textarea>
+      <!-- Mensajes de error para el campo de la descripción -->
       <div *ngIf="tareaForm.get('descripcion')?.touched && tareaForm.get('descripcion')?.invalid" class="text-danger">
         <div *ngIf="tareaForm.get('descripcion')?.errors?.['blacklisted']">La descripción contiene palabras prohibidas.</div>
       </div>
     </div>
+
+    <!-- Campo para la fecha de vencimiento de la tarea -->
     <div class="form-group mb-3">
       <label for="fechaVencimiento">Fecha de Vencimiento:</label>
       <input type="date" class="form-control" id="fechaVencimiento" formControlName="fechaVencimiento" placeholder="Ingrese la fecha de vencimiento">
+      <!-- Mensajes de error para el campo de la fecha de vencimiento -->
       <div *ngIf="tareaForm.get('fechaVencimiento')?.touched && tareaForm.get('fechaVencimiento')?.invalid" class="text-danger">
         <div *ngIf="tareaForm.get('fechaVencimiento')?.errors?.['required']">La fecha de vencimiento es requerida.</div>
       </div>
     </div>
+
+    <!-- Campo para el estado de la tarea -->
     <div class="form-group mb-3">
       <label for="estado">Estado:</label>
       <select id="estado" class="form-select" formControlName="estado">
@@ -33,22 +49,29 @@
         <option *ngFor="let estado of estados" [ngValue]="estado">{{ estado }}</option>
       </select>
     </div>
+
+    <!-- Botón para enviar el formulario y guardar los cambios -->
     <div class="d-flex justify-content-end">
       <button type="submit" class="btn btn-primary" [disabled]="tareaForm.invalid">Modificar</button>
     </div>
   </form>
 </div>
 
+<!-- Modal de acción satisfactoria -->
 <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
   <div class="modal-content">
+    <!-- Botón para cerrar el modal y volver a la vista anterior -->
     <span class="close" (click)="closeModalCerrar(); irAtras()">&times;</span>
+    <!-- Animación de verificación -->
     <div class="check-animation">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
         <circle cx="26" cy="26" r="25" fill="none" />
         <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M14 27l5 5 14-14" class="check-svg" />
       </svg>
     </div>
+    <!-- Mensaje de acción satisfactoria -->
     <p>Se ha realizado la acción satisfactoriamente</p>
+    <!-- Botón para cerrar el modal y volver a la vista anterior -->
     <button class="btnCerrar" (click)="closeModalCerrar(); irAtras()">Cerrar</button>
   </div>
 </div>

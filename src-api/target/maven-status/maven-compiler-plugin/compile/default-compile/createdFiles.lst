@@ -1,3 +1,4 @@
+com\daw2\proyectoFinal\validation\EstadoTareaValidator.class
 com\daw2\proyectoFinal\servicesImpl\AuthenticationServiceImpl$AuthenticationServiceImplBuilder.class
 com\daw2\proyectoFinal\repository\AnotacionRepository.class
 com\daw2\proyectoFinal\dtos\response\JwtAuthenticationResponse.class
@@ -19,6 +20,7 @@ com\daw2\proyectoFinal\model\Anotacion.class
 com\daw2\proyectoFinal\servicesImpl\AuthenticationServiceImpl.class
 com\daw2\proyectoFinal\util\LogUtil.class
 com\daw2\proyectoFinal\controller\AuthController.class
+com\daw2\proyectoFinal\validation\ValidEstadoTarea.class
 com\daw2\proyectoFinal\dtos\request\RegistroRequest.class
 com\daw2\proyectoFinal\dtos\response\JwtAuthenticationResponse$UserResponse.class
 com\daw2\proyectoFinal\conf\JwtAuthenticationFilter.class

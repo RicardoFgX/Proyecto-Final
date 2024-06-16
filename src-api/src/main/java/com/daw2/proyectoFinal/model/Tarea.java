@@ -2,6 +2,7 @@ package com.daw2.proyectoFinal.model;
 
 import java.time.LocalDate;
 
+import com.daw2.proyectoFinal.validation.ValidEstadoTarea;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
@@ -14,6 +15,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "tareas")
@@ -23,15 +26,19 @@ public class Tarea {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "El nombre no puede estar en blanco")
     @Column(nullable = false)
     private String nombre;
 
     @Column(nullable = false)
     private String descripcion;
 
+    @NotNull(message = "La fecha de vencimiento no puede estar en blanco")
     @Column(name = "fecha_vencimiento", nullable = false)
     private LocalDate fechaVencimiento;
 
+    @NotNull(message = "El estado no puede estar en blanco")
+    @ValidEstadoTarea
     @Enumerated(EnumType.STRING)
     private EstadoTarea estado;
 

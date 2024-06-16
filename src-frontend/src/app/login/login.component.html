@@ -1,81 +1,119 @@
 <div class="section">
   <div class="container">
     <div class="row justify-content-center">
+      <!-- Contenedor principal de la sección de inicio de sesión y registro -->
       <div class="col-12 text-center align-self-center py-5">
         <div class="pb-5 pt-5 pt-sm-2 text-center">
+          <!-- Encabezado de la sección -->
           <h6 class="mb-0 pb-3"><span>Iniciar Sesión </span><span>Registrarse</span></h6>
+          <!-- Checkbox para alternar entre los formularios de inicio de sesión y registro -->
           <input class="checkbox" type="checkbox" id="reg-log" name="reg-log" />
           <label for="reg-log"></label>
+          <!-- Contenedor de la tarjeta que se voltea para mostrar los formularios -->
           <div class="card-3d-wrap mx-auto">
             <div class="card-3d-wrapper">
+              <!-- Cara frontal de la tarjeta: Formulario de inicio de sesión -->
               <div class="card-front">
                 <div class="center-wrap">
-                  <div class="text-center">
-                    <h4 class="mb-4 pb-3" style="color: white;">Iniciar Sesión</h4>
-                    <div class="form-group">
-                      <input
-                        type="email"
-                        [(ngModel)]="email"
-                        name="email"
-                        class="form-style"
-                        placeholder="Correo Electrónico"
-                        required="required"
-                      />
+                  <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+                    <div class="text-center">
+                      <h4 class="mb-4 pb-3" style="color: white;">Iniciar Sesión</h4>
+                      <div class="form-group">
+                        <input
+                          type="email"
+                          formControlName="email"
+                          class="form-style"
+                          placeholder="Correo Electrónico"
+                          required
+                        />
+                      </div>
+                      <!-- Validaciones y mensajes de error del campo 'email' -->
+                      <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="validation-error">
+                        <div *ngIf="loginForm.get('email')?.errors?.['required']">El correo electrónico es requerido.</div>
+                        <div *ngIf="loginForm.get('email')?.errors?.['email']">El correo electrónico no es válido.</div>
+                      </div>
+                      <div class="form-group mt-2">
+                        <input
+                          type="password"
+                          formControlName="password"
+                          class="form-style"
+                          placeholder="Contraseña"
+                          required
+                        />
+                      </div>
+                      <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="validation-error">
+                        <div *ngIf="loginForm.get('password')?.errors?.['required']">La contraseña es requerida.</div>
+                        <div *ngIf="loginForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 5 caracteres.</div>
+                        <div *ngIf="loginForm.get('password')?.errors?.['pattern']">La contraseña debe contener al menos un número.</div>
+                      </div>
+                      <!-- Mensaje de error de inicio de sesión -->
+                      <div *ngIf="loginError" class="error-message">
+                        El correo o la contraseña son incorrectos.
+                      </div>
+                      <button type="submit" class="btn mt-4" [disabled]="loginForm.invalid">Iniciar Sesión</button>
+                      <p class="mb-0 mt-4 text-center">
+                        <a class="link">¿Has olvidado la contraseña?</a>
+                      </p>
                     </div>
-                    <div class="form-group mt-2">
-                      <input
-                        type="password"
-                        [(ngModel)]="password"
-                        name="password"
-                        class="form-style"
-                        placeholder="Contraseña"
-                        required="required"
-                      />
-                    </div>
-                    <a (click)="login()" class="btn mt-4">Iniciar Sesión</a>
-                    <p class="mb-0 mt-4 text-center">
-                      <a href="#0" class="link">¿Has olvidado la contraseña?</a>
-                    </p>
-                  </div>
+                  </form>
                 </div>
               </div>
+              <!-- Cara posterior de la tarjeta: Formulario de registro -->
               <div class="card-back">
                 <div class="center-wrap">
-                  <div class="text-center">
-                    <h4 class="mb-4 pb-3" style="color: white;">Registrarse</h4>
-                    <div class="form-group mt-2">
-                      <input
-                        type="string"
-                        [(ngModel)]="nombre"
-                        name="nombre"
-                        class="form-style"
-                        placeholder="Nombre"
-                        required="required"
-                      />
+                  <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+                    <div class="text-center">
+                      <h4 class="mb-4 pb-3" style="color: white;">Registrarse</h4>
+                      <div class="form-group mt-2">
+                        <input
+                          type="text"
+                          formControlName="nombre"
+                          class="form-style"
+                          placeholder="Nombre"
+                          required
+                        />
+                        <!-- Validaciones y mensajes de error del campo 'nombre' -->
+                        <div *ngIf="registerForm.get('nombre')?.touched && registerForm.get('nombre')?.invalid" class="validation-error">
+                          <div *ngIf="registerForm.get('nombre')?.errors?.['required']">El nombre es requerido.</div>
+                          <div *ngIf="registerForm.get('nombre')?.errors?.['pattern']">El nombre no puede contener números ni caracteres especiales.</div>
+                        </div>
+                      </div>
+                      <div class="form-group mt-2">
+                        <input
+                          type="email"
+                          formControlName="email"
+                          class="form-style"
+                          placeholder="Correo Electrónico"
+                          required
+                        />
+                        <!-- Validaciones y mensajes de error del campo 'email' -->
+                        <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid" class="validation-error">
+                          <div *ngIf="registerForm.get('email')?.errors?.['required']">El correo electrónico es requerido.</div>
+                          <div *ngIf="registerForm.get('email')?.errors?.['email']">El correo electrónico no es válido.</div>
+                        </div>
+                      </div>
+                      <div class="form-group mt-2">
+                        <input
+                          type="password"
+                          formControlName="password"
+                          class="form-style"
+                          placeholder="Contraseña"
+                          required
+                        />
+                        <!-- Validaciones y mensajes de error del campo 'password' -->
+                        <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" class="validation-error">
+                          <div *ngIf="registerForm.get('password')?.errors?.['required']">La contraseña es requerida.</div>
+                          <div *ngIf="registerForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 5 caracteres.</div>
+                          <div *ngIf="registerForm.get('password')?.errors?.['pattern']">La contraseña debe contener al menos un número.</div>
+                        </div>
+                      </div>
+                      <!-- Mensaje de error de registro -->
+                      <div *ngIf="registerError" class="error-message">
+                        El correo ya está registrado.
+                      </div>
+                      <button type="submit" class="btn mt-4" [disabled]="registerForm.invalid">Registrarse</button>
                     </div>
-
-                    <div class="form-group mt-2">
-                      <input
-                        type="email"
-                        [(ngModel)]="email"
-                        name="email"
-                        class="form-style"
-                        placeholder="Correo Electrónico"
-                        required="required"
-                      />
-                    </div>
-                    <div class="form-group mt-2">
-                      <input
-                        type="password"
-                        [(ngModel)]="password"
-                        name="password"
-                        class="form-style"
-                        placeholder="Contraseña"
-                        required="required"
-                      />
-                    </div>
-                    <a (click)="register()" class="btn mt-4">Registrarse</a>
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -83,8 +121,8 @@
         </div>
       </div>
     </div>
-    
   </div>
+  <!-- SVG de ondas en el fondo -->
   <div>
     <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
         viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
@@ -98,5 +136,5 @@
             <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
         </g>
     </svg>
-</div>
+  </div>
 </div>

@@ -8,6 +8,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "anotaciones")
@@ -17,13 +20,16 @@ public class Anotacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "El título no puede estar en blanco")
     @Column(nullable = true)
     private String titulo;
 
+    @NotBlank(message = "El contenido no puede estar en blanco")
     @Column(nullable = false)
     private String contenido;
 
     // Relación Many-to-One con Usuario
+    @NotNull(message = "El usuario no puede ser nulo")
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;

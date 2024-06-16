@@ -31,6 +31,8 @@ import jakarta.persistence.Table;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 /**
  * Clase que representa la entidad Usuario en la base de datos.
@@ -38,7 +40,7 @@ import jakarta.validation.constraints.NotBlank;
 @Entity
 @Table(name = "usuarios")
 public class Usuario implements UserDetails {
-    
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -46,16 +48,20 @@ public class Usuario implements UserDetails {
     private Long id;
 
     @NotBlank(message = "El nombre no puede estar en blanco")
+    @Pattern(regexp = "^[a-zA-Z\\s]*$", message = "El nombre no puede contener números ni caracteres especiales")
     private String nombre;
 
+    @Pattern(regexp = "^[a-zA-Z\\s]*$", message = "Los apellidos no pueden contener números ni caracteres especiales")
     private String apellidos;
 
     @Column(unique = true)
     @Email(message = "La dirección de correo electrónico debe ser válida")
-    @NotBlank(message = "La contraseña no puede estar en blanco")
+    @NotBlank(message = "El correo electrónico no puede estar en blanco")
     private String email;
 
     @NotBlank(message = "La contraseña no puede estar en blanco")
+    @Size(min = 5, message = "La contraseña debe tener al menos 5 caracteres")
+    @Pattern(regexp = "^(?=.*\\d).*$", message = "La contraseña debe contener al menos un número")
     private String contrasena;
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Rol.class)
@@ -63,7 +69,7 @@ public class Usuario implements UserDetails {
     @CollectionTable(name = "usuario_rol")
     @Column(name = "Rol")
     private Set<Rol> rol = new HashSet<>();
-    
+
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
         name = "usuario_proyecto",
@@ -80,7 +86,6 @@ public class Usuario implements UserDetails {
     @Transactional
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        rol.size();
         return rol.stream().map(role -> new SimpleGrantedAuthority(role.name())).collect(Collectors.toList());
     }
 
@@ -170,12 +175,10 @@ public class Usuario implements UserDetails {
         this.anotaciones = anotaciones;
     }
 
-	@Override
-	public String toString() {
-		return "Usuario [id=" + id + ", nombre=" + nombre + ", apellidos=" + apellidos + ", email=" + email
-				+ ", contrasena=" + contrasena + ", rol=" + rol + ", proyectos=" + proyectos + ", anotaciones="
-				+ anotaciones + "]";
-	}
-    
-    
+    @Override
+    public String toString() {
+        return "Usuario [id=" + id + ", nombre=" + nombre + ", apellidos=" + apellidos + ", email=" + email
+                + ", contrasena=" + contrasena + ", rol=" + rol + ", proyectos=" + proyectos + ", anotaciones="
+                + anotaciones + "]";
+    }
 }

@@ -31,9 +31,11 @@ C:\Users\Ric\Documents\ProyectoFinal\Proyecto-Final\src-api\src\main\java\com\da
 C:\Users\Ric\Documents\ProyectoFinal\Proyecto-Final\src-api\src\main\java\com\daw2\proyectoFinal\dtos\response\JwtAuthenticationResponse.java
 C:\Users\Ric\Documents\ProyectoFinal\Proyecto-Final\src-api\src\main\java\com\daw2\proyectoFinal\BackendApplication.java
 C:\Users\Ric\Documents\ProyectoFinal\Proyecto-Final\src-api\src\main\java\com\daw2\proyectoFinal\model\Anotacion.java
+C:\Users\Ric\Documents\ProyectoFinal\Proyecto-Final\src-api\src\main\java\com\daw2\proyectoFinal\validation\EstadoTareaValidator.java
 C:\Users\Ric\Documents\ProyectoFinal\Proyecto-Final\src-api\src\main\java\com\daw2\proyectoFinal\services\UsuarioService.java
 C:\Users\Ric\Documents\ProyectoFinal\Proyecto-Final\src-api\src\main\java\com\daw2\proyectoFinal\dtos\UsuarioDTO.java
 C:\Users\Ric\Documents\ProyectoFinal\Proyecto-Final\src-api\src\main\java\com\daw2\proyectoFinal\servicesImpl\TareaServiceImpl.java
 C:\Users\Ric\Documents\ProyectoFinal\Proyecto-Final\src-api\src\main\java\com\daw2\proyectoFinal\controller\TareaController.java
 C:\Users\Ric\Documents\ProyectoFinal\Proyecto-Final\src-api\src\main\java\com\daw2\proyectoFinal\services\TareaService.java
+C:\Users\Ric\Documents\ProyectoFinal\Proyecto-Final\src-api\src\main\java\com\daw2\proyectoFinal\validation\ValidEstadoTarea.java
 C:\Users\Ric\Documents\ProyectoFinal\Proyecto-Final\src-api\src\main\java\com\daw2\proyectoFinal\controller\AnotacionController.java

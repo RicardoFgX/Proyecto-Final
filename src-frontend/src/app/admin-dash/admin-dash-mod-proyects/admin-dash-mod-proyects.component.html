@@ -1,153 +1,180 @@
+<!-- Contenedor principal para el formulario de modificación de proyectos -->
 <div class="container mt-5 espaciado">
-    <div class="back">
-      <button type="button" class="btn btn-primary" (click)="irAAdminDashProyectos()">Volver</button>
-    </div>
-    <div *ngIf="showNotification" class="notification">
-      <img src="../../../assets/warning.png" class="warning">
-      <span>{{ notificationMessage }}</span>
-    </div>
-  
-    <h2>Modificar Proyecto</h2>
-    <form [formGroup]="proyectoForm" (ngSubmit)="modificarProyecto()">
-      <div class="form-group mb-3">
-        <label for="titulo">
-          <h4>Título</h4>
-        </label>
-        <input type="text" id="titulo" class="form-control" formControlName="titulo" required>
-        <div *ngIf="proyectoForm.get('titulo')?.touched && proyectoForm.get('titulo')?.invalid" class="text-danger">
-          <div *ngIf="proyectoForm.get('titulo')?.errors?.['required']">El título es requerido.</div>
-          <div *ngIf="proyectoForm.get('titulo')?.errors?.['blacklisted']">El título contiene palabras prohibidas.</div>
-        </div>
-      </div>
-      <div class="form-group mb-3">
-        <label for="descripcion">
-          <h4>Descripción</h4>
-        </label>
-        <textarea id="descripcion" class="form-control" formControlName="descripcion" rows="5" required></textarea>
-        <div *ngIf="proyectoForm.get('descripcion')?.touched && proyectoForm.get('descripcion')?.invalid" class="text-danger">
-          <div *ngIf="proyectoForm.get('descripcion')?.errors?.['blacklisted']">La descripción contiene palabras prohibidas.</div>
-        </div>
-      </div>
-      <div class="form-group mb-3">
-        <label for="fechaCreacion">
-          <h4>Fecha Creación</h4>
-        </label>
-        <input type="text" id="fechaCreacion" class="form-control" formControlName="fechaCreacion" readonly>
-      </div>
-      <div class="form-group mb-3">
-        <label for="integrantes">
-          <h4>Integrantes</h4>
-        </label>
-        <div *ngFor="let integrante of proyecto.integrantes" class="mb-3 tarjeta">
-            <mat-card class="example-card"
-                (click)="confirmarborrarUsuario(integrante.id, integrante.nombre, integrante.email)">
-                <mat-card-header>
-                    <mat-card-title-group>
-                        <mat-card-title>{{integrante.nombre}}</mat-card-title>
-                        <mat-card-subtitle>{{integrante.email}}</mat-card-subtitle>
-                        <img mat-card-sm-image src="../../../assets/user.png">
-                    </mat-card-title-group>
-                </mat-card-header>
-            </mat-card>
-        </div>
-        <div class="mb-3 tarjeta agregar">
-          <mat-card class="example-card add-card agregar" (click)="agregarIntegrante()">
-            <mat-card-content>
-              <mat-icon>add</mat-icon>
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </div>
-      <div class="form-group mb-3">
-        <label for="tareas">
-          <h4>Tareas</h4>
-        </label>
-        <div *ngFor="let tarea of proyecto.tareas" class="mb-3 tarjeta">
-          <mat-card class="example-card" (click)="modificarTarea(tarea)">
-            <mat-card-header>
-              <mat-card-title-group>
-                <mat-card-title>{{tarea.nombre}}</mat-card-title>
-                <mat-card-subtitle>{{tarea.descripcion}}</mat-card-subtitle>
-                <mat-card-subtitle>{{tarea.fechaVencimiento}}</mat-card-subtitle>
-                <mat-card-subtitle>{{tarea.estado}}</mat-card-subtitle>
-                <img mat-card-sm-image src="../../../assets/tarea.png">
-              </mat-card-title-group>
-            </mat-card-header>
-          </mat-card>
-        </div>
-        <div class="mb-3 tarjeta agregar">
-          <mat-card class="example-card add-card agregar" (click)="agregarTarea()">
-            <mat-card-content>
-              <mat-icon>add</mat-icon>
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </div>
-      <div class="d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary me-2" [disabled]="proyectoForm.invalid">Guardar Cambios</button>
-      </div>
-    </form>
+  <!-- Botón para volver a la vista anterior -->
+  <div class="back">
+    <button type="button" class="btn btn-primary" (click)="irAAdminDashProyectos()">Volver</button>
   </div>
   
-  <div id="myModal" class="modal" [ngClass]="{'show': isModalBorrarUserOpen}">
-    <div class="modal-content">
-      <span class="close" (click)="closeBorrarUser()">&times;</span>
-      <h2>Está a punto de borrar a un usuario de este proyecto</h2>
-      <p>¿Está seguro?</p>
-      <div class="buttons">
-        <button class="btn confirm" (click)="closeBorrarUser(); borrarUsuarioConfirmado()">Confirmar</button>
-        <button class="btn cancel" (click)="closeBorrarUser()">Cancelar</button>
+  <!-- Notificación de advertencia -->
+  <div *ngIf="showNotification" class="notification">
+    <img src="../../../assets/warning.png" class="warning">
+    <span>{{ notificationMessage }}</span>
+  </div>
+
+  <!-- Título de la sección -->
+  <h2>Modificar Proyecto</h2>
+
+  <!-- Formulario para modificar el proyecto -->
+  <form [formGroup]="proyectoForm" (ngSubmit)="modificarProyecto()">
+    <!-- Campo para el título del proyecto -->
+    <div class="form-group mb-3">
+      <label for="titulo">
+        <h4>Título</h4>
+      </label>
+      <input type="text" id="titulo" class="form-control" formControlName="titulo" required>
+      <!-- Mensajes de error para el campo del título -->
+      <div *ngIf="proyectoForm.get('titulo')?.touched && proyectoForm.get('titulo')?.invalid" class="text-danger">
+        <div *ngIf="proyectoForm.get('titulo')?.errors?.['required']">El título es requerido.</div>
+        <div *ngIf="proyectoForm.get('titulo')?.errors?.['blacklisted']">El título contiene palabras prohibidas.</div>
       </div>
     </div>
-  </div>
-  
-  <div id="myModal2" class="modal" [ngClass]="{'show': isModalNuevoUserOpen}">
-    <div class="modal-content">
-        <span class="close" (click)="closeNuevoUser()">&times;</span>
-        <h1>Nuevo Usuario</h1>
-        <select id="autor" class="form-select" [(ngModel)]="usuarioN" name="autor">
-            <option *ngFor="let usuario of usuarios" [ngValue]="usuario">{{ usuario.email }}</option>
-        </select>
-        <button class="btnCerrar" (click)="agregarUsuario()" style="margin-top: 20px; margin-bottom: 20px;">Añadir</button>
+
+    <!-- Campo para la descripción del proyecto -->
+    <div class="form-group mb-3">
+      <label for="descripcion">
+        <h4>Descripción</h4>
+      </label>
+      <textarea id="descripcion" class="form-control" formControlName="descripcion" rows="5" required></textarea>
+      <!-- Mensajes de error para el campo de la descripción -->
+      <div *ngIf="proyectoForm.get('descripcion')?.touched && proyectoForm.get('descripcion')?.invalid" class="text-danger">
+        <div *ngIf="proyectoForm.get('descripcion')?.errors?.['blacklisted']">La descripción contiene palabras prohibidas.</div>
+      </div>
     </div>
+
+    <!-- Campo para la fecha de creación del proyecto -->
+    <div class="form-group mb-3">
+      <label for="fechaCreacion">
+        <h4>Fecha Creación</h4>
+      </label>
+      <input type="text" id="fechaCreacion" class="form-control" formControlName="fechaCreacion" readonly>
+    </div>
+
+    <!-- Campo para los integrantes del proyecto -->
+    <div class="form-group mb-3">
+      <label for="integrantes">
+        <h4>Integrantes</h4>
+      </label>
+      <!-- Listado de integrantes del proyecto -->
+      <div *ngFor="let integrante of proyecto.integrantes" class="mb-3 tarjeta">
+          <mat-card class="example-card" (click)="confirmarborrarUsuario(integrante.id, integrante.nombre, integrante.email)">
+              <mat-card-header>
+                  <mat-card-title-group>
+                      <mat-card-title>{{integrante.nombre}}</mat-card-title>
+                      <mat-card-subtitle>{{integrante.email}}</mat-card-subtitle>
+                      <img mat-card-sm-image src="../../../assets/user.png">
+                  </mat-card-title-group>
+              </mat-card-header>
+          </mat-card>
+      </div>
+      <!-- Botón para agregar un nuevo integrante -->
+      <div class="mb-3 tarjeta agregar">
+        <mat-card class="example-card add-card agregar" (click)="agregarIntegrante()">
+          <mat-card-content>
+            <mat-icon>add</mat-icon>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Campo para las tareas del proyecto -->
+    <div class="form-group mb-3">
+      <label for="tareas">
+        <h4>Tareas</h4>
+      </label>
+      <!-- Listado de tareas del proyecto -->
+      <div *ngFor="let tarea of proyecto.tareas" class="mb-3 tarjeta">
+        <mat-card class="example-card" (click)="modificarTarea(tarea)">
+          <mat-card-header>
+            <mat-card-title-group>
+              <mat-card-title>{{tarea.nombre}}</mat-card-title>
+              <mat-card-subtitle>{{tarea.descripcion}}</mat-card-subtitle>
+              <mat-card-subtitle>{{tarea.fechaVencimiento}}</mat-card-subtitle>
+              <mat-card-subtitle>{{tarea.estado}}</mat-card-subtitle>
+              <img mat-card-sm-image src="../../../assets/tarea.png">
+            </mat-card-title-group>
+          </mat-card-header>
+        </mat-card>
+      </div>
+      <!-- Botón para agregar una nueva tarea -->
+      <div class="mb-3 tarjeta agregar">
+        <mat-card class="example-card add-card agregar" (click)="agregarTarea()">
+          <mat-card-content>
+            <mat-icon>add</mat-icon>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Botón para guardar los cambios -->
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-primary me-2" [disabled]="proyectoForm.invalid">Guardar Cambios</button>
+    </div>
+  </form>
 </div>
-  
-  <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
-    <div class="modal-content">
-      <span class="close" (click)="closeModalCerrar(); irAAdminDashProyectos()">&times;</span>
-      <div class="check-animation">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-          <circle cx="26" cy="26" r="25" fill="none" />
-          <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M14 27l5 5 14-14" class="check-svg" />
-        </svg>
-      </div>
-      <p>Se ha realizado la acción satisfactoriamente</p>
-      <button class="btnCerrar" (click)="closeModalCerrar(); irAAdminDashProyectos()">Cerrar</button>
+
+<!-- Modal para confirmar la eliminación de un usuario del proyecto -->
+<div id="myModal" class="modal" [ngClass]="{'show': isModalBorrarUserOpen}">
+  <div class="modal-content">
+    <span class="close" (click)="closeBorrarUser()">&times;</span>
+    <h2>Está a punto de borrar a un usuario de este proyecto</h2>
+    <p>¿Está seguro?</p>
+    <div class="buttons">
+      <button class="btn confirm" (click)="closeBorrarUser(); borrarUsuarioConfirmado()">Confirmar</button>
+      <button class="btn cancel" (click)="closeBorrarUser()">Cancelar</button>
     </div>
   </div>
-  
-  <div id="myModal" class="modal" [ngClass]="{'show': isModalBorrarTareaOpen}">
-    <div class="modal-content">
-      <span class="close" (click)="closeBorrarTarea()">&times;</span>
-      <h1>¿Qué acción quieres realizar?</h1>
-      <div class="buttons">
-        <button class="btn confirm" (click)="closeBorrarTarea(); modTarea(tarea.id)" routerLinkActive="active">Modificar</button>
-        <button class="btn cancel" (click)="closeBorrarTarea(); eliminarTarea()">Borrar</button>
-      </div>
+</div>
+
+<!-- Modal para agregar un nuevo usuario al proyecto -->
+<div id="myModal2" class="modal" [ngClass]="{'show': isModalNuevoUserOpen}">
+  <div class="modal-content">
+      <span class="close" (click)="closeNuevoUser()">&times;</span>
+      <h1>Nuevo Usuario</h1>
+      <select id="autor" class="form-select" [(ngModel)]="usuarioN" name="autor">
+          <option *ngFor="let usuario of usuarios" [ngValue]="usuario">{{ usuario.email }}</option>
+      </select>
+      <button class="btnCerrar" (click)="agregarUsuario()" style="margin-top: 20px; margin-bottom: 20px;">Añadir</button>
+  </div>
+</div>
+
+<!-- Modal de acción satisfactoria -->
+<div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
+  <div class="modal-content">
+    <span class="close" (click)="closeModalCerrar(); irAAdminDashProyectos()">&times;</span>
+    <div class="check-animation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="25" fill="none" />
+        <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M14 27l5 5 14-14" class="check-svg" />
+      </svg>
+    </div>
+    <p>Se ha realizado la acción satisfactoriamente</p>
+    <button class="btnCerrar" (click)="closeModalCerrar(); irAAdminDashProyectos()">Cerrar</button>
+  </div>
+</div>
+
+<!-- Modal para confirmar la eliminación de una tarea del proyecto -->
+<div id="myModal" class="modal" [ngClass]="{'show': isModalBorrarTareaOpen}">
+  <div class="modal-content">
+    <span class="close" (click)="closeBorrarTarea()">&times;</span>
+    <h1>¿Qué acción quieres realizar?</h1>
+    <div class="buttons">
+      <button class="btn confirm" (click)="closeBorrarTarea(); modTarea(tarea.id)" routerLinkActive="active">Modificar</button>
+      <button class="btn cancel" (click)="closeBorrarTarea(); eliminarTarea()">Borrar</button>
     </div>
   </div>
-  
-  <div id="myModal5" class="modal" [ngClass]="{'show': isModalConfirmarBorrarTareaOpen}">
-    <div class="modal-content">
-      <span class="close" (click)="closeModalCerrar(); irAAdminDashProyectos()">&times;</span>
-      <div class="check-animation">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-          <circle cx="26" cy="26" r="25" fill="none" />
-          <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M14 27l5 5 14-14" class="check-svg" />
-        </svg>
-      </div>
-      <p>Se ha realizado la acción satisfactoriamente</p>
-      <button class="btnCerrar" (click)="closeConfirmarBorrarTarea();">Cerrar</button>
+</div>
+
+<!-- Modal de confirmación de eliminación de tarea -->
+<div id="myModal5" class="modal" [ngClass]="{'show': isModalConfirmarBorrarTareaOpen}">
+  <div class="modal-content">
+    <span class="close" (click)="closeModalCerrar(); irAAdminDashProyectos()">&times;</span>
+    <div class="check-animation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="25" fill="none" />
+        <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M14 27l5 5 14-14" class="check-svg" />
+      </svg>
     </div>
+    <p>Se ha realizado la acción satisfactoriamente</p>
+    <button class="btnCerrar" (click)="closeConfirmarBorrarTarea();">Cerrar</button>
   </div>
-  
+</div>

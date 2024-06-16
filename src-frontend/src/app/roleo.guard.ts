@@ -8,7 +8,6 @@ export const roleoGuard: CanActivateFn = (route, state) => {
     if (token) {
       const decodedToken: any = jwtService.decodeToken(token);
       const expectedRole = 'ADMINISTRADOR'; // Define el rol esperado
-      console.log(decodedToken.role[0].authority)
 
       // Comprueba si el usuario tiene el rol adecuado
       if (decodedToken && decodedToken.role[0].authority === expectedRole) {

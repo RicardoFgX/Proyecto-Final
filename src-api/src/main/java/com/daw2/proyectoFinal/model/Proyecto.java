@@ -11,6 +11,8 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -22,12 +24,15 @@ public class Proyecto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "El nombre no puede estar en blanco")
     @Column(nullable = false)
     private String nombre;
 
+    @NotBlank(message = "La descripción no puede estar en blanco")
     @Column(nullable = false)
     private String descripcion;
 
+    @NotNull(message = "La fecha de creación no puede estar en blanco")
     @Column(name = "fecha_creacion", nullable = false)
     private LocalDate fechaCreacion;
 
@@ -108,9 +113,8 @@ public class Proyecto {
         this.tareas = tareas;
     }
 
-	@Override
-	public String toString() {
-		return "Proyecto [id=" + id + ", nombre=" + nombre + "]";
-	}
-    
+    @Override
+    public String toString() {
+        return "Proyecto [id=" + id + ", nombre=" + nombre + "]";
+    }
 }

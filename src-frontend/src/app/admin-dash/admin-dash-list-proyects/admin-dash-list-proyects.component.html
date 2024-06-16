@@ -1,15 +1,20 @@
+<!-- Contenedor principal del panel de administración -->
 <div class="adminDash d-flex">
+  <!-- Componente de barra lateral de administrador -->
   <app-admin-sidebar></app-admin-sidebar>
+  
+  <!-- Contenido principal -->
   <div class="main-content flex-grow-1">
     <section>
       <div class="align-items-center">
         <div class="justify-content-center">
+          <!-- Botón para crear un nuevo proyecto -->
           <div class="d-flex justify-content-end mb-3" style="margin: 30px;">
-            <button class="btn btn-success" [routerLink]="['/adminDash/crearProyecto']" routerLinkActive="active">Crear
-              Proyecto</button>
+            <button class="btn btn-success" [routerLink]="['/adminDash/crearProyecto']" routerLinkActive="active">Crear Proyecto</button>
           </div>
-          <div class="table-responsive bg-white" data-mdb-perfect-scrollbar="true"
-            style="position: relative; height: 70vh;">
+          
+          <!-- Tabla responsiva que muestra los proyectos -->
+          <div class="table-responsive bg-white" data-mdb-perfect-scrollbar="true" style="position: relative; height: 70vh;">
             <table class="table centered-table">
               <thead>
                 <tr>
@@ -18,11 +23,12 @@
                   <th>Nombre</th>
                   <th>Descripción</th>
                   <th>Fecha Creación</th>
-                  <th>Ultima Fecha de modificación</th>
+                  <th>Última Fecha de Modificación</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
+                <!-- Iteración sobre los proyectos para mostrarlos en la tabla -->
                 <tr *ngFor="let proyecto of proyectos">
                   <td>
                     <div class="featured-icon">
@@ -35,10 +41,10 @@
                   <td>{{ proyecto.fechaCreacion }}</td>
                   <td>{{ proyecto.ultimaFechaModificacion }}</td>
                   <td>
-                    <button class="btn btn-primary" (click)="modificarProyecto(proyecto.id)"
-                      [routerLink]="['/adminDash/proyectos', proyecto.id]" routerLinkActive="active">Modificar</button>
-                    <button class="btn btn-danger"
-                      (click)="confirmarborrarProyecto(proyecto.id, proyecto.nombre)">Borrar</button>
+                    <!-- Botón para modificar un proyecto -->
+                    <button class="btn btn-primary" (click)="modificarProyecto(proyecto.id)" [routerLink]="['/adminDash/proyectos', proyecto.id]" routerLinkActive="active">Modificar</button>
+                    <!-- Botón para borrar un proyecto con confirmación -->
+                    <button class="btn btn-danger" (click)="confirmarborrarProyecto(proyecto.id, proyecto.nombre)">Borrar</button>
                   </td>
                 </tr>
               </tbody>
@@ -50,29 +56,38 @@
   </div>
 </div>
 
+<!-- Modal para confirmar el borrado de un proyecto -->
 <div id="myModal" class="modal" [ngClass]="{'show': isModalOpen}">
   <div class="modal-content">
+    <!-- Botón para cerrar el modal -->
     <span class="close" (click)="closeModal()">&times;</span>
+    <!-- Mensaje de confirmación de borrado -->
     <h1>Borrando Proyecto {{ proyectoBorradoID }} - {{ proyectoBorradoTitulo }}</h1>
     <p>¿Estás seguro que quieres borrar?</p>
     <div class="buttons">
+      <!-- Botón para confirmar la acción de borrado -->
       <button class="btn confirm" (click)="confirmAction(); borrarProyecto(proyectoBorradoID)">Confirmar</button>
+      <!-- Botón para cancelar la acción de borrado -->
       <button class="btn cancel" (click)="closeModal()">Cancelar</button>
     </div>
   </div>
 </div>
 
+<!-- Modal para mostrar mensaje de acción satisfactoria -->
 <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
   <div class="modal-content">
+    <!-- Botón para cerrar el modal -->
     <span class="close" (click)="closeModalCerrar()">&times;</span>
+    <!-- Animación de verificación -->
     <div class="check-animation">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
         <circle cx="26" cy="26" r="25" fill="none" />
-        <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
-          d="M14 27l5 5 14-14" class="check-svg" />
+        <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M14 27l5 5 14-14" class="check-svg" />
       </svg>
     </div>
-    <p>Se ha realizado la acción satisfactorimente</p>
+    <!-- Mensaje de acción satisfactoria -->
+    <p>Se ha realizado la acción satisfactoriamente</p>
+    <!-- Botón para cerrar el modal -->
     <button class="btnCerrar" (click)="closeModalCerrar()">Cerrar</button>
   </div>
 </div>

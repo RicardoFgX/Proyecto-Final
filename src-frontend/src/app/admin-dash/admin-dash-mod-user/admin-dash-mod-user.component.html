@@ -1,52 +1,76 @@
+<!-- Contenedor principal para el formulario de modificación de usuario -->
 <div class="container mt-5 espaciado">
+  <!-- Botón para volver a la vista anterior -->
   <div class="back">
     <button type="button" class="btn btn-primary" (click)="irAAdminDashUsuarios()">Volver</button>
   </div>
+
+  <!-- Título de la sección -->
   <h2>Modificar Usuario</h2>
+
+  <!-- Formulario para modificar el usuario -->
   <form [formGroup]="userForm" (ngSubmit)="modificarUsuario()">
+    <!-- Campo para el nombre del usuario -->
     <div class="form-group">
       <label for="nombre">Nombre:</label>
       <input type="text" class="form-control" id="nombre" formControlName="nombre" placeholder="Ingrese el nombre">
+      <!-- Mensajes de error para el campo del nombre -->
       <div *ngIf="userForm?.get('nombre')?.touched && userForm?.get('nombre')?.invalid" class="text-danger">
         <div *ngIf="userForm?.get('nombre')?.errors?.['required']">El nombre es requerido.</div>
         <div *ngIf="userForm?.get('nombre')?.errors?.['pattern']">El nombre no puede contener números ni caracteres especiales</div>
       </div>
     </div>
+
+    <!-- Campo para los apellidos del usuario -->
     <div class="form-group">
       <label for="apellidos">Apellidos:</label>
       <input type="text" class="form-control" id="apellidos" formControlName="apellidos" placeholder="Ingrese los apellidos">
+      <!-- Mensajes de error para el campo de los apellidos -->
       <div *ngIf="userForm?.get('apellidos')?.touched && userForm?.get('apellidos')?.invalid" class="text-danger">
         <div *ngIf="userForm?.get('apellidos')?.errors?.['pattern']">Los apellidos no pueden contener números ni caracteres especiales</div>
       </div>
     </div>
+
+    <!-- Campo para el correo electrónico del usuario -->
     <div class="form-group">
       <label for="correo">Correo electrónico:</label>
       <input type="email" class="form-control" id="correo" formControlName="email" placeholder="Ingrese el correo electrónico" readonly>
     </div>
+
+    <!-- Campo para la contraseña del usuario -->
     <div class="form-group">
       <label for="contrasena">Contraseña: <b>(Modificar solo en caso de emergencia para cambiar la contraseña)</b></label>
       <input type="password" class="form-control" id="contrasena" formControlName="contrasena" placeholder="Ingrese la nueva contraseña">
+      <!-- Mensajes de error para el campo de la contraseña -->
       <div *ngIf="userForm?.get('contrasena')?.touched && userForm?.get('contrasena')?.invalid" class="text-danger">
         <div *ngIf="userForm?.get('contrasena')?.errors?.['minlength']">La contraseña debe tener al menos 5 caracteres.</div>
         <div *ngIf="userForm?.get('contrasena')?.errors?.['pattern']">La contraseña debe tener al menos 4 letras y 1 número.</div>
       </div>
     </div>
+
+    <!-- Campo para confirmar la contraseña del usuario -->
     <div class="form-group">
       <label for="confirmContrasena">Confirmar Contraseña:</label>
       <input type="password" class="form-control" id="confirmContrasena" formControlName="confirmContrasena" placeholder="Confirme la nueva contraseña">
+      <!-- Mensaje de error para confirmar la contraseña -->
       <div *ngIf="userForm.errors?.['mismatch'] && userForm?.get('confirmContrasena')?.touched" class="text-danger">
         Las contraseñas no coinciden.
       </div>
     </div>
+
+    <!-- Botón para enviar el formulario y guardar los cambios -->
     <div class="d-flex justify-content-end">
       <button type="submit" class="btn btn-primary me-2" [disabled]="userForm.invalid">Guardar Cambios</button>
     </div>
   </form>
 </div>
 
+<!-- Modal de acción satisfactoria -->
 <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
   <div class="modal-content">
+    <!-- Botón para cerrar el modal -->
     <span class="close" (click)="closeModalCerrar()">&times;</span>
+    <!-- Animación de verificación -->
     <div class="check-animation">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
         <circle cx="26" cy="26" r="25" fill="none" />
@@ -54,7 +78,9 @@
           d="M14 27l5 5 14-14" class="check-svg" />
       </svg>
     </div>
+    <!-- Mensaje de acción satisfactoria -->
     <p>Se ha realizado la acción satisfactorimente</p>
+    <!-- Botón para cerrar el modal y volver a la vista anterior -->
     <button class="btnCerrar" (click)="closeModalCerrar(); irAAdminDashUsuarios()">Cerrar</button>
   </div>
 </div>

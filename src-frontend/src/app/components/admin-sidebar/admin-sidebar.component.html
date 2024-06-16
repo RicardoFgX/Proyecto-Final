@@ -1,10 +1,18 @@
-<div class="barra-lateral-admin" [class.collapsed]="isCollapsed">
+<!-- Contenedor principal de la barra lateral del administrador -->
+<div class="barra-lateral-admin" [class.collapsed]="!isCollapsed">
+  <!-- Botón para alternar el estado de la barra lateral (colapsado/expandido) -->
   <div class="toggle-button" (click)="toggleSidebar()">
-    <mat-icon *ngIf="isCollapsed" class="cerrado">chevron_right</mat-icon>
-    <mat-icon *ngIf="!isCollapsed" class="abierto">chevron_left</mat-icon>
+    <!-- Icono que muestra la flecha hacia la derecha cuando la barra está colapsada -->
+    <mat-icon *ngIf="!isCollapsed" class="cerrado">chevron_right</mat-icon>
+    <!-- Icono que muestra la flecha hacia la izquierda cuando la barra está expandida -->
+    <mat-icon *ngIf="isCollapsed" class="abierto">chevron_left</mat-icon>
   </div>
+  
+  <!-- Sección de proyectos, oculta cuando la barra está colapsada -->
   <div class="project-sections" [class.hidden]="isCollapsed">
+    <!-- Enlace a la vista principal del admin -->
     <a class="nav-link project" routerLink="/adminDash" routerLinkActive="active">
+      <!-- SVG del icono de Admin View -->
       <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g id="At symbol">
           <path id="Vector" fill-rule="evenodd" clip-rule="evenodd"
@@ -12,14 +20,19 @@
             fill="#F8C51B" />
         </g>
       </svg>
+      <!-- Descripción del enlace a la vista principal del admin -->
       <div class="title-description">
         <div class="text-wrapper">Admin View</div>
         <div class="div">Gestiona usuarios y proyectos</div>
       </div>
     </a>
+    
+    <!-- Sección de enlaces a diferentes secciones del panel de administración -->
     <div class="sections">
+      <!-- Enlace a la sección de usuarios -->
       <a class="nav-link" routerLink="/adminDash/usuarios" routerLinkActive="active">
         <div class="sidenav-item usuarios">
+          <!-- SVG del icono de Usuarios -->
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="Clipboard check">
               <g id="Vector">
@@ -32,11 +45,14 @@
               </g>
             </g>
           </svg>
+          <!-- Descripción del enlace a la sección de usuarios -->
           <div class="title-2">Usuarios</div>
         </div>
       </a>
+      <!-- Enlace a la sección de notas -->
       <a class="nav-link" routerLink="/adminDash/notas" routerLinkActive="active">
         <div class="sidenav-item notas">
+          <!-- SVG del icono de Notas -->
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="Document duplicate">
               <g id="Vector">
@@ -49,11 +65,14 @@
               </g>
             </g>
           </svg>
+          <!-- Descripción del enlace a la sección de notas -->
           <div class="title-2">Notas</div>
         </div>
       </a>
+      <!-- Enlace a la sección de proyectos -->
       <a class="nav-link" routerLink="/adminDash/proyectos" routerLinkActive="active">
         <div class="sidenav-item proyectos">
+          <!-- SVG del icono de Proyectos -->
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="Collection">
               <path id="Vector"
@@ -61,9 +80,11 @@
                 fill="#84919A" />
             </g>
           </svg>
+          <!-- Descripción del enlace a la sección de proyectos -->
           <div class="title-2">Proyectos</div>
         </div>
       </a>
+      <!-- Divisor visual entre secciones -->
       <div class="sidenav-divider" *ngIf="!isCollapsed">
         <div class="divider-2"></div>
       </div>

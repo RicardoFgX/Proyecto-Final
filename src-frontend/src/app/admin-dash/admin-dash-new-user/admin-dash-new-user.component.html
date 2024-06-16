@@ -1,55 +1,78 @@
+<!-- Contenedor principal del formulario de creación de usuario -->
 <div class="container mt-5 espaciado">
+  <!-- Botón para volver a la vista anterior -->
   <div class="back">
     <button type="button" class="btn btn-primary" (click)="irAAdminDashUsuarios()">Volver</button>
   </div>
+
+  <!-- Título de la sección -->
   <h2>Crear Usuario</h2>
+
+  <!-- Formulario para crear un nuevo usuario -->
   <form [formGroup]="userForm" (ngSubmit)="crearUsuario()">
+    <!-- Campo para el nombre del usuario -->
     <div class="form-group">
       <label for="nombre">Nombre:</label>
       <input type="text" class="form-control" id="nombre" placeholder="Ingrese el nombre" formControlName="nombre">
+      <!-- Mensajes de error para el campo del nombre -->
       <div *ngIf="userForm.get('nombre')?.touched && userForm.get('nombre')?.invalid" class="text-danger">
         <div *ngIf="userForm.get('nombre')?.errors?.['required']">El nombre es requerido.</div>
         <div *ngIf="userForm.get('nombre')?.errors?.['pattern']">El nombre no puede contener números ni caracteres especiales.</div>
       </div>
     </div>
+
+    <!-- Campo para los apellidos del usuario -->
     <div class="form-group">
       <label for="apellidos">Apellidos:</label>
       <input type="text" class="form-control" id="apellidos" placeholder="Ingrese los apellidos" formControlName="apellidos">
+      <!-- Mensajes de error para el campo de los apellidos -->
       <div *ngIf="userForm.get('apellidos')?.touched && userForm.get('apellidos')?.invalid" class="text-danger">
         <div *ngIf="userForm.get('apellidos')?.errors?.['pattern']">Los apellidos no pueden contener números ni caracteres especiales.</div>
       </div>
     </div>
+
+    <!-- Campo para el correo electrónico del usuario -->
     <div class="form-group">
       <label for="correo">Correo electrónico:</label>
       <input type="email" class="form-control" id="correo" placeholder="Ingrese el correo electrónico" formControlName="email">
+      <!-- Mensajes de error para el campo del correo electrónico -->
       <div *ngIf="userForm.get('email')?.touched && userForm.get('email')?.invalid" class="text-danger">
         <div *ngIf="userForm.get('email')?.errors?.['required']">El correo electrónico es requerido.</div>
         <div *ngIf="userForm.get('email')?.errors?.['email']">El correo electrónico no es válido.</div>
       </div>
     </div>
+
+    <!-- Campo para la contraseña del usuario -->
     <div class="form-group">
       <label for="contrasena">Contraseña:</label>
       <input type="password" class="form-control" id="contrasena" placeholder="Ingrese la contraseña" formControlName="contrasena">
+      <!-- Mensajes de error para el campo de la contraseña -->
       <div *ngIf="userForm.get('contrasena')?.touched && userForm.get('contrasena')?.invalid" class="text-danger">
         <div *ngIf="userForm.get('contrasena')?.errors?.['required']">La contraseña es requerida.</div>
         <div *ngIf="userForm.get('contrasena')?.errors?.['minlength']">La contraseña debe tener al menos 5 caracteres.</div>
         <div *ngIf="userForm.get('contrasena')?.errors?.['pattern']">La contraseña debe contener al menos un número.</div>
       </div>
     </div>
+
+    <!-- Campo para confirmar la contraseña del usuario -->
     <div class="form-group">
       <label for="confirmarContrasena">Confirmar Contraseña:</label>
       <input type="password" class="form-control" id="confirmarContrasena" placeholder="Confirme la contraseña" formControlName="confirmarContrasena">
+      <!-- Mensajes de error para el campo de confirmación de la contraseña -->
       <div *ngIf="userForm.get('confirmarContrasena')?.touched && userForm.get('confirmarContrasena')?.invalid" class="text-danger">
         <div *ngIf="userForm.get('confirmarContrasena')?.errors?.['required']">La confirmación de la contraseña es requerida.</div>
         <div *ngIf="userForm.hasError('mismatch')">Las contraseñas no coinciden.</div>
       </div>
     </div>
+
+    <!-- Botón para enviar el formulario y crear el usuario -->
     <div class="d-flex justify-content-end">
       <button type="submit" class="btn btn-primary me-2" [disabled]="userForm.invalid">Crear Usuario</button>
     </div>
   </form>
 </div>
 
+<!-- Modal de acción satisfactoria -->
 <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
   <div class="modal-content">
     <span class="close" (click)="closeModalCerrar(); irAAdminDashUsuarios()">&times;</span>
@@ -60,7 +83,7 @@
           d="M14 27l5 5 14-14" class="check-svg" />
       </svg>
     </div>
-    <p>Se ha realizado la acción satisfactorimente</p>
+    <p>Se ha realizado la acción satisfactoriamente</p>
     <button class="btnCerrar" (click)="closeModalCerrar(); irAAdminDashUsuarios()">Cerrar</button>
   </div>
 </div>

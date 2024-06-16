@@ -16,12 +16,15 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
   styleUrl: './user-profile.component.css'
 })
 export class UserProfileComponent {
+  // Objeto para solicitar el correo electrónico del usuario
   emailRequest = {
     email: ''
   };
 
+  // Variable para almacenar el token de autenticación
   token: string | null = null;
 
+  // Objeto para almacenar los datos del usuario
   user = {
     id: '',
     nombre: '',
@@ -30,9 +33,12 @@ export class UserProfileComponent {
     contrasena: '',
   };
 
+  // Variable para almacenar el correo inicial del usuario
   emailInicial: string = '';
+  // Variable para almacenar la contraseña
   contrasena: string = '';
 
+  // Formulario para los datos del usuario
   userForm: FormGroup;
 
   constructor(
@@ -40,6 +46,7 @@ export class UserProfileComponent {
     private jwtService: JwtService,
     private userService: UserServiceService,
   ) {
+    // Inicialización del formulario del usuario con validaciones
     this.userForm = this.fb.group({
       id: [''],
       nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
@@ -49,6 +56,8 @@ export class UserProfileComponent {
       confirmContrasena: ['']
     }, { validator: this.passwordMatchValidator });
   }
+
+  // Validador para verificar que las contraseñas coincidan
   passwordMatchValidator(group: FormGroup) {
     const password = group.get('contrasena')?.value;
     const confirmPassword = group.get('confirmContrasena')?.value;
@@ -56,18 +65,19 @@ export class UserProfileComponent {
   }
 
   ngOnInit(): void {
+    // Comprobar el estado de autenticación del usuario
     this.checkAuthStatus();
+    // Obtener los datos del usuario
     this.getUser();
   }
 
+  // Comprobar si hay un token de autenticación almacenado
   checkAuthStatus() {
-    // Verificar si hay un token guardado en el almacenamiento local
     this.token = this.jwtService.getToken();
     if (this.token != null) {
       try {
         // Decodificar el token para obtener el correo electrónico del usuario
         const decodedToken: any = jwtDecode(this.token);
-        console.log(decodedToken);
         this.emailRequest.email = decodedToken?.sub; // "sub" es el campo donde se almacena el correo electrónico en el token
       } catch (error) {
         console.error('Error al decodificar el token:', error);
@@ -75,11 +85,10 @@ export class UserProfileComponent {
     }
   }
 
+  // Obtener los datos del usuario utilizando el servicio de usuario
   getUser(): void {
-    // Obtener el ID del usuario de la URL
     const token = localStorage.getItem('token');
     if (token) {
-      // Utilizar el servicio de usuario para obtener los datos del usuario por su ID
       this.userService.getUserEmail(this.emailRequest, token).subscribe({
         next: (data: any) => {
           this.userForm.patchValue({
@@ -89,43 +98,34 @@ export class UserProfileComponent {
             email: data.email
           });
           this.emailInicial = data.email;
-          console.log(data);
         },
         error: (error) => {
           console.error('Error al cargar al usuario', error);
         },
-        complete: () => {
-          console.log('Petición para obtener el usuario completada');
-        }
+        complete: () => {}
       });
     } else {
       console.error('Algo ocurrió con el token');
     }
   }
 
+  // Ocultar un elemento en la interfaz de usuario
   ocultarElemento(id: string) {
     const elemento = document.getElementById(id);
     if (elemento) {
-      console.log("Id de ejemplo", id);
       elemento.style.display = 'none';
     } else {
       console.error('Elemento no encontrado con ID:', id);
     }
   }
 
-  prueba(): void{
-    console.log(this.userForm)
-  }
-
+  // Modificar los datos del usuario
   modificarUsuario(): void {
     const token = localStorage.getItem('token');
-    console.log(this.user.contrasena);
-    if (this.user.contrasena == '') {
-      console.log("vacio");
-    }
+    if (this.user.contrasena == '') {}
     if (token) {
       if (this.userForm.value.contrasena !== '') {
-        console.log("NuevaContra");
+        // Si hay contraseña nueva, incluirla en la actualización
         const userSiP = {
           id: this.userForm.value.id,
           nombre: this.userForm.value.nombre,
@@ -133,7 +133,6 @@ export class UserProfileComponent {
           email: this.userForm.value.email,
           contrasena: this.userForm.value.contrasena
         }
-        console.log(userSiP);
         this.userService.modUser(userSiP, token).subscribe({
           next: () => {
             this.openModalCerrar();
@@ -141,12 +140,10 @@ export class UserProfileComponent {
           error: (error) => {
             console.error('Error al guardar al usuario', error);
           },
-          complete: () => {
-            console.log('Petición para modificar el usuario completada');
-          }
+          complete: () => {}
         });
       } else {
-        console.log("sin contra");
+        // Si no hay contraseña nueva, no incluirla en la actualización
         const userNoP = {
           id: this.userForm.value.id,
           nombre: this.userForm.value.nombre,
@@ -160,9 +157,7 @@ export class UserProfileComponent {
           error: (error) => {
             console.error('Error al guardar al usuario', error);
           },
-          complete: () => {
-            console.log('Petición para modificar el usuario completada');
-          }
+          complete: () => {}
         });
       }
     } else {
@@ -170,6 +165,7 @@ export class UserProfileComponent {
     }
   }
 
+  // Mostrar un elemento en la interfaz de usuario
   confirmarModUsuario() {
     const elemento = document.getElementById('id01');
     if (elemento) {
@@ -179,12 +175,13 @@ export class UserProfileComponent {
 
   isModalCerrar = false;
 
+  // Abrir el modal de confirmación
   openModalCerrar() {
     this.isModalCerrar = true;
   }
 
+  // Cerrar el modal de confirmación
   closeModalCerrar() {
     this.isModalCerrar = false;
   }
-
 }

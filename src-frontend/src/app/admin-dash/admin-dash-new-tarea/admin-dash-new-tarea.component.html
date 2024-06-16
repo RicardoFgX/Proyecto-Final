@@ -1,55 +1,74 @@
+<!-- Contenedor principal para el formulario de creación de tarea -->
 <div class="container mt-5 espaciado">
+  <!-- Botón para volver a la vista anterior -->
   <div class="back">
     <button type="button" class="btn btn-primary" (click)="irAtras()">Volver</button>
   </div>
+
+  <!-- Título de la sección -->
   <h2>Crear Tarea</h2>
+
+  <!-- Formulario para crear la tarea -->
   <form [formGroup]="tareaForm" (ngSubmit)="crearTarea()">
+    <!-- Campo para el título de la tarea -->
     <div class="form-group mb-3">
       <label for="nombre">Título:</label>
       <input type="text" class="form-control" id="nombre" placeholder="Ingrese el título de la tarea" formControlName="nombre">
+      <!-- Mensajes de error para el campo del título -->
       <div *ngIf="tareaForm.get('nombre')?.touched && tareaForm.get('nombre')?.invalid" class="text-danger">
         <div *ngIf="tareaForm.get('nombre')?.errors?.['required']">El título es requerido.</div>
         <div *ngIf="tareaForm.get('nombre')?.errors?.['blacklisted']">El título contiene palabras prohibidas.</div>
       </div>
     </div>
+
+    <!-- Campo para la descripción de la tarea -->
     <div class="form-group mb-3">
       <label for="descripcion">Descripción:</label>
       <textarea id="descripcion" class="form-control" placeholder="Ingrese la descripción" formControlName="descripcion" rows="5"></textarea>
+      <!-- Mensajes de error para el campo de la descripción -->
       <div *ngIf="tareaForm.get('descripcion')?.touched && tareaForm.get('descripcion')?.invalid" class="text-danger">
         <div *ngIf="tareaForm.get('descripcion')?.errors?.['blacklisted']">La descripción contiene palabras prohibidas.</div>
       </div>
     </div>
+
+    <!-- Campo para la fecha de vencimiento de la tarea -->
     <div class="form-group mb-3">
       <label for="fechaVencimiento">Fecha de Vencimiento:</label>
       <input type="date" class="form-control" id="fechaVencimiento" placeholder="Ingrese la fecha de vencimiento" formControlName="fechaVencimiento">
+      <!-- Mensajes de error para el campo de la fecha de vencimiento -->
       <div *ngIf="tareaForm.get('fechaVencimiento')?.touched && tareaForm.get('fechaVencimiento')?.invalid" class="text-danger">
         <div *ngIf="tareaForm.get('fechaVencimiento')?.errors?.['required']">La fecha de vencimiento es requerida.</div>
       </div>
     </div>
+
+    <!-- Campo para el estado de la tarea -->
     <div class="form-group mb-3">
       <label for="estado">Estado:</label>
       <select id="estado" class="form-select" formControlName="estado">
         <option value="">Seleccione el estado</option>
         <option *ngFor="let estado of estados" [ngValue]="estado">{{ estado }}</option>
       </select>
+      <!-- Mensajes de error para el campo del estado -->
       <div *ngIf="tareaForm.get('estado')?.touched && tareaForm.get('estado')?.invalid" class="text-danger">
         <div *ngIf="tareaForm.get('estado')?.errors?.['required']">El estado es requerido.</div>
       </div>
     </div>
+
+    <!-- Botón para enviar el formulario y crear la tarea -->
     <div class="d-flex justify-content-end">
-      <button type="submit" class="btn btn-primary" [disabled]="tareaForm.invalid">Modificar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="tareaForm.invalid">Crear</button>
     </div>
   </form>
 </div>
 
+<!-- Modal de acción satisfactoria -->
 <div id="myModal1" class="modal" [ngClass]="{'show': isModalCerrar}">
   <div class="modal-content">
     <span class="close" (click)="closeModalCerrar(); irAtras()">&times;</span>
     <div class="check-animation">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
         <circle cx="26" cy="26" r="25" fill="none" />
-        <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
-          d="M14 27l5 5 14-14" class="check-svg" />
+        <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M14 27l5 5 14-14" class="check-svg" />
       </svg>
     </div>
     <p>Se ha realizado la acción satisfactoriamente</p>

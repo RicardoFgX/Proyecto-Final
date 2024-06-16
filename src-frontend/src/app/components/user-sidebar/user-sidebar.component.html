@@ -1,38 +1,56 @@
-<div class="barra-lateral-admin" [class.collapsed]="isCollapsed">
-    <div class="toggle-button" (click)="toggleSidebar()">
-      <mat-icon *ngIf="isCollapsed" class="cerrado">chevron_right</mat-icon>
-      <mat-icon *ngIf="!isCollapsed" class="abierto">chevron_left</mat-icon>
-    </div>
-    <div class="project-sections" *ngIf="!isCollapsed">
-      <div class="nav-link project">
-        <img src="https://cdn-icons-png.flaticon.com/512/47/47774.png" alt="" style="width: 30px; margin-right: 5px;">
-        <div class="title-description">
-          <div class="text-wrapper">Panel de trabajo</div>
-          <div class="div">Aquí puedes ver todas tus notas y proyectos</div>
-        </div>
-      </div>
-      <mat-accordion>
-        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-          <mat-expansion-panel-header>
-            <mat-panel-title>Notas</mat-panel-title>
-          </mat-expansion-panel-header>
-          <p [routerLink]="['/notas']" routerLinkActive="active">Todas las notas</p>
-          <p *ngFor="let note of notes" [routerLink]="['/notas', note.id]" routerLinkActive="active">
-            {{note.titulo}}
-          </p>
-          <p [routerLink]="['/crearNota']" routerLinkActive="active">Nueva Nota +</p>
-        </mat-expansion-panel>
-        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-          <mat-expansion-panel-header>
-            <mat-panel-title>Proyectos</mat-panel-title>
-          </mat-expansion-panel-header>
-          <p [routerLink]="['/proyectos']" routerLinkActive="active">Todos los proyectos</p>
-          <p *ngFor="let proyecto of proyectos" [routerLink]="['/proyectos', proyecto.id]" routerLinkActive="active">
-            {{proyecto.nombre}}
-          </p>
-          <p [routerLink]="['/crearProyecto']" routerLinkActive="active">Nuevo Proyecto +</p>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </div>
+<div class="barra-lateral-admin" [class.collapsed]="!isCollapsed">
+  <!-- Botón para alternar la barra lateral -->
+  <div class="toggle-button" (click)="toggleSidebar()">
+      <!-- Icono para expandir la barra lateral -->
+      <mat-icon *ngIf="!isCollapsed" class="cerrado">chevron_right</mat-icon>
+      <!-- Icono para colapsar la barra lateral -->
+      <mat-icon *ngIf="isCollapsed" class="abierto">chevron_left</mat-icon>
   </div>
   
+  <!-- Secciones de proyectos, visibles solo cuando la barra lateral no está colapsada -->
+  <div class="project-sections" *ngIf="isCollapsed">
+      <!-- Enlace al panel de trabajo -->
+      <div class="nav-link project">
+          <!-- Icono del panel de trabajo -->
+          <img src="https://cdn-icons-png.flaticon.com/512/47/47774.png" alt="" style="width: 30px; margin-right: 5px;">
+          <!-- Descripción del panel de trabajo -->
+          <div class="title-description">
+              <div class="text-wrapper">Panel de trabajo</div>
+              <div class="div">Aquí puedes ver todas tus notas y proyectos</div>
+          </div>
+      </div>
+      
+      <!-- Acordeón para las secciones de notas y proyectos -->
+      <mat-accordion>
+          <!-- Panel de expansión para las notas -->
+          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+              <mat-expansion-panel-header>
+                  <mat-panel-title>Notas</mat-panel-title>
+              </mat-expansion-panel-header>
+              <!-- Enlace a todas las notas -->
+              <p [routerLink]="['/notas']" routerLinkActive="active">Todas las notas</p>
+              <!-- Lista de notas -->
+              <p *ngFor="let note of notes" [routerLink]="['/notas', note.id]" routerLinkActive="active">
+                  {{note.titulo}}
+              </p>
+              <!-- Enlace para crear una nueva nota -->
+              <p [routerLink]="['/crearNota']" routerLinkActive="active">Nueva Nota +</p>
+          </mat-expansion-panel>
+          
+          <!-- Panel de expansión para los proyectos -->
+          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+              <mat-expansion-panel-header>
+                  <mat-panel-title>Proyectos</mat-panel-title>
+              </mat-expansion-panel-header>
+              <!-- Enlace a todos los proyectos -->
+              <p [routerLink]="['/proyectos']" routerLinkActive="active">Todos los proyectos</p>
+              <!-- Lista de proyectos -->
+              <p *ngFor="let proyecto of proyectos" [routerLink]="['/proyectos', proyecto.id]" routerLinkActive="active">
+                  {{proyecto.nombre}}
+              </p>
+              <!-- Enlace para crear un nuevo proyecto -->
+              <p [routerLink]="['/crearProyecto']" routerLinkActive="active">Nuevo Proyecto +</p>
+          </mat-expansion-panel>
+      </mat-accordion>
+  </div>
+</div>

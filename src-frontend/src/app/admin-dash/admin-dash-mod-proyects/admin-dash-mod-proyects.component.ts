@@ -1,3 +1,4 @@
+// Importaciones necesarias de Angular y otros módulos
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,15 +12,26 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
-
+// Decorador @Component para definir metadatos del componente
 @Component({
-  selector: 'app-admin-dash-mod-proyects',
-  standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, MatCardModule, MatInputModule, MatIconModule, RouterLink, RouterLinkActive, ReactiveFormsModule],
-  templateUrl: './admin-dash-mod-proyects.component.html',
-  styleUrl: './admin-dash-mod-proyects.component.css'
+  selector: 'app-admin-dash-mod-proyects', // Selector del componente
+  standalone: true, // Indicador de que el componente es autónomo
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    RouterLink, 
+    MatCardModule, 
+    MatInputModule, 
+    MatIconModule, 
+    RouterLink, 
+    RouterLinkActive, 
+    ReactiveFormsModule
+  ], // Módulos y componentes importados
+  templateUrl: './admin-dash-mod-proyects.component.html', // Ruta al archivo de plantilla HTML
+  styleUrl: './admin-dash-mod-proyects.component.css' // Ruta al archivo de estilos CSS
 })
 export class AdminDashModProyectsComponent {
+  // Inicialización de variables para el proyecto, tarea y usuario
   proyecto = {
     id: '',
     titulo: '',
@@ -28,7 +40,6 @@ export class AdminDashModProyectsComponent {
     integrantes: [] as any[],
     tareas: [] as any[]
   };
-
   ultimaFechaModificacion: string = '';
 
   tarea = {
@@ -37,40 +48,24 @@ export class AdminDashModProyectsComponent {
     descripcion: '',
     fechaVencimiento: '',
     estado: '',
-    proyecto: {
-      id: ''
-  }
-  }
-
-  usuario = {
-    email: '',
-    nombre: '',
-    id: '',
-  };
-  
-  usuarioN = {
-    email: '',
-    nombre: '',
-    id: '',
+    proyecto: { id: '' }
   };
 
+  usuario = { email: '', nombre: '', id: '' };
+  usuarioN = { email: '', nombre: '', id: '' };
   usuarioBorradoID: any;
   usuarioBorradoEmail: any;
   usuarioBorradoNombre: any;
 
-
   usuarios: any[] = [];
-
   showNotification: boolean = false;
   notificationMessage: string = '';
-
   estados = ['COMPLETADA', 'EN_PROGRESO', 'PENDIENTE'];
 
   proyectoForm: FormGroup;
-
   blacklistedWords = ['jolines', 'joder'];
 
-
+  // Constructor para inyectar servicios y form builder
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -79,6 +74,7 @@ export class AdminDashModProyectsComponent {
     private proyectService: ProyectService,
     private tareaService: TareaService
   ) {
+    // Inicialización del formulario con validaciones
     this.proyectoForm = this.fb.group({
       id: [''],
       titulo: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]],
@@ -90,27 +86,25 @@ export class AdminDashModProyectsComponent {
     });
   }
 
+  // Método que se ejecuta al inicializar el componente
   ngOnInit(): void {
-    this.getAllUsers();
-    this.getProyect();
-    console.log(this.proyecto);
-    this.ultimaFechaModificacion = this.getFechaActual();
-    console.log(this.ultimaFechaModificacion);  // Imprime la fecha de creación en el formato correcto
+    this.getAllUsers(); // Obtener todos los usuarios
+    this.getProyect(); // Obtener los datos del proyecto a modificar
+    this.ultimaFechaModificacion = this.getFechaActual(); // Obtener la fecha actual
   }
 
+  // Método para obtener todos los usuarios
   getAllUsers() {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token'); // Obtener el token de autenticación del almacenamiento local
     if (token) {
       this.userService.getAllUsers(token).subscribe({
         next: (data: any[]) => {
-          this.usuarios = data;
+          this.usuarios = data; // Asignar los datos obtenidos al array de usuarios
         },
         error: (error) => {
-          console.error('Error al obtener la lista de usuarios:', error);
+          console.error('Error al obtener la lista de usuarios:', error); // Manejar errores
         },
         complete: () => {
-          console.log('Petición para obtener la lista de usuarios completada');
-          console.log(this.usuarios);
         }
       });
     } else {
@@ -118,15 +112,14 @@ export class AdminDashModProyectsComponent {
     }
   }
 
+  // Método para obtener los datos del proyecto a modificar
   getProyect(): void {
-    // Obtener el ID del usuario de la URL
-    const noteID = Number(this.route.snapshot.paramMap.get('id'));
-    console.log(noteID);
-    const token = localStorage.getItem('token');
+    const noteID = Number(this.route.snapshot.paramMap.get('id')); // Obtener el ID del proyecto de los parámetros de la ruta
+    const token = localStorage.getItem('token'); // Obtener el token de autenticación del almacenamiento local
     if (token) {
-      // Utilizar el servicio de usuario para obtener los datos del usuario por su ID
       this.proyectService.getProyecto(noteID, token).subscribe({
         next: (data: any) => {
+          // Asignar los datos del proyecto a los campos del formulario
           this.proyectoForm.patchValue({
             id: data.id,
             titulo: data.nombre,
@@ -135,15 +128,11 @@ export class AdminDashModProyectsComponent {
           });
           this.proyecto.integrantes = data.usuarios;
           this.proyecto.tareas = data.tareas;
-          console.log(data);
-          console.log(this.proyecto.integrantes);
-          console.log(this.proyecto.tareas);
         },
         error: (error: any) => {
-          console.error('Error al cargar la nota', error);
+          console.error('Error al cargar el proyecto', error); // Manejar errores
         },
         complete: () => {
-          console.log('Petición para obtener el proyecto completada');
         }
       });
     } else {
@@ -151,70 +140,69 @@ export class AdminDashModProyectsComponent {
     }
   }
 
-  
+  // Método para modificar el proyecto
   modificarProyecto(): void {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token'); // Obtener el token de autenticación del almacenamiento local
     if (token) {
-        const newProyecto = {
-          nombre: this.proyectoForm.value.titulo,
-          descripcion: this.proyectoForm.value.descripcion,
-          fechaCreacion: this.proyectoForm.value.fechaCreacion,
-          ultimaFechaModificacion: this.ultimaFechaModificacion,
-          usuarios: this.proyecto.integrantes.map((integrante: any) => ({ id: integrante.id }))
+      const newProyecto = {
+        nombre: this.proyectoForm.value.titulo,
+        descripcion: this.proyectoForm.value.descripcion,
+        fechaCreacion: this.proyectoForm.value.fechaCreacion,
+        ultimaFechaModificacion: this.ultimaFechaModificacion,
+        usuarios: this.proyecto.integrantes.map((integrante: any) => ({ id: integrante.id }))
+      };
+      this.proyectService.modProyecto(this.proyectoForm.value.id, newProyecto, token).subscribe({
+        next: () => {
+          this.openModalCerrar(); // Abrir el modal de confirmación de éxito
+        },
+        error: (error: any) => {
+          console.error('Error al guardar el proyecto', error); // Manejar errores
+        },
+        complete: () => {
         }
-        console.log(newProyecto);
-        this.proyectService.modProyecto(this.proyectoForm.value.id, newProyecto, token).subscribe({
-          next: () => {
-            this.openModalCerrar();
-          },
-          error: (error: any) => {
-            console.error('Error al guardar el proyecto', error);
-          },
-          complete: () => {
-            console.log('Petición para modificar el proyecto completada'); 
-          }
-        });
-      } else {
+      });
+    } else {
       console.error('Algo ocurrió con el token');
     }
   }
 
+  // Método adicional para modificar el proyecto (necesario para agregar una tarea)
   modificarProyecto2(): void {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token'); // Obtener el token de autenticación del almacenamiento local
     if (token) {
-        const newProyecto = {
-          nombre: this.proyectoForm.value.titulo,
-          descripcion: this.proyectoForm.value.descripcion,
-          fechaCreacion: this.proyectoForm.value.fechaCreacion,
-          ultimaFechaModificacion: this.ultimaFechaModificacion,
-          usuarios: this.proyecto.integrantes.map((integrante: any) => ({ id: integrante.id }))
+      const newProyecto = {
+        nombre: this.proyectoForm.value.titulo,
+        descripcion: this.proyectoForm.value.descripcion,
+        fechaCreacion: this.proyectoForm.value.fechaCreacion,
+        ultimaFechaModificacion: this.ultimaFechaModificacion,
+        usuarios: this.proyecto.integrantes.map((integrante: any) => ({ id: integrante.id }))
+      };
+      this.proyectService.modProyecto(this.proyectoForm.value.id, newProyecto, token).subscribe({
+        next: () => {},
+        error: (error: any) => {
+          console.error('Error al guardar el proyecto', error); // Manejar errores
+        },
+        complete: () => {
         }
-        console.log(newProyecto);
-        this.proyectService.modProyecto(this.proyectoForm.value.id, newProyecto, token).subscribe({
-          next: () => {
-          },
-          error: (error: any) => {
-            console.error('Error al guardar el proyecto', error);
-          },
-          complete: () => {
-            console.log('Petición para modificar el proyecto completada'); 
-          }
-        });
-      } else {
+      });
+    } else {
       console.error('Algo ocurrió con el token');
     }
   }
 
+  // Navegar de vuelta a la lista de proyectos del administrador
   irAAdminDashProyectos() {
     this.router.navigate(['/adminDash/proyectos']);
   }
 
+  // Variables para controlar la visibilidad de los modales
   isModalBorrarUserOpen = false;
   isModalBorrarTareaOpen = false;
   isModalNuevoUserOpen = false;
   isModalConfirmarBorrarTareaOpen = false;
   isModalCerrar = false;
 
+  // Métodos para abrir los modales
   openModalCerrar() {
     this.isModalCerrar = true;
   }
@@ -231,6 +219,7 @@ export class AdminDashModProyectsComponent {
     this.isModalConfirmarBorrarTareaOpen = true;
   }
 
+  // Métodos para cerrar los modales
   closeModalCerrar() {
     this.isModalCerrar = false;
   }
@@ -247,48 +236,38 @@ export class AdminDashModProyectsComponent {
     this.isModalConfirmarBorrarTareaOpen = false;
   }
 
-  mostrarIdUsuario(email: string): void {
-    const usuarioSeleccionado = this.usuarios.find(usuario => usuario.email === email);
-    if (usuarioSeleccionado) {
-      console.log('ID del usuario seleccionado:', usuarioSeleccionado.id);
-    }
-  }
-
+  // Buscar y asignar el ID del usuario asociado al email seleccionado en el formulario
   buscarIdUsuario(): void {
     if (this.usuario.email) {
       const usuario = this.usuarios.find(u => u.email === this.usuario.email);
       if (usuario) {
-        console.log('ID del usuario:', usuario.id);
-        this.usuario.id = usuario.id
-      } else {
-        console.log('Usuario no encontrado');
+        this.usuario.id = usuario.id;
       }
-    } else {
-      console.log('No se ha seleccionado ningún correo electrónico');
     }
   }
 
+  // Agregar un nuevo integrante al proyecto
   agregarIntegrante(): void {
     this.openNuevoUser();
   }
 
+  // Obtener la fecha actual en formato AAAA-MM-DD
   getFechaActual(): string {
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, '0');
     const day = String(today.getDate()).padStart(2, '0');
-    
     return `${year}-${month}-${day}`;
   }
 
+  // Modificar una tarea seleccionada
   modificarTarea(tarea: any): void {
     this.tarea = tarea;
     this.openBorrarTarea();
-    console.log(this.tarea);
   }
 
+  // Confirmar el borrado de una tarea
   borrarTareaConfirmado(): void {
-    console.log(this.usuarioBorradoID);
     if (this.usuarioBorradoID) {
       this.proyecto.integrantes = this.proyecto.integrantes.filter(
         integrante => integrante.id !== this.usuarioBorradoID
@@ -296,37 +275,31 @@ export class AdminDashModProyectsComponent {
     }
   }
 
-  confirmarborrarTarea(){
+  // Confirmar el borrado de una tarea
+  confirmarborrarTarea() {
     this.openConfirmarBorrarTarea();
   }
 
+  // Agregar un usuario al proyecto
   agregarUsuario(): void {
-    console.log(this.usuarioN.email);
     if (this.usuarioN.email) {
       const usuarioExistente = this.proyecto.integrantes.find(u => u.email === this.usuarioN.email);
       if (usuarioExistente) {
-        console.log('El usuario ya existe en la lista de integrantes del proyecto.');
         this.mostrarNotificacion('El usuario ya existe en la lista de integrantes del proyecto.');
       } else {
-        console.log(this.usuarioN);
-        console.log('Usuario no encontrado, se añadirá a la lista de integrantes del proyecto.');
-        // Crear un nuevo usuario para agregarlo a la lista
         const nuevoUsuario = {
-          id: this.usuarioN.id, // Podrías generar un ID único aquí
-          nombre: this.usuarioN.nombre, // Agrega el nombre si tienes esta información disponible
+          id: this.usuarioN.id,
+          nombre: this.usuarioN.nombre,
           email: this.usuarioN.email
         };
-        // Agregar el nuevo usuario a la lista de integrantes del proyecto
         this.proyecto.integrantes.push(nuevoUsuario);
         this.closeNuevoUser();
       }
-    } else {
-      console.log('No se ha seleccionado ningún correo electrónico');
     }
   }
 
+  // Confirmar el borrado de un usuario del proyecto
   borrarUsuarioConfirmado(): void {
-    console.log(this.usuarioBorradoID);
     if (this.usuarioBorradoID) {
       this.proyecto.integrantes = this.proyecto.integrantes.filter(
         integrante => integrante.id !== this.usuarioBorradoID
@@ -334,51 +307,55 @@ export class AdminDashModProyectsComponent {
     }
   }
 
-  confirmarborrarUsuario(id: number, nombre:any, email: any){
-      this.usuarioBorradoID = id;
-      this.usuarioBorradoNombre = nombre;
-      this.usuarioBorradoEmail = email;
-      this.openBorrarUser();
+  // Confirmar el borrado de un usuario del proyecto
+  confirmarborrarUsuario(id: number, nombre: any, email: any) {
+    this.usuarioBorradoID = id;
+    this.usuarioBorradoNombre = nombre;
+    this.usuarioBorradoEmail = email;
+    this.openBorrarUser();
   }
 
+  // Mostrar una notificación
   mostrarNotificacion(message: string): void {
     this.notificationMessage = message;
     this.showNotification = true;
-
     setTimeout(() => {
       this.showNotification = false;
     }, 3000);
   }
 
+  // Navegar a la vista de tareas para modificar una tarea específica
   modTarea(id: any) {
     this.router.navigate(['tareas', id], { relativeTo: this.route });
   }
 
+  // Navegar a la vista de tareas para agregar una nueva tarea
   agregarTarea() {
     this.modificarProyecto2();
     this.router.navigate(['tareas'], { relativeTo: this.route });
   }
 
+  // Eliminar una tarea específica
   eliminarTarea(): void {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token'); // Obtener el token de autenticación del almacenamiento local
     if (token) {
-        this.tareaService.deleteTarea(this.tarea.id, token).subscribe({
-          next: () => {
-            this.openConfirmarBorrarTarea();
-            this.getProyect();
-          },
-          error: (error: any) => {
-            console.error('Error al guardar el proyecto', error);
-          },
-          complete: () => {
-            console.log('Petición para modificar el proyecto completada'); 
-          }
-        });
-      } else {
+      this.tareaService.deleteTarea(this.tarea.id, token).subscribe({
+        next: () => {
+          this.openConfirmarBorrarTarea(); // Abrir el modal de confirmación de éxito
+          this.getProyect(); // Actualizar la lista de tareas
+        },
+        error: (error: any) => {
+          console.error('Error al eliminar la tarea', error); // Manejar errores
+        },
+        complete: () => {
+        }
+      });
+    } else {
       console.error('Algo ocurrió con el token');
     }
   }
 
+  // Validador personalizado para palabras prohibidas
   blacklistValidator(blacklistedWords: string[]) {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
       if (!control.value) {

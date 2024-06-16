@@ -13,18 +13,20 @@ import { UserServiceService } from '../../../services/user-service.service';
   styleUrls: ['./user-mod-notes.component.css']
 })
 export class UserModNotesComponent implements OnInit {
-  notaForm: FormGroup;
+  notaForm: FormGroup; // Formulario reactivo para la nota
 
+  // Lista de palabras prohibidas
   blacklistedWords = [
     'maricón', 'puto', 'joder', 'mierda', 'cabrón', 'cabron', 'bastardo'
   ];
 
+  // Objeto para almacenar información del usuario
   usuario = {
     email: '',
     id: '',
   };
 
-  usuarios: any[] = [];
+  usuarios: any[] = []; // Lista de usuarios
 
   constructor(
     private fb: FormBuilder,
@@ -33,17 +35,20 @@ export class UserModNotesComponent implements OnInit {
     private userService: UserServiceService,
     private noteService: NoteService
   ) {
+    // Inicialización del formulario con validaciones
     this.notaForm = this.fb.group({
       titulo: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]],
       contenido: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]]
     });
   }
 
+  // Método que se ejecuta al inicializar el componente
   ngOnInit(): void {
-    this.getAllUsers();
-    this.getNote();
+    this.getAllUsers(); // Obtiene todos los usuarios
+    this.getNote(); // Obtiene la nota a modificar
   }
 
+  // Validador personalizado para verificar palabras prohibidas en los campos del formulario
   blacklistValidator(blacklist: string[]) {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) {
@@ -54,6 +59,7 @@ export class UserModNotesComponent implements OnInit {
     };
   }
 
+  // Método para obtener todos los usuarios
   getAllUsers() {
     const token = localStorage.getItem('token');
     if (token) {
@@ -65,8 +71,6 @@ export class UserModNotesComponent implements OnInit {
           console.error('Error al obtener la lista de usuarios:', error);
         },
         complete: () => {
-          console.log('Petición para obtener la lista de usuarios completada');
-          console.log(this.usuarios);
         }
       });
     } else {
@@ -74,6 +78,7 @@ export class UserModNotesComponent implements OnInit {
     }
   }
 
+  // Método para obtener la nota a modificar
   getNote(): void {
     const noteID = Number(this.route.snapshot.paramMap.get('id'));
     const token = localStorage.getItem('token');
@@ -91,7 +96,6 @@ export class UserModNotesComponent implements OnInit {
           console.error('Error al cargar la nota', error);
         },
         complete: () => {
-          console.log('Petición para obtener la nota completada');
         }
       });
     } else {
@@ -99,6 +103,7 @@ export class UserModNotesComponent implements OnInit {
     }
   }
 
+  // Método para modificar la nota
   modificarNota(): void {
     const token = localStorage.getItem('token');
     this.buscarIdUsuario();
@@ -119,37 +124,36 @@ export class UserModNotesComponent implements OnInit {
           console.error('Error al guardar la nota', error);
         },
         complete: () => {
-          console.log('Petición para modificar la nota completada'); 
         }
       });
     } else {
       console.error('Algo ocurrió con el token o el formulario no es válido');
     }
   }
-  
+
+  // Método para navegar de vuelta al dashboard de usuarios
   irAAdminDashUsuarios() {
     this.router.navigate(['/notas']);
   }
 
+  // Método para buscar el ID del usuario basado en su correo electrónico
   buscarIdUsuario(): void {
     if (this.usuario.email) {
       const usuario = this.usuarios.find(u => u.email === this.usuario.email);
       if (usuario) {
         this.usuario.id = usuario.id;
-      } else {
-        console.log('Usuario no encontrado');
-      }
-    } else {
-      console.log('No se ha seleccionado ningún correo electrónico');
-    }
+      } 
+    } 
   }
 
-  isModalCerrar = false;
+  isModalCerrar = false; // Estado del modal de confirmación
 
+  // Método para abrir el modal de confirmación
   openModalCerrar() {
     this.isModalCerrar = true;
   }
 
+  // Método para cerrar el modal de confirmación
   closeModalCerrar() {
     this.isModalCerrar = false;
   }

@@ -53,6 +53,7 @@ export class UserNewNotesComponent implements OnInit {
     private noteService: NoteService,
     private jwtService: JwtService
   ) {
+    // Inicialización del formulario con validaciones
     this.notaForm = this.fb.group({
       titulo: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]],
       contenido: ['', [Validators.required, this.blacklistValidator(this.blacklistedWords)]]
@@ -60,11 +61,13 @@ export class UserNewNotesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Llamar a los métodos necesarios al inicializar el componente
     this.getAllUsers();
     this.checkAuthStatus();
     this.getUser();
   }
 
+  // Validador para palabras no permitidas
   blacklistValidator(blacklist: string[]) {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) {
@@ -75,6 +78,7 @@ export class UserNewNotesComponent implements OnInit {
     };
   }
 
+  // Verifica el estado de autenticación y obtiene el token
   checkAuthStatus() {
     this.token = this.jwtService.getToken();
     if (this.token != null) {
@@ -87,6 +91,7 @@ export class UserNewNotesComponent implements OnInit {
     }
   }
 
+  // Obtiene los datos del usuario autenticado
   getUser(): void {
     const token = localStorage.getItem('token');
     if (token) {
@@ -103,7 +108,6 @@ export class UserNewNotesComponent implements OnInit {
           console.error('Error al cargar al usuario', error);
         },
         complete: () => {
-          console.log('Petición para obtener el usuario completada');
         }
       });
     } else {
@@ -111,6 +115,7 @@ export class UserNewNotesComponent implements OnInit {
     }
   }
 
+  // Obtiene la lista de todos los usuarios
   getAllUsers() {
     const token = localStorage.getItem('token');
     if (token) {
@@ -122,7 +127,6 @@ export class UserNewNotesComponent implements OnInit {
           console.error('Error al obtener la lista de usuarios:', error);
         },
         complete: () => {
-          console.log('Petición para obtener la lista de usuarios completada');
         }
       });
     } else {
@@ -130,6 +134,7 @@ export class UserNewNotesComponent implements OnInit {
     }
   }
 
+  // Crea una nueva nota
   crearNota(): void {
     const token = localStorage.getItem('token');
     this.buscarIdUsuario();
@@ -149,7 +154,6 @@ export class UserNewNotesComponent implements OnInit {
           console.error('Error al guardar al usuario', error);
         },
         complete: () => {
-          console.log('Petición para modificar el usuario completada'); 
         }
       });
     } else {
@@ -157,6 +161,7 @@ export class UserNewNotesComponent implements OnInit {
     }
   }
 
+  // Navega de regreso al dashboard de notas
   irAAdminDashNotas() {
     this.router.navigate(['/notas']);
   }
@@ -164,31 +169,23 @@ export class UserNewNotesComponent implements OnInit {
   isModalOpen = false;
   isModalCerrar = false;
 
+  // Abre el modal de confirmación
   openModalCerrar() {
     this.isModalCerrar = true;
   }
 
+  // Cierra el modal de confirmación
   closeModalCerrar() {
     this.isModalCerrar = false;
   }
 
-  mostrarIdUsuario(email: string): void {
-    const usuarioSeleccionado = this.usuarios.find(usuario => usuario.email === email);
-    if (usuarioSeleccionado) {
-      console.log('ID del usuario seleccionado:', usuarioSeleccionado.id);
-    }
-  }
-
+  // Busca el ID del usuario basado en su email
   buscarIdUsuario(): void {
     if (this.usuario.email) {
       const usuario = this.usuarios.find(u => u.email === this.usuario.email);
       if (usuario) {
         this.usuario.id = usuario.id;
-      } else {
-        console.log('Usuario no encontrado');
-      }
-    } else {
-      console.log('No se ha seleccionado ningún correo electrónico');
-    }
+      } 
+    } 
   }
 }

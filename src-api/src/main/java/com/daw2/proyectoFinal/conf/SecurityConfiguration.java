@@ -116,7 +116,6 @@ public class SecurityConfiguration {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://mi-app-angular.s3-website-us-east-1.amazonaws.com");
-        config.addAllowedOrigin("http://otro-origen-permitido.com");
         config.addAllowedOrigin("http://localhost:4200");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
